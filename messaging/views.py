@@ -33,12 +33,6 @@ class YogaConfirmationEmailView(views.APIView):
 
         staff_email = getEmails()
 
-        print(account.get_first_name())
-        print(lesson.get_type())
-        print(lesson.get_intensity())
-        print(lesson.get_str_animator())
-        print(lesson.get_str_date())
-
         subject = "Confirmation de réservation"
         message_content = """
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -60,7 +54,7 @@ class YogaConfirmationEmailView(views.APIView):
                le %s, pour %s personne%s <br><br>
                </div >
 
-               Vous pouvez annuler cette réservation en allant sur http://cafeaum.fr/yoga/calendrier<br><br>
+               Vous pouvez annuler cette réservation en allant sur <a href="http://cafeaum.fr/yoga/calendrier">CafeAum</a><br><br>
 
                Bonne journée, <br>
                L'équipe CafeAum   <br>
@@ -97,9 +91,6 @@ class RestaurantReservationEmailView(views.APIView):
 
         personal_information = data['personal_information']
         reservation_information = data['reservation_information']
-
-        print(personal_information)
-        print(reservation_information)
 
         staff_email = getEmails()
 

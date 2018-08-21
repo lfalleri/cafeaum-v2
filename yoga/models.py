@@ -22,7 +22,7 @@ class Professeur(models.Model):
     prenom = models.CharField(max_length=32)
     description = models.CharField(max_length=512)
     lien = models.CharField(max_length=128, null=True, blank=True)
-    photo = models.CharField(max_length=128, null=True, blank=True)
+    photo = models.CharField(max_length=128, null=True, blank=True, default="/static/img")
 
     def __str__(self):
         return ' '.join([self.prenom, self.nom])
