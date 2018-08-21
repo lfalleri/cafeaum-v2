@@ -81,7 +81,7 @@
               $scope.alert_message = message;
               $scope.alert_message_color = "green";
               YogaService.deletePendingReservation(lesson, account, nb_persons, function(success,message){});
-              MessagingService.sendEmail(lesson, account, function(){});
+              MessagingService.sendYogaConfirmationEmail(lesson, account, nb_persons, function(){});
            }
         });
      }

@@ -83,7 +83,7 @@
           Layout.toastShow();
           var toast = $mdToast.simple()
                    .textContent('En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies pour vous proposer une meilleure qualité de service')
-                   .action('OK')
+                   .action('J\'accepte')
                    .highlightAction(true)
                    .position('top')
                    .hideDelay(0);

@@ -5,49 +5,153 @@ from rest_framework.response import Response
 from rest_framework import  status
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
-from .models import Config
-
+from .models import SendgridApiKey, StaffEmail
+from yoga.models import Lesson
+from authentication.models import Account
+import sendgrid
+from sendgrid.helpers.mail import Email, Content, Mail, Attachment
 
 def getApiKey():
-    config = Config.objects.get(id=1)
-    return config
+    key = SendgridApiKey.objects.get(id=1)
+    return key
 
-SENDGRID_API_KEY = getApiKey()
+def getEmails():
+    emails = StaffEmail.objects.get(id=1)
+    return emails
 
-class EmailView(views.APIView):
+
+class YogaConfirmationEmailView(views.APIView):
 
     def post(self, request, format=None):
         data = json.loads(request.body)
-        lesson = data['lesson']
-        account = data['account']
-        print("lesson : %s"%lesson)
-        print("account : %s"%account['email'])
-        mail = EmailMultiAlternatives(
-            subject="Your Subject",
-            body="This is a simple text email body.",
-            from_email="laurent.falleri@gmail.com",
-            to=["laurentfall@hotmail.fr"],
-            headers={"Reply-To": "laurentfall@hotmail.fr"}
-        )
-        # Add template
-        mail.template_id = 'f6581133-5c0b-4cc1-9a86-96a8bcd0db06'
+        json_lesson = data['lesson']
+        json_account = data['account']
+        nb_persons = data['nb_persons']
 
-        # Replace substitutions in sendgrid template
-        mail.substitutions = {'%type%': 'Hatha',
-                              '%date%': 'mercredi 28 juin',
-                              '%heure%': '11h30'}
+        lesson = Lesson.objects.get(id=json_lesson['id'])
+        account = Account.objects.get(id=json_account['id'])
+
+        staff_email = getEmails()
+
+        print(account.get_first_name())
+        print(lesson.get_type())
+        print(lesson.get_intensity())
+        print(lesson.get_str_animator())
+        print(lesson.get_str_date())
+
+        subject = "Confirmation de réservation"
+        message_content = """
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+            <html>
+            <head>
+            <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+            <title>Confirmation de réservation</title>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+            <style>
+               * {font-family: Montserrat, sans-serif;}
+            </style>
+            </head>
+            <div style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;">
+               Bonjour %s,<br>
+               Nous vous confirmons votre réservation pour le cours : <br><br>
+
+               <div style="font-family : Montserrat;">
+               %s %s (animé par %s) <br>
+               le %s, pour %s personne%s <br><br>
+               </div >
+
+               Vous pouvez annuler cette réservation en allant sur http://cafeaum.fr/yoga/calendrier<br><br>
+
+               Bonne journée, <br>
+               L'équipe CafeAum   <br>
+               <br>
+            </div>
+            </html>
+        """%(account.get_first_name(), lesson.get_type(), lesson.get_intensity(), lesson.get_str_animator(), lesson.get_str_date(), str(nb_persons), str("s" if nb_persons > 1 else ""))
+
+        sg = sendgrid.SendGridAPIClient(apikey=getApiKey())
+
+        from_email = Email(staff_email.noreply())
+        to_email = Email(account.get_email())
+        content = Content("text/html", message_content)
+        mail = Mail(from_email, subject, to_email, content)
+
+        response = sg.client.mail.send.post(request_body=mail.get())
+
+        if (response.status_code >= 200) and (response.status_code < 300):
+            return Response({
+                'status': 'OK',
+                'message': 'Email sent'
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'status': 'KO',
+                'message': 'Error'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-        # Add categories
-        mail.categories = [
-            'confirmation',
-        ]
+class RestaurantReservationEmailView(views.APIView):
 
-        mail.send()
-        return Response({
-            'status': 'OK',
-            'message': 'Email sent'
-        }, status=status.HTTP_200_OK)
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+
+        personal_information = data['personal_information']
+        reservation_information = data['reservation_information']
+
+        print(personal_information)
+        print(reservation_information)
+
+        staff_email = getEmails()
+
+        subject = "Réservation de table"
+        message_content = """
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+            <html>
+            <head>
+            <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+            <title>Demande de contact 2</title>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+            </head>
+            <p style="font-family : Montserrat;font-size:130%%;">
+               CafeAum,<br>
+               %s (email : %s %s) souhaite réserver une table le %s à %s pour %s personne%s. <br>
+               %s
+               <br><br>
+
+               Merci de lui répondre dans les meilleurs délais.
+
+               <br>
+            </p>
+            </html>
+        """%(personal_information["name"],
+             personal_information["email"],
+             " / tel : %s" % personal_information["tel"] if personal_information["tel"] != "" else "",
+             reservation_information["human_date"],
+             reservation_information["hour"],
+             reservation_information["nb_persons"],
+             "s" if int(reservation_information["nb_persons"]) > 1 else "",
+             "Son commentaire : <br> \"%s\""%('<br>'.join(personal_information["comment"].splitlines())) if personal_information["comment"] != "" else "",
+             )
+
+        sg = sendgrid.SendGridAPIClient(apikey=getApiKey())
+
+        from_email = Email(staff_email.noreply())
+        to_email = Email(staff_email.contact())
+        content = Content("text/html", message_content)
+        mail = Mail(from_email, subject, to_email, content)
+
+        response = sg.client.mail.send.post(request_body=mail.get())
+
+        if (response.status_code >= 200) and (response.status_code < 300):
+            return Response({
+                'status': 'OK',
+                'message': 'Email sent'
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'status': 'KO',
+                'message': 'Error'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ContactEmailView(views.APIView):
@@ -57,36 +161,75 @@ class ContactEmailView(views.APIView):
 
         type = data['type']
         name = data['name']
-        email= data['email']
+        email = data['email']
         tel = data['tel']
-        message =data['message']
+        message = data['message']
 
-        mail = EmailMultiAlternatives(
-            subject="Subject",
-            body="Body",
-            from_email="laurent.falleri@gmail.com",
-            to=["laurent.falleri@gmail.com"],
-            headers={"Reply-To": "laurent.falleri@gmail.com"}
-        )
+        staff_email = getEmails()
 
-        # Add template (ContactMessage)
-        mail.template_id = '4f9c3e44-7d6f-4ff8-a8f2-99018e998aff'
+        if type == "Réserver une table":
+            subject = "Réservation de table"
+            message_content = """
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+            <html>
+            <head>
+            <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+            <title>Demande de contact 2</title>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+            </head>
+            <p style="font-family : Montserrat;font-size:130%%;">
+               CafeAum,<br>
+               %s (email : %s / tel : %s) souhaite réserver une table. Son message :<br>
 
-        # Replace substitutions in sendgrid template
-        mail.substitutions = {'%type%': type,
-                              '%email%' : email,
-                              '%nom%': name,
-                              '%message%':message,
-                              '%tel%': tel}
+               "%s"
+               <br><br>
 
-        # Add categories
-        mail.categories = [
-            'contact',
-        ]
+               Merci de lui répondre dans les meilleurs délais.
 
-        mail.send()
+               <br>
+            </p>
+            </html>
+            """%(name, email, tel, '<br>'.join(message.splitlines()))
+        else:
+            subject = "Demande de contact"
+            message_content = """
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+            <html>
+            <head>
+            <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+            <title>Demande de contact 2</title>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+            </head>
+            <p style="font-family : Montserrat;font-size:130%%;">
+               CafeAum,<br>
+               %s (email : %s / tel : %s) a laissé une demande de contact. Son message :<br>
 
-        return Response({
-            'status': 'OK',
-            'message': 'Email sent'
-        }, status=status.HTTP_200_OK)
+               "%s"
+               <br><br>
+
+               Merci de lui répondre dans les meilleurs délais.
+
+               <br>
+            </p>
+            </html>
+            """%(name, email, tel, '<br>'.join(message.splitlines()))
+
+        sg = sendgrid.SendGridAPIClient(apikey=getApiKey())
+
+        from_email = Email(staff_email.noreply())
+        to_email = Email(staff_email.contact())
+        content = Content("text/html", message_content)
+        mail = Mail(from_email, subject, to_email, content)
+
+        response = sg.client.mail.send.post(request_body=mail.get())
+
+        if (response.status_code >= 200) and (response.status_code < 300):
+            return Response({
+                'status': 'OK',
+                'message': 'Email sent'
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'status': 'KO',
+                'message': 'Error'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

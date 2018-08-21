@@ -36,7 +36,8 @@ from boutique.views import CreateurView, \
 
 from evenements.views import EvenementView
 
-from messaging.views import EmailView, \
+from messaging.views import YogaConfirmationEmailView, \
+                            RestaurantReservationEmailView, \
                             ContactEmailView
 
 router = routers.SimpleRouter()
@@ -85,7 +86,8 @@ urlpatterns = patterns(
     url(r'^api/v1/evenements/$', EvenementView.as_view(), name='evenements'),
 
     # Messaging Views
-    url(r'^api/v1/messaging/email/$', EmailView.as_view(), name='email'),
+    url(r'^api/v1/messaging/yoga_confirmation_email/$', YogaConfirmationEmailView.as_view(), name='yoga_confirmation_email'),
+    url(r'^api/v1/messaging/restaurant_reservation_email/$', RestaurantReservationEmailView.as_view(), name='restaurant_reservation_email'),
     url(r'^api/v1/messaging/contact/$', ContactEmailView.as_view(), name='contact'),
 
     # Admin Views

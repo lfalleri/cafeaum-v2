@@ -20,6 +20,7 @@
     $scope.questions = ["Réserver une table", "Contacter notre équipe"];
     $scope.button_text = ["Réserver", "Envoyer"];
     $scope.submit_button = "Réserver";
+    $scope.sendingMessage = false;
     $scope.success = undefined;
     $scope.selectedQuestion = $scope.questions[0];
 
@@ -62,9 +63,16 @@
     }
 
     $scope.sendMessage = function(){
+
+       $scope.sendingMessage = true;
+       $scope.success = undefined;
+       $scope.error = undefined;
+
        if($scope.contact_tel === undefined){
           $scope.contact_tel = '';
        }
+
+       console.log("Try to send mail from contact page");
 
        MessagingService.sendEmailFromContactPage(
           $scope.selectedQuestion,
@@ -75,7 +83,10 @@
           function(success, message){
              if(success){
                 $scope.success = "Votre message a été bien envoyé, notre équipe vous répondra dans les plus brefs délais."
+             }else{
+                $scope.error = "Une erreur est survenue lors de l'envoi du message. Merci de réessayer plus tard ou de contacter notre équipe par télephone."
              }
+             $scope.sendingMessage = false;
           });
     }
   }

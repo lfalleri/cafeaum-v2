@@ -17,10 +17,15 @@
       var boissonDisplayOrders =
       {
          "Boissons chaudes" : 0,
-         "Eaux" : 2,
-         "Boissons fraîches sans alcool" : 1,
-         "Digestif" : 11,
-         "Boissons alcoolisées" : 10,
+         "Eaux" : 20,
+         "Boissons fraîches sans alcool" : 10,
+         "Boissons fraîches" : 9,
+         "Sans alcool" : 8,
+         "Boissons sans alcool" : 8,
+         "Apéritifs" : 99,
+         "Boissons alcoolisées" : 100,
+         "Alcools" : 101,
+         "Digestifs" : 110,
       };
 
       activate();
@@ -137,6 +142,7 @@
 
          }
          $scope.boissons = boisson_list;
+         console.log("Boissons : ", $scope.boissons);
       });
 
       function activate() {

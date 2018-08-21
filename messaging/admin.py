@@ -1,4 +1,5 @@
 from django.contrib import admin
-from .models import Config
+from .models import SendgridApiKey, StaffEmail
 
-admin.site.register(Config)
+admin.site.register(SendgridApiKey)
+admin.site.register(StaffEmail)

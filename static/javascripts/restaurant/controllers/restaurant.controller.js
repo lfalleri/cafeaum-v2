@@ -9,14 +9,18 @@
     .module('cafeyoga.restaurant.controllers')
     .controller('RestaurantController', RestaurantController);
 
-  RestaurantController.$inject = ['RestaurantService', 'Authentication', '$scope','Layout'];
+  RestaurantController.$inject = ['RestaurantService', 'Authentication', 'MessagingService', '$scope','Layout'];
 
-  function RestaurantController(RestaurantService, Authentication, $scope, Layout) {
+  function RestaurantController(RestaurantService, Authentication, MessagingService, $scope, Layout) {
 
       var vm = this;
 
       activate();
       $scope.account = Authentication.fullAccount;
+      $scope.reservation_comment = "";
+      $scope.reservation_tel = "";
+
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
       Date.prototype.addDays = function(days) {
          var date = new Date(this.valueOf());
@@ -44,7 +48,6 @@
          var fermetures = config["fermetures"];
          var jours = config["jours"];
          var index = 0;
-         var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
          /* A partir d'aujourdhui, jusque dans 30 jours, on cherche à construire :
               la liste des jours d'ouvertures ->
@@ -131,16 +134,22 @@
          $scope.selected_day_hours = $scope.all_days_hours[index];
          $scope.error = undefined;
          $scope.success = undefined;
+         $scope.reservation_comment = "";
+         $scope.reservation_tel = "";
       }
 
       $scope.changeHour = function(){
          $scope.error = undefined;
          $scope.success = undefined;
+         $scope.reservation_comment = "";
+         $scope.reservation_tel = "";
       }
 
       $scope.changeNbPersons = function(){
          $scope.error = undefined;
          $scope.success = undefined;
+         $scope.reservation_comment = "";
+         $scope.reservation_tel = "";
       }
 
       $scope.changeForm = function(){
@@ -197,6 +206,7 @@
                                                            $scope.selectedHour.split(":")[1])));
          reservation_information["hour"] = $scope.selectedHour;
          reservation_information["nb_persons"] = $scope.selectedNumberOfPersons;
+         reservation_information["human_date"] = date.toLocaleDateString('fr-FR', options);
 
          var personal_information = {};
          personal_information["name"] = $scope.reservation_nom;
@@ -220,6 +230,14 @@
                $scope.error = data.data["message"];//"Une erreur est survenue lors de la réservation";
                $scope.success = undefined;
             });
+
+         MessagingService.sendRestaurantReservationEmail(reservation_information,personal_information, function(status, message){
+            if(!status){
+                $scope.error = "Une erreur est survenue lors de la réservation, veuillez contacter notre équipe directement par téléphone";
+                $scope.success = undefined;
+            }
+
+         });
 
       }
 

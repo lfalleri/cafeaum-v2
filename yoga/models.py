@@ -82,6 +82,42 @@ class Lesson(models.Model):
     def __str__(self):
         return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
 
+    def get_type(self):
+        return self.type
+
+    def get_intensity(self):
+        return self.intensity
+
+    def get_str_animator(self):
+        return str(self.animator)
+
+    def get_animator(self):
+        return self.animator
+
+    def get_str_date(self):
+        return str(self.date.strftime("%A %d %b %Y à %Hh%M"))
+
+    def get_date(self):
+        return self.date
+
+    def get_str_duration(self):
+        return str(self.duration)
+
+    def get_duration(self):
+        return self.duration
+
+    def get_str_nb_places(self):
+        return str(self.nb_places)
+
+    def get_nb_places(self):
+        return self.nb_places
+
+    def get_price(self):
+        return self.price
+
+    def get_str_price(self):
+        return str(self.price)
+
 
 class LessonRecurrent(models.Model):
     class Meta:

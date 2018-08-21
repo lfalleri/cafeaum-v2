@@ -192,12 +192,8 @@ class LandingPageView(views.APIView):
 
 class ConfigView(views.APIView):
     def get(self, request):
-        config = Config.objects.all()
-        serialized_config = ConfigSerializer(config, many=True)
-
         local_dev = bool(os.environ.get('LOCAL_DEV', False))
-        serialized_config['local_dev'] = str(local_dev)
-
-
-        return Response(serialized_config, content_type="application/json")
+        response_data = {}
+        response_data['local_dev'] = str(local_dev)
+        return Response(json.dumps(response_data), content_type="application/json")
 

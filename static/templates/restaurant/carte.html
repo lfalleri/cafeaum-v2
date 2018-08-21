@@ -108,9 +108,9 @@
                                         </div>
 
                                         <!--<div style="padding-bottom: 2%;" ng-repeat="(categorie, boissons_for_categorie) in boissons | orderBy:'categorie':boissonSortFunction">-->
-                                        <div style="padding-bottom: 2%;" ng-repeat="dict in boissons"><!-- | orderBy:'categorie':boissonSortFunction">-->
-                                            <div  ng-repeat="(categorie, boissons_for_categorie) in dict">
-                                                <div class="restaurant-specificite">
+                                        <div style="padding-bottom: 0%;" ng-repeat="dict in boissons track by $index"><!-- | orderBy:'categorie':boissonSortFunction">-->
+                                            <div ng-if="!(dict | isEmpty)" ng-repeat="(categorie, boissons_for_categorie) in dict">
+                                                <div style="margin-top:15px;" class="restaurant-specificite">
                                                     {{categorie}}
                                                 </div>
                                                 <div ng-repeat="boisson in boissons_for_categorie">

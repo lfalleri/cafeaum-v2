@@ -21,19 +21,32 @@
     * @desc The Factory to be returned
     */
     var MessagingService = {
-       sendEmail: sendEmail,
+       sendYogaConfirmationEmail: sendYogaConfirmationEmail,
+       sendRestaurantReservationEmail: sendRestaurantReservationEmail,
        sendEmailFromContactPage:sendEmailFromContactPage,
-       getSengridKey: getSengridKey,
     }
 
     return MessagingService;
 
     ////////////////////
 
-    function sendEmail(lesson, account, callback) {
-       return $http.post('api/v1/messaging/email/', {
+    function sendYogaConfirmationEmail(lesson, account, nb_persons, callback) {
+       return $http.post('api/v1/messaging/yoga_confirmation_email/', {
          lesson: lesson,
          account: account,
+         nb_persons:nb_persons,
+       }).then(
+         function(data, status, headers, config){
+           callback(true, "OK");
+       },function(data, status, headers, config){
+           callback(false, ["Une erreur est survenue lors de la réservation"]);
+       });
+    }
+
+    function sendRestaurantReservationEmail(reservation_information,personal_information, callback) {
+       return $http.post('api/v1/messaging/restaurant_reservation_email/', {
+         reservation_information: reservation_information,
+         personal_information: personal_information,
        }).then(
          function(data, status, headers, config){
            callback(true, "OK");
@@ -56,17 +69,6 @@
            callback(false, ["Une erreur est survenue lors de la réservation"]);
        });
     }
-
-    function getSengridKey(callback){
-       return $http.get('api/v1/config/').then(
-         function(data, status, headers, config){
-           console.log(data.data);
-           callback(JSON.parse(data.data));
-       },function(data, status, headers, config){
-           callback(false, ["Une erreur est survenue lors de la réservation"]);
-       });
-    }
-
   }
 })();
 
