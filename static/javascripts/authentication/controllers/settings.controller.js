@@ -30,6 +30,7 @@
                      showLessonHistoric : false,
                      showTransactionHistoric : false
                    };
+    $scope.loaded = false;
 
     function activate() {
        Authentication.getFullAccount(function(value){
@@ -88,6 +89,8 @@
                  $scope.state.showLessonHistoric = newValue['lessons'];
                  $scope.state.showTransactionHistoric = newValue['historic'];
              }, true);
+
+             $scope.loaded = true;
           }
        });
     }

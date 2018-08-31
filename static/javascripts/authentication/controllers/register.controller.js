@@ -9,12 +9,12 @@
     .module('cafeyoga.authentication.controllers')
     .controller('RegisterController', RegisterController);
 
-  RegisterController.$inject = ['$location','$http', '$scope', 'Authentication', 'vcRecaptchaService', 'Config'];
+  RegisterController.$inject = ['$location','$http', '$scope', 'Authentication', 'MessagingService', 'vcRecaptchaService', 'Config'];
 
   /**
   * @namespace RegisterController
   */
-  function RegisterController($location, $http, $scope, Authentication, vcRecaptchaService, Config) {
+  function RegisterController($location, $http, $scope, Authentication, MessagingService, vcRecaptchaService, Config) {
     var vm = this;
 
     $scope.register = {};
@@ -89,10 +89,14 @@
                                   function(success,message){
               if(!success){
                  $scope.register_error = "Votre email est déjà utilisé";
+                 return;
               }
+              $scope.message = "Votre profil a bien été créé";
+              console.log("Envoi de mail de création");
+              MessagingService.sendAccountCreationEmail($scope.register.email, function(){});
 
           });
-          $scope.message = "Votre profil a bien été créé";
+
        }
        else{
           $scope.register_error = "Vos deux mots de passes sont différents";

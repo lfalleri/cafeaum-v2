@@ -2,7 +2,9 @@
 from django.db import models
 from authentication.models import Account
 from django.dispatch import receiver
+from django.db.models.signals import pre_delete
 from datetime import timedelta
+from messaging.views import send_lesson_modification_email, send_lesson_cancellation_email
 
 class UploadedImage(models.Model):
     image = models.ImageField('Updloaded image')
@@ -70,6 +72,11 @@ class Lesson(models.Model):
     intensity = models.CharField(max_length=30, choices=INTENSITY_OF_LESSON, default=INTENSITY_BASIQUE)
     animator = models.ForeignKey(Professeur, on_delete=models.CASCADE)
     date = models.DateTimeField()
+
+    copy_type = models.CharField(max_length=30, editable=False)
+    copy_intensity = models.CharField(max_length=30, editable=False)
+    copy_date = models.DateTimeField(editable=False)
+
     duration = models.IntegerField() # in min
     nb_places = models.IntegerField(default=10)
     price = models.IntegerField(default=2) # En points : 1h = 2pts / 1h30 = 3pts
@@ -82,11 +89,20 @@ class Lesson(models.Model):
     def __str__(self):
         return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
 
+    def save(self, *args, **kwargs):
+        super(Lesson, self).save(*args, **kwargs)
+
     def get_type(self):
         return self.type
 
+    def get_copy_type(self):
+        return self.copy_type
+
     def get_intensity(self):
         return self.intensity
+
+    def get_copy_intensity(self):
+        return self.copy_intensity
 
     def get_str_animator(self):
         return str(self.animator)
@@ -96,6 +112,9 @@ class Lesson(models.Model):
 
     def get_str_date(self):
         return str(self.date.strftime("%A %d %b %Y à %Hh%M"))
+
+    def get_str_copy_date(self):
+        return str(self.copy_date.strftime("%A %d %b %Y à %Hh%M"))
 
     def get_date(self):
         return self.date
@@ -154,6 +173,7 @@ class LessonRecurrent(models.Model):
     duration = models.IntegerField() # in min
     nb_places = models.IntegerField(default=10)
     price = models.IntegerField(default=2) # En points : 1h = 2pts / 1h30 = 3pts
+    nb_semaines = models.IntegerField(default=13)
 
     def __unicode__(self):
         return ' '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
@@ -161,18 +181,6 @@ class LessonRecurrent(models.Model):
     def __str__(self):
         return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
 
-
-@receiver(models.signals.post_save, sender=LessonRecurrent)
-def create_lessons_from_template(sender, instance, created, *args, **kwargs):
-    if created:
-        for i in range(0,13):
-            Lesson.objects.create_lesson(instance.type,
-                                         instance.intensity,
-                                         instance.animator,
-                                         instance.date + timedelta(days=i*7),
-                                         instance.duration,
-                                         instance.nb_places,
-                                         instance.price)
 
 class ReservationManager(models.Manager):
 
@@ -209,7 +217,6 @@ class Reservation(models.Model):
 # Transaction related Objects #
 ###############################
 class Formule(models.Model):
-
     montant = models.FloatField(default=0.0)
     nb_cours = models.IntegerField(default=0)
     description = models.CharField(max_length=64)
@@ -232,9 +239,7 @@ class CodeReduction(models.Model):
         return ' '.join(["Code :", str(self.code), "- Réduction : ", str(self.pourcentage) + " %"])
 
 
-
 class TransactionManager(models.Manager):
-
     def create_transaction(self, account, montant, token):
         transaction = Transaction(account=account, montant=montant, token=token)
         transaction.save(force_insert=True)
@@ -242,7 +247,6 @@ class TransactionManager(models.Manager):
 
 
 class Transaction(models.Model):
-
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     montant = models.FloatField(default=0.0)
     token = models.CharField(max_length=64)
@@ -255,3 +259,57 @@ class Transaction(models.Model):
 
     def __str__(self):
         return ' '.join([str(self.account), str(self.montant) + " €", self.token])
+
+
+###############################
+# Signal callbacks            #
+###############################
+@receiver(models.signals.post_save, sender=LessonRecurrent)
+def create_lessons_from_template(sender, instance, created, *args, **kwargs):
+    if created:
+        for i in range(0, instance.nb_semaines):
+            Lesson.objects.create_lesson(instance.type,
+                                         instance.intensity,
+                                         instance.animator,
+                                         instance.date + timedelta(days=i*7),
+                                         instance.duration,
+                                         instance.nb_places,
+                                         instance.price)
+
+
+@receiver(models.signals.pre_save, sender=Lesson)
+def warn_user_on_lesson_change(sender, instance, *args, **kwargs):
+    if instance.copy_date != instance.date or\
+       instance.copy_type != instance.type or \
+       instance.copy_intensity != instance.intensity:
+            reservations = Reservation.objects.filter(lesson=instance)
+            for reservation in reservations:
+                account = reservation.account
+                send_lesson_modification_email(account,
+                                               instance.get_type(),
+                                               instance.get_intensity(),
+                                               instance.get_str_date(),
+                                               instance.get_copy_type(),
+                                               instance.get_copy_intensity(),
+                                               instance.get_str_copy_date()
+                                               )
+    instance.copy_type = instance.type
+    instance.copy_intensity = instance.intensity
+    instance.copy_date = instance.date
+
+@receiver(pre_delete, sender=Lesson)
+def warn_users_before_deleting_lesson(sender, instance, **kwargs):
+    reservations = Reservation.objects.filter(lesson=instance)
+
+    for reservation in reservations:
+        account = reservation.account
+        nb_personnes = reservation.nb_personnes
+        prix = instance.price
+        account.credits += (prix * nb_personnes)
+        account.save()
+        send_lesson_cancellation_email(account,
+                                       instance.get_type(),
+                                       instance.get_intensity(),
+                                       instance.get_str_date(),
+                                       instance.get_price(),
+                                       nb_personnes)

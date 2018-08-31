@@ -2,7 +2,7 @@ from django.contrib.auth import update_session_auth_hash
 
 from rest_framework import serializers
 
-from authentication.models import Account
+from authentication.models import Account, PasswordRecovery
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -38,7 +38,6 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class FullAccountSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Account
         fields = ('id', 'email', 'created_at', 'updated_at',
@@ -47,3 +46,7 @@ class FullAccountSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at', 'updated_at', 'credits', 'is_staff', 'is_admin')
 
 
+class PasswordRecoverySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PasswordRecovery
+        fields = ('id', 'email', 'token')

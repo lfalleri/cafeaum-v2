@@ -28,6 +28,14 @@
       controller: 'SettingsController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/authentication/settings.html'
+    }).when('/password-forgotten', {
+      controller: 'RecoveryController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/authentication/password_forgotten.html'
+    }).when('/recovery/:token', {
+      controller: 'RecoveryController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/authentication/update_password.html'
     }).when('/boutique', {
       controller: 'BoutiqueController',
       controllerAs: 'vm',
@@ -45,6 +53,10 @@
       controllerAs: 'vm',
       templateUrl: '/static/templates/yoga/reservation.html'
     }).when('/yoga/annulation', {
+      controller: 'YogaCancellationController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/yoga/cancellation.html'
+    }).when('/yoga/annulation/:reservation', {
       controller: 'YogaCancellationController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/yoga/cancellation.html'

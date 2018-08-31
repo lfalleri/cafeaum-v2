@@ -38,13 +38,22 @@
          var date = new Date(this.valueOf());
          date.setDate(date.getDate() + days);
          return date;
-      }
+     }
+
+     Date.prototype.removeDays = function(days) {
+         var date = new Date(this.valueOf());
+         date.setDate(date.getDate() - days);
+         return date;
+     }
 
      var vm = this;
+     var first_loaded = true;
+     $scope.loaded = false;
      activate();
      $scope.account = Authentication.fullAccount;
      $scope.reservationParams = {nb_persons : 1};
      $scope.reservedLessonIdForAccount = [];
+     $scope.nbPersonsByLessonId = {};
      $scope.reservedLessons = [];
      $scope.events = [];
      $scope.lesson_to_display = false;
@@ -69,46 +78,17 @@
                           };
      $scope.days_with_lessons = {};
 
-
-
-     function activate() {
-         Authentication.getFullAccount(function(value){
-            $scope.account = value;
-            if(angular.equals($scope.account,{})){
-               /* If not logged in, just get all the lessons */
-               getAllLessons();
-            }else{
-               /* If there is an on-going (pending) reservation, don't display calendar page, but reservation page */
-               YogaService.gotoReservationIfAny($scope.account);
-
-               /* Otherwise get reservations of  user */
-               YogaService.getReservationsByAccount($scope.account.id, function(success, reservations){
-               if(!success){
-                  return;
-               }
-               reservations.forEach(function(reservation){
-                   if (!$scope.reservedLessonIdForAccount.includes(reservation.lesson.id)){
-                      $scope.reservedLessonIdForAccount.push(reservation.lesson.id);
-                   }
-               });
-               getAllLessons();
-            });
-            }
-         });
-     }
-
-     function getAllLessons(){
-        /* On récupère toutes les lessons */
-        var promise = YogaService.getAllLessons();
-        var lessons = [];
-        var closest_lesson = undefined;
-
-
-        promise.then(function(value){
-           /* Une fois que le promise est résolu, on parcourt chaque lesson pour le rajouter dans vm.events */
+     /* Fonction appelé une fois qu'on a récupéré les lessons d'une semaine donnée, rajoute ces lessons dans le calendrier */
+     function prepare_lessons(lessons){
+        /* Une fois que le promise est résolu, on parcourt chaque lesson pour le rajouter dans vm.events */
            var now = new Date();
            var diff_min = Number.MAX_SAFE_INTEGER;
-           lessons = value.data;
+           var closest_lesson = undefined;
+
+           while($scope.events.length > 0) {
+              $scope.events.pop();
+           }
+
            lessons.forEach(function (lesson) {
                lesson.reservedByAccount = false;
                lesson.cancelable = false;
@@ -205,8 +185,6 @@
                /* Add newly built event to calendar events list */
                $scope.events.push(new_event);
 
-
-
                /* For datepicker only */
                var day = new_event.meta.day;
                if( lesson.cancelable || lesson.reservable){
@@ -249,7 +227,49 @@
                    });
                }
            }
-        });
+     }
+
+     function activate() {
+         Authentication.getFullAccount(function(value){
+            $scope.account = value;
+            var now = new Date();
+            $scope.loaded = true;
+            if(angular.equals($scope.account,{})){
+               /* If not logged in, just get all the lessons */
+               YogaService.getLessonsBetweenDates(
+                  moment(now.removeDays(6)).format('YYYY-MM-DD HH:mm'),
+                  moment(now.addDays(6)).format('YYYY-MM-DD HH:mm'),
+                  function(status, result){
+                     prepare_lessons(result);
+               });
+
+            }else{
+               /* If there is an on-going (pending) reservation, don't display calendar page, but reservation page */
+               YogaService.gotoReservationIfAny($scope.account);
+
+               /* Otherwise get reservations of  user */
+               YogaService.getReservationsByAccount($scope.account.id, function(success, reservations){
+               if(!success){
+                  return;
+               }
+
+               reservations.forEach(function(reservation){
+                   console.log(reservation);
+                   if (!$scope.reservedLessonIdForAccount.includes(reservation.lesson.id)){
+                      $scope.reservedLessonIdForAccount.push(reservation.lesson.id);
+                   }
+                   $scope.nbPersonsByLessonId[reservation.lesson.id] = reservation.nb_personnes;
+                   console.log($scope.nbPersonsByLessonId);
+               });
+               YogaService.getLessonsBetweenDates(
+                  moment(now.removeDays(6)).format('YYYY-MM-DD HH:mm'),
+                  moment(now.addDays(6)).format('YYYY-MM-DD HH:mm'),
+                  function(status, result){
+                     prepare_lessons(result);
+                  });
+            });
+            }
+         });
      }
 
      $scope.number_of_persons = [];
@@ -301,9 +321,11 @@
               right: 'prev,next'
             },
             eventAfterRender :  function (event, element, view) {
-                if(event.meta.lesson.id == $scope.previous_event.meta.lesson.id){
-                    element.css('border-width','medium');
-                    $scope.previous_selected = element;
+                if($scope.previous_event){
+                    if(event.meta.lesson.id == $scope.previous_event.meta.lesson.id){
+                       element.css('border-width','medium');
+                       $scope.previous_selected = element;
+                    }
                 }
             },
             eventClick: function(calEvent, jsEvent, view) {
@@ -351,11 +373,7 @@
                       $scope.previous_selected.css('border-color',$scope.previous_selected_border_color);
                       $scope.previous_selected.css('border-width','thin');
                    }
-                  /*if(!calEvent.meta.lesson.reservable &&
-                      !calEvent.meta.lesson.cancelable){
-                      $scope.previous_selected = undefined;
-                      return;
-                   }*/
+
                    if(!calEvent.meta.lesson.reservable &&
                       !calEvent.meta.lesson.cancelable){
                       $scope.previous_selected = $(this);
@@ -391,6 +409,19 @@
             eventMouseover: function(calEvent, jsEvent, view) {
                    $(this).css('cursor','pointer');
             },
+            events: function(start, end, timezone, callback ) {
+                /* On charge les cours de la semaine sélectionnée */
+                if(first_loaded){
+                   first_loaded = false;
+                   return;
+                }
+                YogaService.getLessonsBetweenDates(
+                  moment(start).format('YYYY-MM-DD HH:mm'),
+                  moment(end).format('YYYY-MM-DD HH:mm'),
+                  function(status, result){
+                     prepare_lessons(result);
+                  });
+             }
          }
      };
 

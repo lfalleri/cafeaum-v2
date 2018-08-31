@@ -86,3 +86,32 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, package_name):
         return self.is_admin == True
 
+
+class PasswordRecoveryManager(models.Manager):
+    def create_password_recovery(self, email, token, expiration_date):
+        pwd_recovery = PasswordRecovery(email=email, token=token, expiration_date=expiration_date)
+        pwd_recovery.save(force_insert=True)
+        return pwd_recovery
+
+
+class PasswordRecovery(models.Model):
+
+    email = models.EmailField(unique=True)
+    token = models.CharField(max_length=40, unique=True)
+    expiration_date = models.DateTimeField()
+
+    objects = PasswordRecoveryManager()
+
+    def __unicode__(self):
+        return ' '.join([self.email, '|', self.token, '| Expire à ', str(self.expiration_date)])
+
+    def __str__(self):
+        return ' '.join([self.email, '|', self.token, '| Expire à ', str(self.expiration_date)])
+
+    def check_expiration_date(self, now):
+        if self.expiration_date > now:
+            return True
+        return False
+
+    def get_expiration_date(self):
+        return self.expiration_date

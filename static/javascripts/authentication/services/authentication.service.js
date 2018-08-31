@@ -9,13 +9,13 @@
     .module('cafeyoga.authentication.services')
     .factory('Authentication', Authentication);
 
-  Authentication.$inject = ['$cookies', '$http', '$rootScope','$location'];
+  Authentication.$inject = ['$cookies', '$http', '$rootScope','$location', 'MessagingService'];
 
   /**
   * @namespace Authentication
   * @returns {Factory}
   */
-  function Authentication($cookies, $http, $rootScope, $location) {
+  function Authentication($cookies, $http, $rootScope, $location, MessagingService) {
     /**
     * @name Authentication
     * @desc The Factory to be returned
@@ -23,6 +23,7 @@
     var Authentication = {
       getAuthenticatedAccount: getAuthenticatedAccount,
       isAuthenticated: isAuthenticated,
+      isStored:isStored,
       login: login,
       logout: logout,
       register: register,
@@ -34,6 +35,11 @@
       isStaff: isStaff,
       fullAccount : {},
       getUsers: getUsers,
+
+      checkAccountByEmail: checkAccountByEmail,
+      generatePasswordRecovery:generatePasswordRecovery,
+      getPasswordRecoveryInformation: getPasswordRecoveryInformation,
+      updatePassword: updatePassword,
 
       gotoLoginAndBackTo : gotoLoginAndBackTo,
       backTo: undefined,
@@ -73,6 +79,7 @@
       function registerSuccessFn(data, status, headers, config) {
         Authentication.login(email, password, false, function(success, message){
            if(success){
+              MessagingService.sendAccountCreationEmail(email, function(){});
               $location.url("/settings");
            }
         });
@@ -85,6 +92,7 @@
       */
       function registerErrorFn(data, status, headers, config) {
         alert("Echec de l'enregistrement");
+        callback(false,"");
       }
     }
 
@@ -215,7 +223,6 @@
        if (!$cookies.authenticatedAccount) {
           return;
        }
-       console.log($cookies.authenticatedAccount);
        return JSON.parse($cookies.authenticatedAccount);
     }
 
@@ -226,7 +233,11 @@
      * @memberOf thinkster.authentication.services.Authentication
      */
     function isAuthenticated() {
-       return !!$cookies.authenticatedAccount;
+        return !!$cookies.authenticatedAccount;
+    }
+
+    function isStored() {
+        return !!window.localStorage.getItem('fullAccount');
     }
 
     /**
@@ -248,6 +259,49 @@
      */
     function unauthenticate() {
        delete $cookies.authenticatedAccount;
+    }
+
+    function checkAccountByEmail(email, callback){
+       return $http.get('api/v1/auth/accounts/',{
+           params: {email:email, exact:1}}
+       ).then(
+         function(data, status, headers, config){
+           callback(true, data.data);
+         },function(data, status, headers, config){
+           callback(false, []);
+       });
+    }
+
+    function generatePasswordRecovery(account, callback){
+        return $http.post('/api/v1/auth/password-recovery/', {
+          account_id: account.id,
+       }).then(function(data, status, headers, config){
+          callback(true,data.data);
+       }, function(data, status, headers, config){
+          callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
+       });
+    }
+
+    function getPasswordRecoveryInformation(token, callback){
+       return $http.get('/api/v1/auth/password-recovery/', {
+          params: {token: token}
+       }).then(function(data, status, headers, config){
+          callback(true,data.data);
+       }, function(data, status, headers, config){
+          console.log(status);
+          callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
+       });
+    }
+
+    function updatePassword(email, password, callback){
+        return $http.post('/api/v1/auth/update-password/', {
+          email: email,
+          password: password
+       }).then(function(data, status, headers, config){
+          callback(true,data.data);
+       }, function(data, status, headers, config){
+          callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
+       });
     }
 
     function requestFullAccount(email, callback){

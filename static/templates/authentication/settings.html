@@ -2,8 +2,14 @@
   <div class="cy-contour">
     <div class="cy-container">
       <div ng-include="'/static/templates/general/navbar.html'"></div>
-
-      <div class="main-container">
+      <div class="main-container" style="min-height:1200px;" ng-if="!loaded">
+        <md-progress-circular
+                ng-disabled="data.transaction_successful"
+                md-mode="indeterminate"
+                style="margin: 50% auto;">
+        </md-progress-circular>
+      </div>
+      <div class="main-container" ng-if="loaded">
         <h1 class="page-title">Bonjour {{account.first_name}}</h1>
         <h4 class="page-title">Votre crédit est de {{account.credits}} points</h4>
 

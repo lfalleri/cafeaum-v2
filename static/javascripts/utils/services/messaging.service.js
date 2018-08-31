@@ -21,20 +21,46 @@
     * @desc The Factory to be returned
     */
     var MessagingService = {
+       sendAccountCreationEmail:sendAccountCreationEmail,
        sendYogaConfirmationEmail: sendYogaConfirmationEmail,
+       sendYogaCancellationEmail: sendYogaCancellationEmail,
        sendRestaurantReservationEmail: sendRestaurantReservationEmail,
        sendEmailFromContactPage:sendEmailFromContactPage,
+       sendPasswordRecoveryEmail:sendPasswordRecoveryEmail,
     }
 
     return MessagingService;
 
     ////////////////////
+    function sendAccountCreationEmail(email,  callback) {
+       return $http.post('api/v1/messaging/account_creation_email/', {
+         email: email,
+       }).then(
+         function(data, status, headers, config){
+           callback(true, "OK");
+       },function(data, status, headers, config){
+           callback(false, ["Une erreur est survenue lors de la réservation"]);
+       });
+    }
 
-    function sendYogaConfirmationEmail(lesson, account, nb_persons, callback) {
+    function sendYogaConfirmationEmail(lesson, account, nb_persons, reservation_id, callback) {
        return $http.post('api/v1/messaging/yoga_confirmation_email/', {
          lesson: lesson,
          account: account,
          nb_persons:nb_persons,
+         reservation_id: reservation_id,
+       }).then(
+         function(data, status, headers, config){
+           callback(true, "OK");
+       },function(data, status, headers, config){
+           callback(false, ["Une erreur est survenue lors de la réservation"]);
+       });
+    }
+
+    function sendYogaCancellationEmail(lesson, account, callback) {
+       return $http.post('api/v1/messaging/yoga_cancellation_email/', {
+         lesson: lesson,
+         account: account,
        }).then(
          function(data, status, headers, config){
            callback(true, "OK");
@@ -69,6 +95,19 @@
            callback(false, ["Une erreur est survenue lors de la réservation"]);
        });
     }
+
+    function sendPasswordRecoveryEmail(email, token, callback) {
+       return $http.post('api/v1/messaging/recovery/', {
+         email: email,
+         token: token,
+       }).then(
+         function(data, status, headers, config){
+           callback(true, "OK");
+       },function(data, status, headers, config){
+           callback(false, ["Une erreur est survenue lors de la réservation"]);
+       });
+    }
+
   }
 })();
 

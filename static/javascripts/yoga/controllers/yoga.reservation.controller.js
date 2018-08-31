@@ -16,6 +16,7 @@
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       $scope.reservationSuccessful = false;
       $scope.alert_message = undefined;
+      $scope.loaded = false;
       var timer;
       activate();
 
@@ -46,12 +47,12 @@
                   $scope.meta.total_price = $scope.nb_persons * $scope.lesson.price;
                   $scope.meta.next_credits = $scope.account.credits - ($scope.nb_persons * $scope.lesson.price);
                   $scope.meta.remaining_time = 15 - Math.floor((((now-pendingReservation.created) % 86400000) % 3600000) / 60000);
-                  console.log("$scope.meta.remaining_time : ",$scope.meta.remaining_time);
                   if($scope.meta.remaining_time < 0){
                      YogaService.stagedReservationExit(true, $scope.account, true);
                      $scope.reservationSuccessful = false;
                   }
                   timer = window.setTimeout(expiredReservation, 1000 * 60  ); // 1min
+                  $scope.loaded = true;
                });
             }
          });
@@ -70,7 +71,7 @@
      }
 
      $scope.processReservation = function(lesson, account, nb_persons){
-        YogaService.createReservation(lesson, account, nb_persons, function(success, message){
+        YogaService.createReservation(lesson, account, nb_persons, function(success, message, reservation_id){
            if(!success){
               $scope.alert_message = message;
               $scope.alert_message_color = "red";
@@ -81,7 +82,7 @@
               $scope.alert_message = message;
               $scope.alert_message_color = "green";
               YogaService.deletePendingReservation(lesson, account, nb_persons, function(success,message){});
-              MessagingService.sendYogaConfirmationEmail(lesson, account, nb_persons, function(){});
+              MessagingService.sendYogaConfirmationEmail(lesson, account, nb_persons, reservation_id, function(){});
            }
         });
      }

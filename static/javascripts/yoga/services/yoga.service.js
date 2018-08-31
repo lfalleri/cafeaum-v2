@@ -23,6 +23,7 @@
     var YogaService = {
        /* Lesson API */
        getAllLessons: getAllLessons,
+       getLessonsBetweenDates: getLessonsBetweenDates,
        getLesson: getLesson,
 
        /* Pre-confirmation reservation API */
@@ -57,6 +58,7 @@
        updateNbPresent : updateNbPresent,
        allReservations : allReservations,
        getReservation: getReservation,
+       getReservationsById: getReservationsById,
        getReservationsByAccount : getReservationsByAccount,
        getReservationsByLesson : getReservationsByLesson,
 
@@ -108,6 +110,20 @@
        function getLessonsErrorFn(data, status, headers, config) {
        }
     }
+
+    function getLessonsBetweenDates(from, to, callback){
+        return $http.get('api/v1/yoga/lessons/',{
+             params: { from:from, to: to}}
+        ).then(
+        function(data, status, headers, config){
+          var lessons = data.data;
+          callback(true, lessons);
+        },function(data, status, headers, config){
+          callback(false, undefined);
+        });
+    }
+
+
 
     function getLesson(lesson, callback){
       return $http.get('api/v1/yoga/lessons/',{
@@ -317,9 +333,9 @@
                          start.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
                           + " " +start.getHours() + ":"+(start.getMinutes() < 10 ? '0' : '')+start.getMinutes(),
                          lesson.duration + " minutes"];
-          callback(true, message);
+          callback(true, message, data.data.id);
       },function(data, status, headers, config){
-          callback(false, ["Une erreur est survenue lors de la réservation"]);
+          callback(false, ["Une erreur est survenue lors de la réservation"], 0);
       });
     }
 
@@ -419,6 +435,22 @@
       },function(data, status, headers, config){
           callback(false, undefined);
       });
+    }
+
+    /**
+     * @name getReservationsByAccount
+     * @desc Get the all the Reservations of a given user
+     */
+    function getReservationsById(reservation_id, callback) {
+      return $http.get('api/v1/yoga/reservation/',{
+         params: {reservation_id: reservation_id}
+      }).then(
+        function(data, status, headers, config){
+          var reservations = data.data;
+          callback(true, reservations);
+      },function(data, status, headers, config){
+          callback(false, []);
+      });;
     }
 
     /**

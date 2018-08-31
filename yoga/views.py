@@ -20,6 +20,7 @@ from .serializers import LessonSerializer, \
 
 import stripe
 from datetime import datetime
+from django.utils.dateparse import parse_datetime
 import pytz
 
 
@@ -34,7 +35,11 @@ class LessonView(views.APIView):
     serializer_class = LessonSerializer
 
     def get(self, request, format=None):
-        if 'lesson_id' not in request.query_params.keys():
+        if 'from' in request.query_params.keys() and 'to' in request.query_params.keys():
+            from_date = parse_datetime(request.query_params['from'])
+            to_date = parse_datetime(request.query_params['to'])
+            queryset = Lesson.objects.filter(date__range=(from_date, to_date))
+        elif 'lesson_id' not in request.query_params.keys():
             queryset = Lesson.objects.all()
         else:
             lesson_id = request.query_params['lesson_id']
@@ -162,7 +167,11 @@ class ReservationView(views.APIView):
     def get(self, request, format=None):
         account = None
         lesson = None
+        reservation_id = None
         reservations = []
+
+        if 'reservation_id' in request.query_params.keys():
+            reservation_id = request.query_params['reservation_id']
 
         if 'account_id' in request.query_params.keys():
             account_id = request.query_params['account_id']
@@ -184,6 +193,13 @@ class ReservationView(views.APIView):
             reservations = Reservation.objects.filter(lesson=lesson, confirmed=True)
         elif not lesson and account:
             reservations = Reservation.objects.filter(account=account, confirmed=True)
+        else:
+            reservations = Reservation.objects.filter(id=int(reservation_id))
+            if not reservations:
+                return Response({
+                    'status': 'Not found',
+                    'message': "Réservation invalide"
+                }, status=status.HTTP_404_NOT_FOUND)
 
         serialized = ReservationSerializer(reservations, many=True)
         return Response(serialized.data)

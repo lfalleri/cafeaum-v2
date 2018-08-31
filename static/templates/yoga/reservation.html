@@ -3,7 +3,13 @@
         <div class="cy-container">
             <div ng-include="'/static/templates/general/navbar.html'"></div>
             <div class="main-container">
-                <section ng-if="!reservationSuccessful" class="text-container">
+                <div style="margin: 25% auto 25% auto;" ng-if="!loaded">
+                    <md-progress-circular
+                            md-mode="indeterminate"
+                            style="margin: auto;">
+                    </md-progress-circular>
+                </div>
+                <section ng-if="!reservationSuccessful && loaded" class="text-container">
                     <h2 style="text-align: center;">Bonjour {{  account.first_name }} {{  account.last_name }}</h2><br>
                     <h4 class="text-centered" style="color:red; margin-bottom:2%;">Attention : Ne tardez pas trop à finaliser votre réservation !
                         Ces places vous sont réservées pendant {{meta.remaining_time}} minutes,

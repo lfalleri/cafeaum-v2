@@ -3,10 +3,13 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import permissions, viewsets, status, views
 from rest_framework.response import Response
-from authentication.models import Account, AccountManager
+from authentication.models import Account, AccountManager, PasswordRecovery, PasswordRecoveryManager
 from authentication.permissions import IsAccountOwner
-from authentication.serializers import AccountSerializer, FullAccountSerializer
+from authentication.serializers import AccountSerializer, FullAccountSerializer, PasswordRecoverySerializer
 import os
+import uuid
+import datetime
+
 
 class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
@@ -126,10 +129,20 @@ class AccountView(views.APIView):
         return Response(status.HTTP_200_OK)
 
     def get(self, request, format=None):
-        first_name = request.query_params['first_name']
-        last_name = request.query_params['last_name']
-        email = request.query_params['email']
+        first_name = None
+        last_name = None
+        email = None
+        exact = None
         queryset = []
+
+        if 'first_name' in request.query_params.keys():
+            first_name = request.query_params['first_name']
+        if 'last_name' in request.query_params.keys():
+            last_name = request.query_params['last_name']
+        if 'email' in request.query_params.keys():
+            email = request.query_params['email']
+        if 'exact' in request.query_params.keys():
+            exact = request.query_params['exact']
 
         if last_name:
             if first_name:
@@ -153,7 +166,7 @@ class AccountView(views.APIView):
             else:
                 queryset = Account.objects.all()
 
-        if not queryset:
+        if not exact and not queryset:
             if last_name:
                 if first_name:
                     if email:
@@ -179,6 +192,76 @@ class AccountView(views.APIView):
 
         serialized = AccountSerializer(queryset, many=True)
         return Response(serialized.data)
+
+
+class PasswordRecoveryView(views.APIView):
+
+    def get(self, request, format=None):
+        token = request.query_params['token']
+        password_recovery = PasswordRecovery.objects.filter(token=token)
+        if not password_recovery:
+            return Response({
+                'status': 'Not Found',
+                'message': 'Invalid token'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        password_recovery = password_recovery[0]
+        if not password_recovery.check_expiration_date(datetime.datetime.now()):
+            password_recovery.delete()
+            return Response({
+                'status': 'Not Found',
+                'message': 'Invalid token'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        password_recovery_serialized = PasswordRecoverySerializer(password_recovery)
+        return Response(password_recovery_serialized.data)
+
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        account_id = data['account_id']
+        account = Account.objects.get(id=account_id)
+
+        if not account:
+            return Response({
+                'status': 'Not Found',
+                'message': 'This account has not been found.'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        email = account.get_email()
+        previous = PasswordRecovery.objects.filter(email=email)
+        if previous:
+            previous.delete()
+
+        token = uuid.uuid4().hex[:40]
+        expiration_date = datetime.datetime.now() + datetime.timedelta(days=1)
+
+        password_recovery = PasswordRecovery.objects.create_password_recovery(email=email,
+                                                                              token=token,
+                                                                              expiration_date=expiration_date)
+        password_recovery_serialized = PasswordRecoverySerializer(password_recovery)
+        return Response(password_recovery_serialized.data)
+
+
+class UpdateNewPasswordView(views.APIView):
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+
+        email = data['email']
+        password = data['password']
+        account = Account.objects.filter(email=email)
+        if not account:
+            return Response({
+                'status': 'Not Found',
+                'message': 'This account has not been found.'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        account = account[0]
+        account.set_password(password)
+        account.save()
+        password_recovery = PasswordRecovery.objects.filter(email=email)
+        password_recovery[0].delete()
+        return Response({}, status=status.HTTP_200_OK)
+
 
 
 class SettingsView(views.APIView):

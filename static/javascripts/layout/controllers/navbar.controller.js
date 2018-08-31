@@ -282,14 +282,13 @@
     activate();
 
     function activate() {
-         Authentication.getFullAccount(function(value){
-            $scope.account = value;
-            if(!angular.equals($scope.account,{})){
+
+         if (Authentication.isStored()){
                $scope.navBar["logout"].display = true;
                var logout = $scope.itemList[$scope.itemList.length - 1];
                logout.display = true;
-            }
-         });
+         }
+
          var location = $location.path().split('/');
          if(location.length > 2)
             $scope.setCurrentLocation(location[1],location[2]);

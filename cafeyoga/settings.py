@@ -148,5 +148,5 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.Account'
 AUTH_PROFILE_MODULE = 'authentication.Account'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/static/img/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'img')

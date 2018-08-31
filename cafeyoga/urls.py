@@ -10,9 +10,10 @@ from authentication.views import AccountViewSet, \
                                  LoginView, \
                                  LogoutView, \
                                  FullAccountView, \
-                                 SettingsView, \
                                  LandingPageView, \
-                                 ConfigView
+                                 ConfigView, \
+                                 PasswordRecoveryView, \
+                                 UpdateNewPasswordView
 
 from yoga.views import CalendarView, \
                        LessonView, \
@@ -36,9 +37,12 @@ from boutique.views import CreateurView, \
 
 from evenements.views import EvenementView
 
-from messaging.views import YogaConfirmationEmailView, \
+from messaging.views import AccountCreationEmailView,\
+                            YogaConfirmationEmailView, \
+                            YogaCancellationEmailView,\
                             RestaurantReservationEmailView, \
-                            ContactEmailView
+                            ContactEmailView,\
+                            PasswordRecoveryEmailView
 
 router = routers.SimpleRouter()
 router.register(r'accounts', AccountViewSet)
@@ -59,6 +63,9 @@ urlpatterns = patterns(
     url(r'^api/v1/auth/fullaccount/$', FullAccountView.as_view(), name='account'),
     url(r'^api/v1/auth/accounts/$', AccountView.as_view(), name='accounts'),
     url(r'^api/v1/auth/update-profile/$', AccountView.as_view(), name='update'),
+    url(r'^api/v1/auth/password-recovery/$', PasswordRecoveryView.as_view(), name='recovery'),
+    url(r'^api/v1/auth/update-password/$', UpdateNewPasswordView.as_view(), name='update-password'),
+
 
     # Config view
     url(r'^api/v1/config/$', ConfigView.as_view(), name='config'),
@@ -86,9 +93,13 @@ urlpatterns = patterns(
     url(r'^api/v1/evenements/$', EvenementView.as_view(), name='evenements'),
 
     # Messaging Views
+    url(r'^api/v1/messaging/account_creation_email/$', AccountCreationEmailView.as_view(), name='creation_email'),
     url(r'^api/v1/messaging/yoga_confirmation_email/$', YogaConfirmationEmailView.as_view(), name='yoga_confirmation_email'),
+    url(r'^api/v1/messaging/yoga_cancellation_email/$', YogaCancellationEmailView.as_view(), name='yoga_cancellation_email'),
     url(r'^api/v1/messaging/restaurant_reservation_email/$', RestaurantReservationEmailView.as_view(), name='restaurant_reservation_email'),
-    url(r'^api/v1/messaging/contact/$', ContactEmailView.as_view(), name='contact'),
+    url(r'^api/v1/messaging/contact/$', ContactEmailView.as_view(), name='contact_email'),
+    url(r'^api/v1/messaging/recovery/$', PasswordRecoveryEmailView.as_view(), name='recovery_email'),
+
 
     # Admin Views
     url(r'^admin/', include(admin.site.urls)),

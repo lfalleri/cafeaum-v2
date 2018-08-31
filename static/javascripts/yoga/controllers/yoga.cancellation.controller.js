@@ -9,18 +9,63 @@
     .module('cafeyoga.yoga.controllers')
     .controller('YogaCancellationController', YogaCancellationController);
 
-  YogaCancellationController.$inject = ['YogaService', 'Authentication', '$scope', '$rootScope', 'moment', '$uibModal', '$location' ];
+  YogaCancellationController.$inject = ['YogaService', 'Authentication', '$scope', '$rootScope', 'moment', '$location', 'MessagingService' ];
 
-  function YogaCancellationController( YogaService, Authentication, $scope, $rootScope, moment, $location) {
+  function YogaCancellationController( YogaService, Authentication, $scope, $rootScope, moment, $location, MessagingService) {
 
-      console.log("YogaCancellationController");
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       $scope.cancellationSuccessful = false;
       $scope.alert_message = undefined;
+      $scope.loaded = false;
       activate();
 
+      function prepare_cancellation(reservation){
+          var start = new Date(reservation.lesson.date);
+          $scope.lesson = reservation.lesson;
+          $scope.reservation = reservation;
+          $scope.nb_persons = reservation.nb_personnes;
+
+          $scope.meta = {};
+          $scope.meta.day = start.toLocaleDateString('fr-FR', options);
+          $scope.meta.start = start.getHours() + ":"+(start.getMinutes() < 10 ? '0' : '') +  start.getMinutes();
+          $scope.meta.duration = $scope.lesson.duration;
+          $scope.meta.nb_places = $scope.lesson.nb_places;
+          $scope.meta.total_price = $scope.nb_persons * $scope.lesson.price;
+          $scope.meta.next_credits = $scope.account.credits + ($scope.nb_persons * $scope.lesson.price);
+          $scope.loaded = true;
+      }
+
       function activate() {
-         Authentication.getFullAccount(function(value){
+         var path = $location.url().split('/');
+
+         /* Si l'utilisateur a cliqué sur le lien /yoga/annulation/<réservation> */
+         if(path.length == 4){
+             Authentication.getFullAccount(function(value){
+                Authentication.fullAccount = value;
+                $scope.account = value;
+                if(angular.equals($scope.account,{})){
+                   Authentication.gotoLoginAndBackTo($location.url());
+                }else{
+                   YogaService.getReservationsById(path[3], function(success, reservations){
+                      if(!success){
+                          $scope.alert_message = "Réservation invalide";
+                          YogaService.stagedReservationExit(false, undefined, false);
+                          return;
+                      }
+                      var reservation = reservations[0];
+
+                      if(reservation.account.id != $scope.account.id){
+                          $scope.alert_message = "Cette réservation ne vous appartient pas";
+                          YogaService.stagedReservationExit(false, undefined, false);
+                          return;
+                      }
+                      prepare_cancellation(reservation);
+                   });
+                }
+             });
+         }else{
+            /* Si l'utilisateur annule directement depuis le calendrier */
+            Authentication.getFullAccount(function(value){
             Authentication.fullAccount = value;
             $scope.account = value;
             if(angular.equals($scope.account,{})){
@@ -31,20 +76,11 @@
                   YogaService.stagedCancellationExit(true, $scope.account.id, false);
                   return;
                }
-               var start = new Date(pendingCancellation.lesson.date);
-               $scope.lesson = pendingCancellation.lesson;
-               $scope.reservation = pendingCancellation;
-               $scope.nb_persons = pendingCancellation.nb_personnes;
-
-               $scope.meta = {};
-               $scope.meta.day = start.toLocaleDateString('fr-FR', options);
-               $scope.meta.start = start.getHours() + ":"+(start.getMinutes() < 10 ? '0' : '') +  start.getMinutes();
-               $scope.meta.duration = $scope.lesson.duration;
-               $scope.meta.nb_places = $scope.lesson.nb_places;
-               $scope.meta.total_price = $scope.nb_persons * $scope.lesson.price;
-               $scope.meta.next_credits = $scope.account.credits + ($scope.nb_persons * $scope.lesson.price);
+               prepare_cancellation(pendingCancellation);
             }
          });
+         }
+
      }
 
      $scope.processCancellation = function(){
@@ -57,6 +93,7 @@
               $scope.cancellationSuccessful = true;
               $scope.alert_message = message;
               $scope.alert_message_color = "green";
+              MessagingService.sendYogaCancellationEmail($scope.lesson, $scope.account, function(success, message){});
            }
         });
      }
