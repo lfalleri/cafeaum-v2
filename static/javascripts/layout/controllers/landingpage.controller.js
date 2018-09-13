@@ -19,7 +19,6 @@
 
     vm.logout = logout;
 
-
     /**
     * @name logout
     * @desc Log the user out
@@ -56,14 +55,20 @@
     $scope.landscape = $mdMedia('landscape');
 
     this.$doCheck = function(){
-       $scope.portrait = Layout.detectScreenOrientation();
        var view = angular.element( document.querySelector( '#view' ) );
-       if($scope.portrait){
-          view.removeClass('cy-view-landscape');
-          view.addClass('cy-view-portrait');
-       }else{
+       if( Layout.detectGtMdScreen() ){
           view.addClass('cy-view-landscape');
           view.removeClass('cy-view-portrait');
+          return;
+       }else{
+          $scope.portrait = Layout.detectScreenOrientation();
+          if($scope.portrait){
+             view.removeClass('cy-view-landscape');
+             view.addClass('cy-view-portrait');
+          }else{
+             view.addClass('cy-view-landscape');
+             view.removeClass('cy-view-portrait');
+          }
        }
     }
 

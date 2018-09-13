@@ -57,29 +57,11 @@ and (max-device-width : 320px) {
   }
 
   .page-title-sm{
-     font-size: 16px;
+     font-size: 32px;
   }
 
   .page-subtitle-sm{
-     font-size: 14px;
-  }
-
-  .menu-burger-border{
-     height:32px;
-     width:32px;
-  }
-
-  .menu-burger{
-     font-size: 32px;
-     margin:10% auto;
-  }
-
-  .menu-burger-item{
-     font-size: 18px;
-  }
-
-  .menu-burger-subitem{
-     font-size: 11px;
+     font-size: 20px;
   }
 
   .select-button{
@@ -248,24 +230,6 @@ and (max-device-height : 480px)
      font-size: 25px;
   }
 
-  .menu-burger-border{
-     height:36px;
-     width:36px;
-  }
-
-  .menu-burger{
-     font-size: 36px;
-     margin:18% auto;
-  }
-
-  .menu-burger-item{
-     font-size: 22px;
-  }
-
-  .menu-burger-subitem{
-     font-size: 14px;
-  }
-
   /* settings.css */
   .md-sidenav-left{
      max-width : 25%;
@@ -425,23 +389,6 @@ and (max-device-width : 768px) {
      min-width: 55%;
   }
 
-  .menu-burger-border{
-     height:40px;width:40px;
-  }
-
-  .menu-burger{
-     font-size: 40px;
-     margin:18% auto;
-  }
-
-  .menu-burger-item{
-     font-size: 18px;
-  }
-
-  .menu-burger-subitem{
-     font-size: 14px;
-  }
-
   /* settings.css */
   .md-sidenav-left{
      max-width : 25%;
@@ -575,16 +522,6 @@ and (max-device-width : 1024px) {
   .main-container{
      margin-top: 50px;
      margin-bottom: 150px;
-  }
-
-  .menu-burger-border{
-     height:40px;
-     width:40px;
-  }
-
-  .menu-burger{
-     font-size: 40px;
-     margin:20% auto;
   }
 
   .content-container{
@@ -1184,12 +1121,24 @@ and (min-width : 1824px)
 
 
 
-@media (min-aspect-ratio: 2/1) {
+@media (min-aspect-ratio: 10/4) {
   .landingpage-item{
-     max-width:75%;
+     max-width:80%;
   }
 }
 
+@media (min-aspect-ratio: 36/16) and (max-aspect-ratio: 10/4) {
+  .landingpage-item{
+     max-width:90%;
+  }
+}
+
+
+@media (min-aspect-ratio: 2/1) and (max-aspect-ratio: 36/16) {
+  .landingpage-item{
+     max-width:93%;
+  }
+}
 
 @media (min-aspect-ratio: 34/19) and (max-aspect-ratio: 2/1) {
   .landingpage-item{
@@ -1207,6 +1156,6 @@ and (min-width : 1824px)
 @media (max-aspect-ratio: 16/9)
  {
   .landingpage-item{
-     max-width:100%;
+     max-width:110%;
   }
 }

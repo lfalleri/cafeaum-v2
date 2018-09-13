@@ -16,6 +16,7 @@ class UploadedImage(models.Model):
     def __str__(self):
         return ' '.join(self.nom)
 
+
 class Professeur(models.Model):
     class Meta:
         ordering = ('nom', 'prenom',)
@@ -33,6 +34,20 @@ class Professeur(models.Model):
         return ' '.join([self.prenom, self.nom])
 
 
+class Type(models.Model):
+    nom = models.CharField(max_length=32, unique=True)
+
+    def __str__(self):
+        return self.nom
+
+
+class Intensite(models.Model):
+    nom = models.CharField(max_length=32, unique=True)
+
+    def __str__(self):
+        return self.nom
+
+
 class LessonManager(models.Manager):
     def create_lesson(self, type, intensity, animator, date, duration, nb_places, price):
         lesson = Lesson(type=type, intensity=intensity, animator=animator, date=date, duration=duration, price=price)
@@ -44,32 +59,8 @@ class Lesson(models.Model):
     class Meta:
        ordering = ('date',)
 
-    TYPE_HATHA = 'Hatha'
-    TYPE_ASHTANGA = 'Ashtanga'
-    TYPE_VINYASA = 'Vinyasa'
-    TYPE_BIKRAM = 'Bikram'
-    TYPE_OF_LESSON = (
-        (TYPE_HATHA, 'Hatha'),
-        (TYPE_ASHTANGA, 'Ashtanga'),
-        (TYPE_VINYASA, 'Vinyasa'),
-        (TYPE_BIKRAM, 'Bikram'),
-    )
-
-    INTENSITY_DEBUTANT = 'Debutant'
-    INTENSITY_BASIQUE = 'Basique'
-    INTENSITY_INTERMEDIAIRE = 'Intermediaire'
-    INTENSITY_INTENSIF = 'Intensif'
-    INTENSITY_EXPERT = 'Expert'
-    INTENSITY_OF_LESSON = (
-        (INTENSITY_DEBUTANT, 'Debutant'),
-        (INTENSITY_BASIQUE, 'Basique'),
-        (INTENSITY_INTERMEDIAIRE, 'Intermediaire'),
-        (INTENSITY_INTENSIF, 'Intensif'),
-        (INTENSITY_EXPERT, 'Expert'),
-    )
-
-    type = models.CharField(max_length=30, choices=TYPE_OF_LESSON, default=TYPE_HATHA) # hatha, ashtanga ...
-    intensity = models.CharField(max_length=30, choices=INTENSITY_OF_LESSON, default=INTENSITY_BASIQUE)
+    type = models.ForeignKey(Type,  on_delete=models.CASCADE)
+    intensity = models.ForeignKey(Intensite,  on_delete=models.CASCADE)
     animator = models.ForeignKey(Professeur, on_delete=models.CASCADE)
     date = models.DateTimeField()
 
@@ -79,27 +70,27 @@ class Lesson(models.Model):
 
     duration = models.IntegerField() # in min
     nb_places = models.IntegerField(default=10)
-    price = models.IntegerField(default=2) # En points : 1h = 2pts / 1h30 = 3pts
+    price = models.IntegerField(default=2)  # En points : 1h = 2pts / 1h30 = 3pts
 
     objects = LessonManager()
 
     def __unicode__(self):
-        return ' '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
+        return ' '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), str(self.type), str(self.intensity), str(self.animator), ])
 
     def __str__(self):
-        return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
+        return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), str(self.type), str(self.intensity), str(self.animator), ])
 
     def save(self, *args, **kwargs):
         super(Lesson, self).save(*args, **kwargs)
 
     def get_type(self):
-        return self.type
+        return str(self.type)
 
     def get_copy_type(self):
         return self.copy_type
 
     def get_intensity(self):
-        return self.intensity
+        return str(self.intensity)
 
     def get_copy_intensity(self):
         return self.copy_intensity
@@ -142,32 +133,8 @@ class LessonRecurrent(models.Model):
     class Meta:
        ordering = ('date',)
 
-    TYPE_HATHA = 'Hatha'
-    TYPE_ASHTANGA = 'Ashtanga'
-    TYPE_VINYASA = 'Vinyasa'
-    TYPE_BIKRAM = 'Bikram'
-    TYPE_OF_LESSON = (
-        (TYPE_HATHA, 'Hatha'),
-        (TYPE_ASHTANGA, 'Ashtanga'),
-        (TYPE_VINYASA, 'Vinyasa'),
-        (TYPE_BIKRAM, 'Bikram'),
-    )
-
-    INTENSITY_DEBUTANT = 'Debutant'
-    INTENSITY_BASIQUE = 'Basique'
-    INTENSITY_INTERMEDIAIRE = 'Intermediaire'
-    INTENSITY_INTENSIF = 'Intensif'
-    INTENSITY_EXPERT = 'Expert'
-    INTENSITY_OF_LESSON = (
-        (INTENSITY_DEBUTANT, 'Debutant'),
-        (INTENSITY_BASIQUE, 'Basique'),
-        (INTENSITY_INTERMEDIAIRE, 'Intermediaire'),
-        (INTENSITY_INTENSIF, 'Intensif'),
-        (INTENSITY_EXPERT, 'Expert'),
-    )
-
-    type = models.CharField(max_length=30, choices=TYPE_OF_LESSON, default=TYPE_HATHA) # hatha, ashtanga ...
-    intensity = models.CharField(max_length=30, choices=INTENSITY_OF_LESSON, default=INTENSITY_BASIQUE)
+    type = models.ForeignKey(Type,  on_delete=models.CASCADE)
+    intensity = models.ForeignKey(Intensite,  on_delete=models.CASCADE)
     animator = models.ForeignKey(Professeur, on_delete=models.CASCADE)
     date = models.DateTimeField()
     duration = models.IntegerField() # in min
@@ -176,10 +143,10 @@ class LessonRecurrent(models.Model):
     nb_semaines = models.IntegerField(default=13)
 
     def __unicode__(self):
-        return ' '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
+        return ' '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), str(self.type), str(self.intensity), str(self.animator), ])
 
     def __str__(self):
-        return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), self.type, self.intensity, str(self.animator), ])
+        return ' - '.join([str(self.date.strftime("%A %d %b %Y à %Hh%M")), str(self.type), str(self.intensity), str(self.animator), ])
 
 
 class ReservationManager(models.Manager):
@@ -280,21 +247,24 @@ def create_lessons_from_template(sender, instance, created, *args, **kwargs):
 @receiver(models.signals.pre_save, sender=Lesson)
 def warn_user_on_lesson_change(sender, instance, *args, **kwargs):
     if instance.copy_date != instance.date or\
-       instance.copy_type != instance.type or \
-       instance.copy_intensity != instance.intensity:
+       instance.copy_type != instance.type.nom or \
+       instance.copy_intensity != instance.intensity.nom:
             reservations = Reservation.objects.filter(lesson=instance)
             for reservation in reservations:
                 account = reservation.account
                 send_lesson_modification_email(account,
+                                               reservation.id,
                                                instance.get_type(),
                                                instance.get_intensity(),
+                                               instance.get_str_animator(),
                                                instance.get_str_date(),
                                                instance.get_copy_type(),
                                                instance.get_copy_intensity(),
-                                               instance.get_str_copy_date()
+                                               instance.get_str_copy_date(),
+                                               instance.get_str_duration(),
                                                )
-    instance.copy_type = instance.type
-    instance.copy_intensity = instance.intensity
+    instance.copy_type = instance.type.nom
+    instance.copy_intensity = instance.intensity.nom
     instance.copy_date = instance.date
 
 @receiver(pre_delete, sender=Lesson)
@@ -308,8 +278,11 @@ def warn_users_before_deleting_lesson(sender, instance, **kwargs):
         account.credits += (prix * nb_personnes)
         account.save()
         send_lesson_cancellation_email(account,
+                                       reservation.id,
                                        instance.get_type(),
                                        instance.get_intensity(),
+                                       instance.get_str_animator(),
                                        instance.get_str_date(),
                                        instance.get_price(),
+                                       instance.get_str_duration(),
                                        nb_personnes)

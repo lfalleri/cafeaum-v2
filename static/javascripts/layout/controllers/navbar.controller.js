@@ -52,8 +52,7 @@
                                        subitems:[]},
                                       {title: 'Nos producteurs',link:'/restaurant/nosproduits',
                                        subitems:[]},
-                                      {title: 'Notre carte des vins',link:'/restaurant/carte',
-                                       subitems:[]}]},
+                                      ]},
                         { title : 'Yoga',
                           display: true,
                           link: '/yoga/calendrier',
@@ -64,9 +63,7 @@
                                       {title: 'Nos professeurs',
                                        link:'/yoga/professeurs',
                                        subitems:[]},
-                                       {title: 'Recharger mon compte',
-                                       link:'/yoga/recharge',
-                                       subitems:[]}]},
+                                       ]},
                         { title : 'Boutique',
                           display: true,
                           link: '/boutique',
@@ -141,10 +138,6 @@
                                                                    link:'/yoga/professeurs',
                                                                    display :true,
                                                                    subitems:{}},
-                                                  'recharge':{title:'Recréditer mon compte',
-                                                              link:'/yoga/recharge',
-                                                              display :true,
-                                                              subitems:{}},
                                                   'reservation':{title:'Réservation'},
                                                   'annulation':{title:'Annulation'},
                                                  }
@@ -224,7 +217,7 @@
           var main = $scope.navBar[item];
           main.currentLocation = true;
           $scope.pageTitle = main.title;
-          if(subitem){
+          if(subitem && main.subitems[subitem]){
              $scope.pageSubTitle = main.subitems[subitem].title;
              main.subitems[subitem].currentLocation = true;
           }
@@ -295,6 +288,18 @@
          else{
             $scope.setCurrentLocation(location[1],undefined);
          }
+
+         $scope.$watch(function() { return Authentication.isStored(); }, function (newValue) {
+            if(newValue==true){
+                $scope.navBar["logout"].display = true;
+                var logout = $scope.itemList[$scope.itemList.length - 1];
+                logout.display = true;
+            }else{
+                $scope.navBar["logout"].display = false;
+                var logout = $scope.itemList[$scope.itemList.length - 1];
+                logout.display = false;
+            }
+         }, true);
     }
 
     /**

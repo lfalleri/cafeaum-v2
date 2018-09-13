@@ -41,17 +41,17 @@ class RestaurantReservationView(views.APIView):
         reservation_slot = RestaurantReservationSlot.objects.filter(date=d)
 
         if not reservation_slot:
-            ret, message = \
+            ret, message, reservation_id = \
                 RestaurantReservationSlot.objects.create_reservation(config,
                                                                      reservation_information,
                                                                      personal_information)
         else:
-            ret, message = RestaurantReservationSlot.objects.update_reservation(config,
+            ret, message, reservation_id = RestaurantReservationSlot.objects.update_reservation(config,
                                                                                 reservation_slot[0],
                                                                                 reservation_information,
                                                                                 personal_information)
 
         if ret:
-            return Response({'message': message}, status=status.HTTP_200_OK)
+            return Response({'message': message, 'reservation_id' :reservation_id}, status=status.HTTP_200_OK)
         else:
             return Response({'message': message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

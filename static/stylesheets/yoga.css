@@ -193,7 +193,7 @@ table a:hover md-icon{
 
 .transaction-step{
    /*border: 1px solid #3f3f3f;*/
-   margin: 0 10% 0 10%;
+   margin: auto;
    padding: 2%;
    position : relative;
    min-height : 50%;

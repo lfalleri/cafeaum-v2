@@ -79,6 +79,20 @@
         });
      }
 
+     $scope.cancelPayment = function(){
+        console.log("Cancel Payment");
+        $scope.data.montant_initial = 0;
+        $scope.data.montant_final = 0;
+        $scope.data.reduction = 0;
+        $scope.data.code_reduction = undefined;
+        for (var k in $scope.state) {
+            if ($scope.state.hasOwnProperty(k)) {
+                $scope.state[k] = false;
+            }
+        }
+        $scope.state.step_formule = true;
+     }
+
      $scope.changeFormule = function(){
         $scope.data.montant_final = $scope.data.montant_initial * (100 - $scope.data.reduction)/100;
         $scope.error = undefined;

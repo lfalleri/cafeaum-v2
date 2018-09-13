@@ -21,6 +21,8 @@
     $scope.login = {};
     $scope.response = null;
     $scope.widgetId = null;
+    $scope.state = {password_invalid:false,}
+
     $scope.model = {
        /*key: '6LcqC1MUAAAAANRMW5g0oN7tufDBTLUI2Lg9lCQ-'*/
     };
@@ -55,7 +57,6 @@
           }else{
              $scope.model.key = '6LcqC1MUAAAAANRMW5g0oN7tufDBTLUI2Lg9lCQ-';
           }
-          $scope.$apply();
        });
     }
 
@@ -100,6 +101,7 @@
        }
        else{
           $scope.register_error = "Vos deux mots de passes sont différents";
+          $scope.state.password_invalid = true;
        }
     }
 
@@ -109,6 +111,10 @@
              $scope.login_error = "Identifiant ou mot de passe invalide";
           }
        });
+    }
+
+    $scope.passwordChanged = function(){
+        $scope.state.password_invalid = false;
     }
 
     $scope.setResponse = function (response) {

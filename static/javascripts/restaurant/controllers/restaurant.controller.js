@@ -223,21 +223,29 @@
          RestaurantService.createReservation(reservation_information, personal_information).then(
             function(data, status, headers, config){
                var message = data.data["message"];//"Votre réservation a bien été prise en compte";
+               reservation_information['reservation_id'] = data.data["reservation_id"];
                $scope.success = data.data["message"];
                $scope.error = undefined;
+
+               MessagingService.sendRestaurantReservationToStaffEmail(reservation_information,personal_information, function(status, message){
+                   if(!status){
+                       $scope.error = "Une erreur est survenue lors de la réservation, veuillez contacter notre équipe directement par téléphone";
+                       $scope.success = undefined;
+                   }
+               });
+
+              MessagingService.sendRestaurantReservationToCustomerEmail(reservation_information,personal_information, function(status, message){
+                  if(!status){
+                      $scope.error = "Une erreur est survenue lors de la réservation, veuillez contacter notre équipe directement par téléphone";
+                      $scope.success = undefined;
+                  }
+              });
             },
             function(data, status, headers, config){
                $scope.error = data.data["message"];//"Une erreur est survenue lors de la réservation";
                $scope.success = undefined;
+               return;
             });
-
-         MessagingService.sendRestaurantReservationEmail(reservation_information,personal_information, function(status, message){
-            if(!status){
-                $scope.error = "Une erreur est survenue lors de la réservation, veuillez contacter notre équipe directement par téléphone";
-                $scope.success = undefined;
-            }
-
-         });
 
       }
 

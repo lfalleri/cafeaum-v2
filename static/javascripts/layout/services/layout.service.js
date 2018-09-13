@@ -20,13 +20,20 @@
     var Layout = {
       detectScreenOrientation: detectScreenOrientation,
       detectMdScreen: detectMdScreen,
+      detectGtMdScreen: detectGtMdScreen,
       setUserAcceptedCookies:setUserAcceptedCookies,
       getUserAcceptedCookies:getUserAcceptedCookies,
       cookiesAcceptedForSession:false,
+
       toastShown: false,
       isToastShown:isToastShown,
       toastShow : toastShow,
       toastHide : toastHide,
+
+      setSideNavBarToRecharge: setSideNavBarToRecharge,
+      unsetSideNavBarToRecharge:unsetSideNavBarToRecharge,
+      getSideNavBarToRecharge: getSideNavBarToRecharge,
+      sideNavBarToRecharge : false,
     };
 
     return Layout;
@@ -37,6 +44,10 @@
 
     function detectMdScreen(){
        return $mdMedia('md');
+    }
+
+    function detectGtMdScreen(){
+       return $mdMedia('gt-md');
     }
 
     function setUserAcceptedCookies(){
@@ -63,6 +74,22 @@
 
     function toastHide(){
       Layout.toastShown = false;
+    }
+
+    function setSideNavBarToRecharge(){
+       if( Layout.sideNavBarToRecharge==false ){
+          Layout.sideNavBarToRecharge=true;
+       }
+    }
+
+    function unsetSideNavBarToRecharge(){
+       if( Layout.sideNavBarToRecharge==true ){
+          Layout.sideNavBarToRecharge=false;
+       }
+    }
+
+    function getSideNavBarToRecharge(){
+        return Layout.sideNavBarToRecharge;
     }
   }
 })();

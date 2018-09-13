@@ -183,15 +183,15 @@ class RestaurantReservationManager(models.Manager):
     def create_reservation(self, config, reservation_info, personal_info):
         reservation_slot = self.create_reservation_slot(config, reservation_info)
         if not reservation_slot:
-            return False, "Impossible de créer la réservation. Veuillez prendre contact avec notre équipe par téléphone."
+            return False, "Impossible de créer la réservation. Veuillez prendre contact avec notre équipe par téléphone.", -1
         reservation_slot.save(force_insert=True)
 
         reservation_contact = self.create_reservation_contact(reservation_slot, personal_info, reservation_info)
         if not reservation_contact:
-            return False, "Impossible de créer la réservation. Veuillez prendre contact avec notre équipe par téléphone."
+            return False, "Impossible de créer la réservation. Veuillez prendre contact avec notre équipe par téléphone.", -1
         reservation_contact.save()
 
-        return True, "Nous avons bien reçu votre demande de réservation et reviendrons vers vous au plus vite par email."
+        return True, "Nous avons bien reçu votre demande de réservation et reviendrons vers vous au plus vite par email.", int(reservation_contact.id)
 
     def create_reservation_slot(self, config,  reservation_info):
         nb_places_par_table = config.nb_couverts_par_table
@@ -225,7 +225,7 @@ class RestaurantReservationManager(models.Manager):
         nb_places_par_table = config.nb_couverts_par_table
 
         if nb_places_restantes - nb_persons < 0:
-            return False, "Nombre de places insuffisant, nous vous invitons à contacter notre équipe directement par téléphone."
+            return False, "Nombre de places insuffisant, nous vous invitons à contacter notre équipe directement par téléphone.", -1
 
         if nb_persons % nb_places_par_table == 0:
             nb_tables = nb_persons / nb_places_par_table
@@ -233,7 +233,7 @@ class RestaurantReservationManager(models.Manager):
             nb_tables = nb_persons / nb_places_par_table + 1
         nb_places_restantes -= (nb_tables * nb_places_par_table)
         if nb_places_restantes < 0:
-            return False, "Nombre de places insuffisant, nous vous invitons à contacter notre équipe directement par téléphone."
+            return False, "Nombre de places insuffisant, nous vous invitons à contacter notre équipe directement par téléphone.",-1
 
         # Update reservation_slot
         reservation_slot.nb_places_restantes = nb_places_restantes
@@ -242,10 +242,10 @@ class RestaurantReservationManager(models.Manager):
         # Create reservation_contact
         reservation_contact = self.create_reservation_contact(reservation_slot, personal_info, reservation_info)
         if not reservation_contact:
-            return False, "Impossible de créer votre contact. Nous nous excusons pour la gêne occasionnée"
+            return False, "Impossible de créer votre contact. Nous nous excusons pour la gêne occasionnée", -1
 
         reservation_contact.save()
-        return True, "Nous avons bien reçu votre demande de réservation et reviendrons vers vous au plus vite par email."
+        return True, "Nous avons bien reçu votre demande de réservation et reviendrons vers vous au plus vite par email.", int(reservation_contact.id)
 
 
 class RestaurantReservationSlot(models.Model):

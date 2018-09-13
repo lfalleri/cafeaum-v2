@@ -255,10 +255,10 @@ and (min-width  : 768px)
 
     .landingpage-item .portfolio-link .portfolio-hover {
       position: absolute;
-      width: 90%;
-      height: 94%;
-      top:3%;
-      left:5%;
+      width: 86%;
+      height: 86%;
+      top:7%;
+      left:7%;
       -webkit-transition: all ease 0.5s;
       -moz-transition: all ease 0.5s;
       transition: all ease 0.5s;

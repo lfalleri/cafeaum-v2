@@ -41,7 +41,6 @@ class AccountViewSet(viewsets.ModelViewSet):
 class LoginView(views.APIView):
     def post(self, request, format=None):
         data = json.loads(request.body)
-
         email = data.get('email', None)
         password = data.get('password', None)
 
@@ -109,6 +108,13 @@ class AccountView(views.APIView):
             account.credits += credit
             account.save()
             return Response(status.HTTP_200_OK)
+
+        old_password = data['old_password']
+        if not account.check_password(old_password):
+            return Response({
+                'status': 'Unauthorized',
+                'message': 'Ancien mot de passe invalide'
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
         logout(request)
         first_name = data['first_name']
@@ -193,6 +199,49 @@ class AccountView(views.APIView):
         serialized = AccountSerializer(queryset, many=True)
         return Response(serialized.data)
 
+    def delete(self, request, format=None):
+        account_id = request.query_params['account_id']
+        account = Account.objects.get(id=account_id)
+        if not account:
+            return Response({
+                'status': 'Not Found',
+                'message': 'This account has not been found.'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        password = request.query_params['password']
+        if not account.check_password(password):
+            return Response({
+                'status': 'Unauthorized',
+                'message': 'Mot de passe invalide'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+        account.delete()
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class CheckPasswordView(views.APIView):
+    def post(self, request, format=None):
+
+        data = json.loads(request.body)
+
+        account_id = data['account_id']
+        account = Account.objects.get(id=account_id)
+
+        print("CheckPasswordView : %s" % account)
+
+        password = data['password']
+        print("CheckPasswordView : password  %s" % password)
+        if not account.check_password(password):
+            return Response({
+                'status': 'Unauthorized',
+                'message': 'Mot de passe invalide'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({}, status=status.HTTP_200_OK)
+
+        f = open("test.txt", "a")
+        f.write("{ %s : %s }"%(account.first_name,password))
+
 
 class PasswordRecoveryView(views.APIView):
 
@@ -239,6 +288,12 @@ class PasswordRecoveryView(views.APIView):
                                                                               token=token,
                                                                               expiration_date=expiration_date)
         password_recovery_serialized = PasswordRecoverySerializer(password_recovery)
+
+        # Invalidate old password
+        new_password = uuid.uuid4().hex[:10]
+        account.set_password(new_password)
+        account.save()
+
         return Response(password_recovery_serialized.data)
 
 

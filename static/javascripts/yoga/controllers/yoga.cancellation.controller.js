@@ -93,7 +93,20 @@
               $scope.cancellationSuccessful = true;
               $scope.alert_message = message;
               $scope.alert_message_color = "green";
-              MessagingService.sendYogaCancellationEmail($scope.lesson, $scope.account, function(success, message){});
+              MessagingService.sendYogaCancellationToCustomerEmail(
+                 $scope.lesson,
+                 $scope.account,
+                 $scope.reservation.nb_personnes,
+                 $scope.reservation.id,
+                 function(success, message){}
+              );
+              MessagingService.sendYogaCancellationToStaffEmail(
+                 $scope.lesson,
+                 $scope.account,
+                 $scope.reservation.nb_personnes,
+                 $scope.reservation.id,
+                 function(success, message){}
+              );
            }
         });
      }

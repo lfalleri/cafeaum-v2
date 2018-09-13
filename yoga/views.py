@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from .models import Lesson,\
                     Reservation,\
                     Professeur, \
+                    Type,\
+                    Intensite,\
                     Transaction, \
                     Formule,\
                     CodeReduction
@@ -14,6 +16,7 @@ from authentication.models import Account
 from .serializers import LessonSerializer, \
                          ReservationSerializer, \
                          ProfesseurSerializer, \
+                         TypeSerializer, \
                          TransactionSerializer,\
                          FormuleSerializer,\
                          CodeReductionSerializer
@@ -36,9 +39,14 @@ class LessonView(views.APIView):
 
     def get(self, request, format=None):
         if 'from' in request.query_params.keys() and 'to' in request.query_params.keys():
+            yoga_type = request.query_params.get('yoga_type')
             from_date = parse_datetime(request.query_params['from'])
             to_date = parse_datetime(request.query_params['to'])
-            queryset = Lesson.objects.filter(date__range=(from_date, to_date))
+            if yoga_type == "Tous":
+                queryset = Lesson.objects.filter(date__range=(from_date, to_date))
+            else:
+                type_obj = Type.objects.filter(nom=yoga_type)[0]
+                queryset = Lesson.objects.filter(type=type_obj, date__range=(from_date, to_date))
         elif 'lesson_id' not in request.query_params.keys():
             queryset = Lesson.objects.all()
         else:
@@ -126,7 +134,6 @@ class ReservationView(views.APIView):
 
                 reservation = Reservation.objects.create_reservation(lesson, account, nb_persons, True)
                 serialized = ReservationSerializer(reservation)
-
                 # Update account and lesson
                 account.credits += credit - (lesson.price * nb_persons)
                 account.save()
@@ -299,6 +306,12 @@ class ProfesseursView(views.APIView):
         serialized = ProfesseurSerializer(queryset, many=True)
         return Response(serialized.data)
 
+
+class YogaTypesView(views.APIView):
+    def get(self, request, format=None):
+        queryset = Type.objects.all()
+        serialized = TypeSerializer(queryset, many=True)
+        return Response(serialized.data)
 
 
 class FormuleView(views.APIView):

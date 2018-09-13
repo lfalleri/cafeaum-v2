@@ -28,6 +28,10 @@
       controller: 'SettingsController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/authentication/settings.html'
+    }).when('/suppression-compte', {
+      controller: 'DeletionController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/authentication/delete_account.html'
     }).when('/password-forgotten', {
       controller: 'RecoveryController',
       controllerAs: 'vm',
@@ -40,10 +44,6 @@
       controller: 'BoutiqueController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/boutique/boutique.html'
-    }).when('/yoga/recharge', {
-      controller: 'RechargeController',
-      controllerAs: 'vm',
-      templateUrl: '/static/templates/yoga/recharge.html'
     }).when('/yoga/calendrier', {
       controller: 'YogaController',
       controllerAs: 'vm',

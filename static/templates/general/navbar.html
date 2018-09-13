@@ -1,7 +1,7 @@
 <nav layout="row"
      flex="100"
      hide-sm hide-xs hide-md
-     style="width:100%; padding-left:2%;"
+     style="width:100%;"
      layout-align="start start"
      ng-controller="NavbarController as vm">
   <div layout="column" flex="none" style="max-width:170px;" class="logo-div">
@@ -47,7 +47,7 @@
        hide-gt-md
        style="padding-left:2%; padding-right : 2%;"
        layout-align="space-between center">
-    <div style="max-width: 70px;max-width: 70px;">
+    <div style="max-width: 150px;">
       <a class="logo-link" href="/" >
         <img class="img-fluid logo" src="/static/img/logo.png" alt="CafeYoga">
       </a>
@@ -56,8 +56,8 @@
       <h2 class="text-centered page-title-sm">{{pageTitle}}</h2>
       <h5 class="text-centered page-subtitle-sm">{{pageSubTitle}}</h5>
     </div>
-    <div class="menu-burger-border" style="border:1px solid #3f3f3f; border-radius:4px;cursor: pointer;">
-      <md-icon style="vertical-align:middle;"
+    <div class="menu-burger-border" >
+      <md-icon style="vertical-align:middle; font-size:60px;"
                class="menu-icon menu-burger"
                md-font-icon="material-icons"
                ng-click="toggleMenu()">menu

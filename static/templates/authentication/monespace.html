@@ -103,6 +103,7 @@
                             <div class="form-group">
                                 <label for="register__password">Mot de passe</label>
                                 <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                                       ng-class="{'invalid-input' : state.password_invalid}"
                                        name="password"
                                        type="password"
                                        class="form-control"
@@ -111,11 +112,12 @@
                                        ng-required="1"
                                        oninvalid="this.setCustomValidity('Champ obligatoire')"
                                        oninput="setCustomValidity('')"
-                                       ng-change="loginForm()" />
+                                       ng-change="passwordChanged()" />
                             </div>
                             <div class="form-group">
                                 <label for="register__confirm_password">Confirmer votre mot de passe</label>
                                 <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                                       ng-class="{'invalid-input' : state.password_invalid}"
                                        name="password"
                                        type="password"
                                        class="form-control"
@@ -124,7 +126,7 @@
                                        ng-required="1"
                                        oninvalid="this.setCustomValidity('Champ obligatoire')"
                                        oninput="setCustomValidity('')"
-                                       ng-change="loginForm()" />
+                                       ng-change="passwordChanged()" />
                             </div>
                             <div    ng-if="model.key!==undefined"
                                     vc-recaptcha

@@ -9,12 +9,12 @@
     .module('cafeyoga.authentication.controllers')
     .controller('SettingsController', SettingsController);
 
-  SettingsController.$inject = ['$location', '$scope', 'Authentication', 'YogaService', '$mdToast'];
+  SettingsController.$inject = ['$location', '$scope', 'Authentication', 'Layout', 'YogaService', '$mdToast', '$routeParams'];
 
   /**
   * @namespace LoginController
   */
-  function SettingsController($location, $scope, Authentication, YogaService, $mdToast) {
+  function SettingsController($location, $scope, Authentication, Layout, YogaService, $mdToast, $routeParams) {
     var vm = this;
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     activate();
@@ -28,7 +28,8 @@
                             password:""};
     $scope.state = { showUpdateProfile : true,
                      showLessonHistoric : false,
-                     showTransactionHistoric : false
+                     showTransactionHistoric : false,
+                     showRecharge: false,
                    };
     $scope.loaded = false;
 
@@ -39,6 +40,14 @@
              /* Non loggé -> /monespace */
              $location.url('/monespace');
           }else{
+
+             if($routeParams.hasOwnProperty('recharge')){
+                Layout.setSideNavBarToRecharge();
+             }else{
+                Layout.unsetSideNavBarToRecharge();
+                Authentication.settingsDisplay('profile');
+             }
+
              $scope.updateProfileFields.first_name = $scope.account.first_name;
              $scope.updateProfileFields.last_name = $scope.account.last_name;
              $scope.updateProfileFields.email = $scope.account.email;
@@ -88,6 +97,7 @@
                  $scope.state.showUpdateProfile = newValue['profile'];
                  $scope.state.showLessonHistoric = newValue['lessons'];
                  $scope.state.showTransactionHistoric = newValue['historic'];
+                 $scope.state.showRecharge = newValue['recharge'];
              }, true);
 
              $scope.loaded = true;
@@ -105,7 +115,7 @@
     }
 
     $scope.updateProfile = function() {
-       if($scope.updateProfileFields.confirmation_password !==$scope.updateProfileFields.password )
+       if($scope.updateProfileFields.confirmation_password !== $scope.updateProfileFields.password )
        {
           $scope.error = "Les 2 mots de passe sont différents";
           return;
@@ -117,21 +127,29 @@
           $scope.updateProfileFields.last_name,
           $scope.updateProfileFields.email,
           $scope.updateProfileFields.password,
+          $scope.updateProfileFields.old_password,
           function(success, message){
              if(!success){
                  $scope.error = message;
                  $scope.success = "";
              }else{
-                 //$scope.success = message;
                  $scope.error = "";
-
+                 $scope.success = "Votre profil a bien été mis à jour";
+                 $scope.updateProfileFields.confirmation_password = undefined;
+                 $scope.updateProfileFields.password = undefined;
+                 $scope.updateProfileFields.old_password = undefined;
                  $scope.showToast();
              }
           }
        );
+    }
 
+    $scope.deleteAccount = function(){
+       $location.url("/suppression-compte");
+    }
 
-      //Authentication.register(vm.email, vm.password, vm.last_name, vm.first_name);
+    $scope.gotoCalendar = function(){
+       $location.url("/");
     }
 
     $scope.changeForm = function(){
@@ -176,18 +194,28 @@
        $scope.state.showUpdateProfile = true;
        $scope.state.showLessonHistoric = false;
        $scope.state.showTransactionHistoric = false;
+       $scope.state.showRecharge = false;
     }
 
     $scope.selectLessonHistoric = function(){
        $scope.state.showUpdateProfile = false;
        $scope.state.showLessonHistoric = true;
        $scope.state.showTransactionHistoric = false;
+       $scope.state.showRecharge = false;
     }
 
     $scope.selectTransactionHistoric = function(){
        $scope.state.showUpdateProfile = false;
        $scope.state.showLessonHistoric = false;
        $scope.state.showTransactionHistoric = true;
+       $scope.state.showRecharge = false;
+    }
+
+    $scope.selectRecharge = function(){
+       $scope.state.showUpdateProfile = false;
+       $scope.state.showLessonHistoric = false;
+       $scope.state.showTransactionHistoric = true;
+       $scope.state.showRecharge = true;
     }
   }
 })();

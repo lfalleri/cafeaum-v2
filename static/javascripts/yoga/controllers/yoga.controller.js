@@ -13,25 +13,8 @@
 
   function YogaController( YogaService, Authentication, $scope, moment, $uibModal, $location) {
 
-     var INTENSITY_COLOR = {
-          Debutant:"#0faa45",
-          Basique:'#1271ba',
-          Intermediaire:'#dbd40f',
-          Intensif:'#d62506',
-          Expert:'#1e1919'
-     };
-     var TYPE_COLOR = {
-          Hatha:["#17822e", "#4aa55e"],
-          Ashtanga:['#a07828','#c19e57'] ,
-          Vinyasa:['#8028a0','#a051bc'],
-          Bikram:['#1f5f7a','#488aa5'],
-     };
-     var EVENT_COLOR = {
-          Hatha:{reservable : "#bfcb91", focused :"#fffdfa", complete:"#f8e4c8", reserved:"#54622e"},
-          Ashtanga:{reservable :'#bfcb91',focused :'#fffdfa', complete:"#f8e4c8", reserved:"#54622e"},
-          Vinyasa:{reservable :'#bfcb91',focused :'#fffdfa', complete:"#f8e4c8", reserved:"#54622e"},
-          Bikram:{reservable :'#bfcb91',focused :'#fffdfa', complete:"#f8e4c8", reserved:"#54622e"},
-     };
+     var EVENT_COLOR = { reservable:"#bfcb91", focused :"#fffdfa", complete:"#f8e4c8", reserved:"#54622e"};
+
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
      Date.prototype.addDays = function(days) {
@@ -48,8 +31,9 @@
 
      var vm = this;
      var first_loaded = true;
+     var calendar = {start:new Date().removeDays(6),end:new Date().addDays(6), now:YogaService.calendar.now};
      $scope.loaded = false;
-     activate();
+
      $scope.account = Authentication.fullAccount;
      $scope.reservationParams = {nb_persons : 1};
      $scope.reservedLessonIdForAccount = [];
@@ -57,7 +41,8 @@
      $scope.reservedLessons = [];
      $scope.events = [];
      $scope.lesson_to_display = false;
-     $scope.nb_places = 12;
+     $scope.nb_places = 10;
+     $scope.number_of_persons = [];
      $scope.staff = {
           reservationsForLesson:[],
           addUser : {
@@ -69,6 +54,7 @@
              selectedAccount:undefined,
           }
      };
+     $scope.yoga = {selected_type:"Tous", types:["Tous"]};
      $scope.datepicker = { display: true,
                            display_buttons : false,
                            today : new Date(),
@@ -77,6 +63,7 @@
                            selectedLesson : undefined,
                           };
      $scope.days_with_lessons = {};
+     activate();
 
      /* Fonction appelé une fois qu'on a récupéré les lessons d'une semaine donnée, rajoute ces lessons dans le calendrier */
      function prepare_lessons(lessons){
@@ -90,6 +77,8 @@
            }
 
            lessons.forEach(function (lesson) {
+               //lesson.type = lesson.type.nom;
+               //lesson.intensity = lesson.intensity.nom;
                lesson.reservedByAccount = false;
                lesson.cancelable = false;
                lesson.reservable = true;
@@ -108,10 +97,11 @@
                if( (new_event.start - now) <0){
                   new_event.borderColor =  "#7a552e"/*"#9a9ca0";*/
                   new_event.backgroundColor = "#f8e4c8";
-                  new_event.title = lesson.type+' '+lesson.intensity;/*+'\n'+lesson.animator.prenom+' '+lesson.animator.nom;*/
+                  new_event.title = lesson.type.nom+' '+lesson.intensity.nom + ' (Terminé)\n' ;/*+'\n'+lesson.animator.prenom+' '+lesson.animator.nom;*/
                   lesson.display_title = "Cours sélectionné (Terminé):";
                   lesson.reservable = false;
                   lesson.cancelable = false;
+                  lesson.finished = true;
                }
                else{
                   if (lesson.reservedByAccount){
@@ -119,13 +109,13 @@
                      lesson.display_title = "Cours sélectionné (Réservé):";
 
                      new_event.borderColor = "#7a552e";
-                     new_event.backgroundColor = EVENT_COLOR[lesson.type].reserved;
+                     new_event.backgroundColor = EVENT_COLOR.reserved;
                      new_event.textColor = "#ffffff";
-                     new_event.title = lesson.type + ' ' + lesson.intensity + ' (Réservé)\n' ;/*+
+                     new_event.title = lesson.type.nom + ' ' + lesson.intensity.nom + ' (Réservé)\n' ;/*+
                                        lesson.animator.prenom + ' ' +lesson.animator.nom;*/
 
                      var reservedLesson = {};
-                     reservedLesson.description = lesson.type+' '+lesson.intensity+' - '+
+                     reservedLesson.description = lesson.type.nom +' '+lesson.intensity.nom +' - '+
                                                   lesson.animator.prenom +' ' + lesson.animator.nom;
                      reservedLesson.day = new_event.start.toLocaleDateString('fr-FR', options);
                      reservedLesson.start = new_event.start.getHours() + ":"+
@@ -143,11 +133,12 @@
                      }
                   }else{
                      /* Lesson not reserved by user; it's either Reservable or Complete */
-                     new_event.title = lesson.type+' '+lesson.intensity+'\n';/*+lesson.animator.prenom+' '+lesson.animator.nom;*/
+                    /*+lesson.animator.prenom+' '+lesson.animator.nom;*/
                      if(lesson.nb_places > 0){
+                        new_event.title = lesson.type.nom +' '+lesson.intensity.nom+'\n';
                         lesson.display_title = "Cours sélectionné (Réservable):";
                         new_event.borderColor = "#3e4826";
-                        new_event.backgroundColor = EVENT_COLOR[lesson.type].reservable;
+                        new_event.backgroundColor = EVENT_COLOR.reservable;
                         new_event.textColor = "#3e4826";
                         lesson.reservable = true;
                         if ((new_event.start - now) < diff_min){
@@ -157,13 +148,25 @@
                            new_event.backgroundColor = "#fffdfa";
                            new_event.textColor = "#3e4826";
                            $scope.previous_event = new_event;
-                           $scope.previous_selected_background_color = EVENT_COLOR[lesson.type].reservable;
+                           $scope.previous_selected_background_color = EVENT_COLOR.reservable;
                         }
                      }else{
                         lesson.display_title = "Cours sélectionné (Complet):";
+                        new_event.title = lesson.type.nom + ' ' + lesson.intensity.nom + ' (Complet)\n' ;
                         new_event.borderColor = "#7a552e";
                         new_event.backgroundColor = "#f8e4c8";
                         lesson.reservable = false;
+                        lesson.full = true;
+                        if ((new_event.start - now) < diff_min){
+                           diff_min = new_event.start - now;
+                           closest_lesson = new_event;
+                           new_event.borderColor = "#3e4826";
+                           new_event.backgroundColor = "#fffdfa";
+                           new_event.textColor = "#3e4826";
+                           $scope.previous_event = new_event;
+                           $scope.previous_selected_background_color = EVENT_COLOR.complete;
+
+                        }
                      }
                   }
                }
@@ -172,7 +175,7 @@
 
                /* Event information not directly connected with calendar events  : used for display */
                new_event.meta = {};
-               new_event.meta.panel_description = lesson.type + ' ' + lesson.intensity + ' \n ' +
+               new_event.meta.panel_description = lesson.type.nom + ' ' + lesson.intensity.nom + ' \n ' +
                                                   lesson.animator.prenom +' ' + lesson.animator.nom;
                new_event.meta.day = new_event.start.toLocaleDateString('fr-FR', options);
                new_event.meta.start = new_event.start.getHours() + ":"+
@@ -205,6 +208,11 @@
                $scope.nb_places = closest_lesson.meta.nb_places;
                $scope.lesson_to_display = true;
 
+               $scope.number_of_persons = [];
+               for(var i = 1 ; i <= $scope.nb_places ; i++ ){
+                   $scope.number_of_persons.push(i);
+               }
+
                if(closest_lesson.meta.lesson.reservedByAccount){
                   $scope.lesson.display_title = "Prochain Cours (Réservé):";
                }else{
@@ -212,6 +220,7 @@
                      $scope.lesson.display_title = "Prochain Cours (Réservable):";
                   }else{
                      $scope.lesson.display_title = "Prochain Cours (Complet):";
+                     $scope.lesson.complet = true;
                   }
                }
 
@@ -230,15 +239,29 @@
      }
 
      function activate() {
+         YogaService.getYogaTypes(function(success, types){
+             types.forEach(function(type){
+                $scope.yoga.types.push(type.nom);
+             });
+          });
          Authentication.getFullAccount(function(value){
             $scope.account = value;
             var now = new Date();
+            calendar = YogaService.getCalendarDates();
+            if( (calendar.start == "") && (calendar.end == "")){
+                calendar.start = now.removeDays(6);
+                calendar.end = now.addDays(6);
+                calendar.now = now;
+                YogaService.setCalendarDates(calendar.start, calendar.end, calendar.now);
+            }
+
             $scope.loaded = true;
             if(angular.equals($scope.account,{})){
                /* If not logged in, just get all the lessons */
                YogaService.getLessonsBetweenDates(
-                  moment(now.removeDays(6)).format('YYYY-MM-DD HH:mm'),
-                  moment(now.addDays(6)).format('YYYY-MM-DD HH:mm'),
+                  $scope.yoga.selected_type,
+                  moment(calendar.start).format('YYYY-MM-DD HH:mm'),
+                  moment(calendar.end).format('YYYY-MM-DD HH:mm'),
                   function(status, result){
                      prepare_lessons(result);
                });
@@ -254,16 +277,15 @@
                }
 
                reservations.forEach(function(reservation){
-                   console.log(reservation);
                    if (!$scope.reservedLessonIdForAccount.includes(reservation.lesson.id)){
                       $scope.reservedLessonIdForAccount.push(reservation.lesson.id);
                    }
                    $scope.nbPersonsByLessonId[reservation.lesson.id] = reservation.nb_personnes;
-                   console.log($scope.nbPersonsByLessonId);
                });
                YogaService.getLessonsBetweenDates(
-                  moment(now.removeDays(6)).format('YYYY-MM-DD HH:mm'),
-                  moment(now.addDays(6)).format('YYYY-MM-DD HH:mm'),
+                  $scope.yoga.selected_type,
+                  moment(calendar.start).format('YYYY-MM-DD HH:mm'),
+                  moment(calendar.end).format('YYYY-MM-DD HH:mm'),
                   function(status, result){
                      prepare_lessons(result);
                   });
@@ -272,9 +294,9 @@
          });
      }
 
-     $scope.number_of_persons = [];
+
      for(var i = 1 ; i <= $scope.nb_places ; i++ ){
-        $scope.number_of_persons.push(i);
+         $scope.number_of_persons.push(i);
      }
 
      $scope.eventSources = [$scope.events];
@@ -288,6 +310,7 @@
             height: 500,
             contentHeight: 530,
             firstDay: 1,
+            defaultDate: moment(calendar.now),
             handleWindowResize:true,
             views: {
                 week: { // name of view
@@ -360,14 +383,14 @@
                    /* Reset previous selected event accordingly to its status (reserved or not)*/
                    if($scope.previous_selected){
                       if($scope.previous_event.meta.lesson.reservedByAccount){
-                         $scope.previous_selected.css('backgroundColor', EVENT_COLOR[$scope.previous_event.meta.lesson.type].reserved);
+                         $scope.previous_selected.css('backgroundColor', EVENT_COLOR.reserved);
                       }
                       else{
                          if(!$scope.previous_event.meta.lesson.reservable &&
                             !$scope.previous_event.meta.lesson.cancelable ){
-                            $scope.previous_selected.css('backgroundColor', EVENT_COLOR[calEvent.meta.lesson.type].complete);
+                            $scope.previous_selected.css('backgroundColor', EVENT_COLOR.complete);
                          }else{
-                            $scope.previous_selected.css('backgroundColor', EVENT_COLOR[$scope.previous_event.meta.lesson.type].reservable);
+                            $scope.previous_selected.css('backgroundColor', EVENT_COLOR.reservable);
                          }
                       }
                       $scope.previous_selected.css('border-color',$scope.previous_selected_border_color);
@@ -386,25 +409,30 @@
                       return;
                    }
                    if(calEvent.meta.lesson.reservedByAccount){
-                      $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].reserved;
-                      $(this).css('backgroundColor', EVENT_COLOR[calEvent.meta.lesson.type].reserved);
+                      $scope.previous_selected_background_color = EVENT_COLOR.reserved;
+                      $(this).css('backgroundColor', EVENT_COLOR.reserved);
                    }else{
                       if(!$scope.previous_event.meta.lesson.reservable &&
                          !$scope.previous_event.meta.lesson.cancelable ){
-                         $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].complete;
+                         $scope.previous_selected_background_color = EVENT_COLOR.complete;
                       }
                       else{
-                         $scope.previous_selected_background_color = EVENT_COLOR[calEvent.meta.lesson.type].reservable;
+                         $scope.previous_selected_background_color = EVENT_COLOR.reservable;
                       }
-                      $(this).css('backgroundColor', EVENT_COLOR[calEvent.meta.lesson.type].focused);
+                      $(this).css('backgroundColor', EVENT_COLOR.focused);
                    }
                    /* (4) */
                    $scope.previous_selected = $(this);
                    $scope.previous_event = calEvent;
                    $scope.previous_selected_border_color = $(this).css('border-color');
                    $(this).css('border-color', '#3e4826');
-                   $(this).css('color', '#3e4826');
+                   //$(this).css('color', '#3e4826');
                    $(this).css('border-width','medium');
+
+                   $scope.number_of_persons = [];
+                   for(var i = 1 ; i <= $scope.nb_places ; i++ ){
+                      $scope.number_of_persons.push(i);
+                   }
             },
             eventMouseover: function(calEvent, jsEvent, view) {
                    $(this).css('cursor','pointer');
@@ -415,7 +443,12 @@
                    first_loaded = false;
                    return;
                 }
+                calendar.start = start;
+                calendar.end = end;
+                calendar.now = start;
+                YogaService.setCalendarDates(start, end, start);
                 YogaService.getLessonsBetweenDates(
+                  $scope.yoga.selected_type,
                   moment(start).format('YYYY-MM-DD HH:mm'),
                   moment(end).format('YYYY-MM-DD HH:mm'),
                   function(status, result){
@@ -424,6 +457,17 @@
              }
          }
      };
+
+
+     $scope.yogaTypeUpdated = function(){
+        YogaService.getLessonsBetweenDates(
+           $scope.yoga.selected_type,
+           moment(calendar.start).format('YYYY-MM-DD HH:mm'),
+           moment(calendar.end).format('YYYY-MM-DD HH:mm'),
+           function(status, result){
+              prepare_lessons(result);
+           });
+     }
 
      $scope.updateReservationParams = function(){
          if( $scope.reservationParams.nb_persons > 1 ){
@@ -486,7 +530,7 @@
 
      /* Function called when the recredite button is clicked by user */
      $scope.recrediteAccount = function(account){
-        $location.url('/yoga/recharge');
+        $location.url('/settings?recharge=true');
      }
 
      /* Function called when the cancellation button is clicked by user.

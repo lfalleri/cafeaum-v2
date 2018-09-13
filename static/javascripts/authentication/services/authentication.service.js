@@ -27,7 +27,9 @@
       login: login,
       logout: logout,
       register: register,
+      checkPassword: checkPassword,
       updateProfile : updateProfile,
+      deleteProfile: deleteProfile,
       crediteProfile: crediteProfile,
       setAuthenticatedAccount: setAuthenticatedAccount,
       unauthenticate: unauthenticate,
@@ -48,7 +50,8 @@
       settingsDisplay : settingsDisplay,
       displayStates : {'profile' : true,
                        'lessons' : false,
-                        'historic' : false}
+                        'historic' : false,
+                        'recharge' : false}
     };
 
     return Authentication;
@@ -91,7 +94,6 @@
       * @desc Log "Epic failure!" to the console
       */
       function registerErrorFn(data, status, headers, config) {
-        alert("Echec de l'enregistrement");
         callback(false,"");
       }
     }
@@ -172,6 +174,18 @@
        }
     }
 
+    function checkPassword(account_id, password, callback){
+       console.log("checkPassword : ",password);
+       return $http.post('/api/v1/auth/check-password/', {
+          account_id: account_id,
+          password:password,
+       }).then(function(data, status, headers, config){
+          callback(true,"Mot de passe valide");
+       }, function(data, status, headers, config){
+          callback(false, data.data.message);
+       });
+    }
+
     /**
     * @name login
     * @desc Try to log in with email `email` and password `password`
@@ -180,17 +194,28 @@
     * @returns {Promise}
     * @memberOf thinkster.authentication.services.Authentication
     */
-    function updateProfile(account_id, first_name, last_name, email, password, callback) {
+    function updateProfile(account_id, first_name, last_name, email, password, old_password, callback) {
        return $http.post('/api/v1/auth/update-profile/', {
           account_id: account_id,
           first_name:first_name,
           last_name:last_name,
           email: email,
-          password: password
+          password: password,
+          old_password: old_password,
        }).then(function(data, status, headers, config){
           callback(true,"Profil mis à jour");
        }, function(data, status, headers, config){
-          callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
+          callback(false, data.data.message);
+       });
+    }
+
+    function deleteProfile(account_id, password, callback) {
+       return $http.delete('/api/v1/auth/accounts/', {
+          params: {account_id: account_id, password: password}
+       }).then(function(data, status, headers, config){
+          callback(true,"Profil mis à jour");
+       }, function(data, status, headers, config){
+          callback(false, data.data.message);
        });
     }
 
@@ -288,7 +313,6 @@
        }).then(function(data, status, headers, config){
           callback(true,data.data);
        }, function(data, status, headers, config){
-          console.log(status);
           callback(false, "Une erreur est survenue lors de la mise à jour de votre profil");
        });
     }

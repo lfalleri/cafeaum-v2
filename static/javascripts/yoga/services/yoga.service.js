@@ -25,6 +25,7 @@
        getAllLessons: getAllLessons,
        getLessonsBetweenDates: getLessonsBetweenDates,
        getLesson: getLesson,
+       getYogaTypes: getYogaTypes,
 
        /* Pre-confirmation reservation API */
        stageReservation: stageReservation,
@@ -76,6 +77,11 @@
                     "settings":"/settings",
                     "cancellation":"/yoga/annulation",
                     "reservation" : "/yoga/reservation"},
+
+       /* Calendar options */
+       calendar : {start:"", end:"", now:new Date()},
+       setCalendarDates: setCalendarDates,
+       getCalendarDates: getCalendarDates,
     }
 
     return YogaService;
@@ -111,9 +117,10 @@
        }
     }
 
-    function getLessonsBetweenDates(from, to, callback){
+    function getLessonsBetweenDates(type, from, to, callback){
+        console.log("yoga_type :", type);
         return $http.get('api/v1/yoga/lessons/',{
-             params: { from:from, to: to}}
+             params: { yoga_type:type, from:from, to: to}}
         ).then(
         function(data, status, headers, config){
           var lessons = data.data;
@@ -137,6 +144,15 @@
       });
     }
 
+    function getYogaTypes(callback){
+      return $http.get('api/v1/yoga/types/').then(
+        function(data, status, headers, config){
+          var types = data.data;
+          callback(true, types);
+      },function(data, status, headers, config){
+          callback(false, undefined);
+      });
+    }
     /*************************************
      *  Pre-confirmation reservation API *
      *************************************/
@@ -582,6 +598,19 @@
            function(data, status, headers, config){
               callback(false, ["Une erreur est survenue lors de la transaction"]);
         });
+     }
+
+      /**********************
+      * Calendar options    *
+      **********************/
+     function setCalendarDates(start, end, now){
+        YogaService.calendar.start = start;
+        YogaService.calendar.end = end;
+        YogaService.calendar.now = now;
+     }
+
+     function getCalendarDates(){
+        return YogaService.calendar;
      }
   }
 })();

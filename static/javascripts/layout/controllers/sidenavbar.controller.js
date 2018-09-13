@@ -15,7 +15,8 @@
                                   'Authentication',
                                    'RestaurantService',
                                   'BoutiqueService',
-                                  'EvenementsService'];
+                                  'EvenementsService',
+                                  'Layout'];
 
   /**
   * @namespace NavbarController
@@ -26,7 +27,8 @@
                                 Authentication,
                                 RestaurantService,
                                 BoutiqueService,
-                                EvenementsService) {
+                                EvenementsService,
+                                Layout) {
 
     $scope.sectionsList =
         {'restaurant' :  { title : 'Restaurant',
@@ -80,12 +82,6 @@
                                                       subitems:[]
                                                       }
                                       ,
-                                      'recharge' : {title: 'Recharger mon compte',
-                                                    link:'/yoga/recharge',
-                                                    currentLocation : false,
-                                                    icon:"",
-                                                    subitems:[]
-                                                    }
                                       }
 
                            }
@@ -160,23 +156,16 @@
                                                   icon:"",
                                                   subitems:{}
                                                   }
+                                       ,
+                                       'recharge' : {title: 'Recharger mon compte',
+                                                    currentLocation : false,
+                                                    click:function(){$scope.selectRecharge()},
+                                                    icon:"",
+                                                    subitems:{}
+                                                    }
                                        }
                          }
         };
-
-    activate();
-
-    function activate() {
-         var location = $location.path().split('/');
-         $scope.currentSection = $scope.sectionsList[location[1]];
-         $scope.currentSectionKey = location[1];
-
-         if(location.length > 2){
-            $scope.currentSubSection = $scope.currentSection.subitems[location[2]];
-            $scope.currentSubSection.currentLocation = true;
-            $scope.currentSubSection.icon = "chevron_right";
-         }
-    }
 
 
     $scope.getStyle = function(item){
@@ -245,6 +234,18 @@
          BoutiqueService.displayText('passees');
     }
 
+    $scope.selectRecharge = function(){
+         $scope.currentSection.subitems['profile'].currentLocation = false;
+         $scope.currentSection.subitems['profile'].icon = "";
+         $scope.currentSection.subitems['lessons'].currentLocation = false;
+         $scope.currentSection.subitems['lessons'].icon = "";
+         $scope.currentSection.subitems['historic'].currentLocation = false;
+         $scope.currentSection.subitems['historic'].icon = "";
+         $scope.currentSection.subitems['recharge'].currentLocation = true;
+         $scope.currentSection.subitems['recharge'].icon = "chevron_right";
+         Authentication.settingsDisplay('recharge');
+    }
+
     $scope.selectUpdateProfile = function(){
          $scope.currentSection.subitems['profile'].currentLocation = true;
          $scope.currentSection.subitems['profile'].icon = "chevron_right";
@@ -252,6 +253,8 @@
          $scope.currentSection.subitems['lessons'].icon = "";
          $scope.currentSection.subitems['historic'].currentLocation = false;
          $scope.currentSection.subitems['historic'].icon = "";
+         $scope.currentSection.subitems['recharge'].currentLocation = false;
+         $scope.currentSection.subitems['recharge'].icon = "";
          Authentication.settingsDisplay('profile');
     }
 
@@ -262,6 +265,8 @@
          $scope.currentSection.subitems['lessons'].icon = "chevron_right";
          $scope.currentSection.subitems['historic'].currentLocation = false;
          $scope.currentSection.subitems['historic'].icon = "";
+         $scope.currentSection.subitems['recharge'].currentLocation = false;
+         $scope.currentSection.subitems['recharge'].icon = "";
          Authentication.settingsDisplay('lessons');
     }
 
@@ -272,6 +277,8 @@
          $scope.currentSection.subitems['lessons'].icon = "";
          $scope.currentSection.subitems['historic'].currentLocation = true;
          $scope.currentSection.subitems['historic'].icon = "chevron_right";
+         $scope.currentSection.subitems['recharge'].currentLocation = false;
+         $scope.currentSection.subitems['recharge'].icon = "";
          Authentication.settingsDisplay('historic');
     }
 
@@ -306,7 +313,7 @@
                         'carte' : '/restaurant/carte',
                         'professeurs': '/yoga/professeurs',
                         'calendrier': '/yoga/calendrier',
-                        'recharge': '/yoga/recharge',
+                        'recharge': '/settings/recharge',
                         'reservation': '/restaurant/reservation'};
        $location.url(locations[location]);
     }
@@ -324,7 +331,30 @@
 
        });
     }
+    activate();
 
+    function activate() {
+         var location = $location.path().split('/');
+         $scope.currentSection = $scope.sectionsList[location[1]];
+         $scope.currentSectionKey = location[1];
+
+         if(location.length > 2){
+             $scope.currentSubSection = $scope.currentSection.subitems[location[2]];
+             $scope.currentSubSection.currentLocation = true;
+             $scope.currentSubSection.icon = "chevron_right";
+         }
+
+         if($scope.currentSectionKey=='settings'){
+             $scope.$watch(function() { return Layout.getSideNavBarToRecharge(); }, function (newValue) {
+                 if(newValue==true){
+                    $scope.selectRecharge();
+                 }else{
+                    $scope.selectUpdateProfile();
+                 }
+             }, true);
+         }
+
+    }
 
 
   }

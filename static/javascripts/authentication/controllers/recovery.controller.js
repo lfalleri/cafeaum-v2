@@ -20,10 +20,14 @@
     activate();
 
     $scope.login = {};
-    $scope.disableButton = true;
+    $scope.disableButton = false;
     $scope.account = undefined;
-    $scope.token_invalid = undefined;
-    $scope.loaded = false;
+    $scope.state = {
+        loaded:false,
+        token_invalid:undefined,
+        password_invalidated:false,
+        password_updated_by_user:false,
+    }
 
     /**
      * @name activate
@@ -33,14 +37,13 @@
         var path = $location.url().split('/');
         if( path[1] == "recovery" ){
            Authentication.getPasswordRecoveryInformation(path[2], function(success, data){
-               console.log(data);
                $scope.email = data.email;
                if( success ){
-                  $scope.token_invalid = false;
+                  $scope.state.token_invalid = false;
                }else{
-                  $scope.token_invalid = "Le lien n'est pas valide ou a expiré. Veuillez effectuer une nouvelle demande de mot de passe";
+                  $scope.state.token_invalid = "Le lien n'est pas valide ou a expiré. Veuillez effectuer une nouvelle demande de mot de passe";
                }
-               $scope.loaded = true;
+               $scope.state.loaded = true;
            })
         }
     }
@@ -58,39 +61,55 @@
        Authentication.updatePassword($scope.email,$scope.login.password,  function(success, data){
           if(success){
              Authentication.login($scope.email, $scope.login.password, false, function(success, data){
-                $location.url('/');
+                $scope.state.password_updated_by_user = true;
+                //$location.url('/');
              });
           }
        });
     }
 
-    $scope.checkLoginEmail = function(){
-        Authentication.checkAccountByEmail($scope.login.email, function(success, account){
-           if(success){
-              if( account.length == 1 ){
-                 $scope.disableButton = false;
-                 $scope.account = account[0];
-              }else{
-                 $scope.disableButton = true;
-              }
-           }else{
-              $scope.disableButton = true;
-           }
-        });
+    $scope.login.checkLoginEmail = function(){
+        $scope.login_error = "";
+        $scope.disableButton = false;
     }
 
     $scope.newRecovery = function(){
         $location.url('/password-forgotten');
     }
 
+    $scope.backToLandingpage = function(){
+        $location.url('/');
+    }
+
     $scope.processRecovery = function(){
-       Authentication.generatePasswordRecovery($scope.account, function(success, data){
-          if(success){
-             console.log(data);
-             MessagingService.sendPasswordRecoveryEmail(data.email, data.token, function(success,data){})
-             $location.url('/');
-          }
-       });
+        Authentication.checkAccountByEmail($scope.login.email, function(success, account){
+           if(success){
+              if( account.length == 1 ){
+                 //$scope.disableButton = false;
+                 $scope.account = account[0];
+                 Authentication.generatePasswordRecovery($scope.account, function(success, data){
+                     $scope.state.password_invalidated = true;
+                     if(success){
+                         MessagingService.sendPasswordRecoveryEmail(data.email, data.token, function(success,data){
+                            $scope.state.password_invalidated = true;
+                            if(success){
+
+                            }
+                         })
+                         //$location.url('/');
+                     }
+                 });
+              }else{
+                 $scope.state.password_invalidated = true;
+              }
+           }else{
+              $scope.state.password_invalidated = true;
+           }
+        });
+    }
+
+    $scope.cancelRecovery = function(){
+       $location.url('/');
     }
   }
 })();

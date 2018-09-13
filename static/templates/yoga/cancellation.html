@@ -29,7 +29,7 @@
                             <div layout="column" flex-gt-md="45" flex="100">
                                 <h2 style="text-align: center;">Votre cours :</h2>
                                 <div class="pending-reservation-lesson">
-                                    <h2 class="pending-reservation-lesson-detail text-centered" style="font-weight: 900;">{{ lesson.type }} {{ lesson.intensity }} </h2>
+                                    <h2 class="pending-reservation-lesson-detail text-centered" style="font-weight: 900;">{{ lesson.type.nom }} {{ lesson.intensity.nom }} </h2>
                                     <h3 class="pending-reservation-lesson-detail text-centered" > Animé par : {{ lesson.animator.prenom }} {{ lesson.animator.nom }}</h3>
                                     <h3 class="pending-reservation-lesson-detail text-centered" >{{ meta.day}} à {{meta.start}}</h3>
                                     <h3 class="pending-reservation-lesson-detail text-centered" >Durée : {{meta.duration}} minutes</h3>
