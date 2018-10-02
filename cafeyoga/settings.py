@@ -70,8 +70,8 @@ if bool(os.environ.get('LOCAL_DEV', False)):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'cafeyoga',
-            'USER': 'lyne_emilie',
+            'NAME': 'cafe-yoga_db',
+            'USER': 'cafe-yoga',
             'PASSWORD': 'cafeyoga2018',
             'HOST': 'localhost',
             'PORT': '',
