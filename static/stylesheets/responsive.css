@@ -421,7 +421,7 @@ and (max-device-width : 768px) {
 
   .main-container{
      margin-top: 50px;
-     margin-bottom: 150px;
+    /* margin-bottom: 150px;*/
   }
 
   .content-container{
@@ -521,7 +521,7 @@ and (max-device-width : 1024px) {
   }
   .main-container{
      margin-top: 50px;
-     margin-bottom: 150px;
+    /* margin-bottom: 150px;*/
   }
 
   .content-container{
@@ -623,7 +623,7 @@ and (max-device-width : 1254px)  {
 
   .main-container{
      margin-top: 20px;
-     margin-bottom: 150px;
+    /* margin-bottom: 150px;*/
   }
 
   .content-container{
@@ -703,7 +703,7 @@ and (max-device-width : 1524px)  {
 
   .main-container{
      margin-top: 20px;
-     margin-bottom: 150px;
+    /* margin-bottom: 150px;*/
   }
 
   .cy-footer-links{
@@ -770,7 +770,7 @@ and (max-width : 1824px)  {
 
   .main-container{
      margin-top: 20px;
-     margin-bottom: 170px;
+    /* margin-bottom: 170px;*/
   }
 }
 
@@ -828,7 +828,7 @@ and (min-width : 1824px) {
 
   .main-container{
      margin-top: 20px;
-     margin-bottom: 170px;
+     /*margin-bottom: 170px;*/
   }
 }
 

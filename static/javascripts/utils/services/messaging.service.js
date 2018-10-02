@@ -165,7 +165,6 @@
 
     function sendEmailFromContactPage(type, name, email, tel, message, callback) {
        return $http.post('api/v1/messaging/contact/', {
-         type: type,
          name: name,
          email: email,
          tel: tel,

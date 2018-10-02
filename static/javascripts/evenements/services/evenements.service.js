@@ -18,11 +18,12 @@
     */
     var EvenementsService = {
        getAllEvenements: getAllEvenements,
+       getAllExpos: getAllExpos,
 
        getEvenementsDisplay: getEvenementsDisplay,
        evenementsDisplay : evenementsDisplay,
-       displayStates : {'a venir' : true,
-                       'passes' : false}
+       displayStates : {'en_cours' : true,
+                       'passees' : false}
     }
 
     return EvenementsService;
@@ -31,6 +32,18 @@
 
     function getAllEvenements(callback) {
         return $http.get('api/v1/evenements/')
+           .then(
+               function(data, status, headers, config){
+                   callback(true, data.data);
+               },
+               function(data, status, headers, config){
+                  callback(false, undefined);
+               }
+           );
+    }
+
+    function getAllExpos(callback) {
+        return $http.get('api/v1/evenements/expos/')
            .then(
                function(data, status, headers, config){
                    callback(true, data.data);

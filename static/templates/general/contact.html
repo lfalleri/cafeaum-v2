@@ -7,23 +7,12 @@
                 <div hide-md hide-sm hide-xs layout layout-align="space-between start" style="min-height:700px;">
                     <div layout="column"  flex="60" layout-align="space-between center" style="height:100%;padding: 0 20px; margin-top:130px;">
                         <div hide-gt-md style="width :1px; margin-bottom:75px;"></div>
-                        <div class="form-group" for="question" style="width : 100%; margin-bottom:15px;">
+                        <div class="form-group" for="question" style="width : 100%; margin-bottom:3%;">
                             <div class="alert alert-success" ng-show="success" ng-bind="success"></div>
-                            <div class="alert alert-danger" ng-show="error" ng-bind="error"></div>
-                            <md-input-container id="question" style="min-width:100%;">
-                                <md-select class="form-control quicksand-lg"
-                                           validate-on="submit"
-                                           ng-required="1"
-                                           ng-model="selectedQuestion"
-                                           placeholder="Vous souhaitez ?"
-                                           ng-change="changeQuestion()"
-                                           style="background-color:#f8e4c8; border-radius: 0;">
-                                    <md-select-header>
-                                        <span class="quicksand-lg"> Vous souhaitez ? </span>
-                                    </md-select-header>
-                                    <md-option class="quicksand-md" ng-value="question" ng-repeat="question in questions">{{ question}}</md-option>
-                                </md-select>
-                            </md-input-container>
+                            <div style="color:red;" class="alert alert-danger" ng-show="error" ng-bind="error"></div>
+                            <p class="text-centered" style="font-size:18px;font-style:italic; width:70%; margin :auto;">
+                                Pour nous contacter, remplissez ce formulaire et nous tâcherons de vous répondre dans les plus brefs délais.
+                            </p>
                         </div>
                         <div layout flex layout-align="space-between start" style="min-width:100%;">
                             <div layout="column" flex="40" layout-align="space-between start">
@@ -88,7 +77,7 @@
                     </div>
                     <div layout="column"  flex="35"  layout-align="space-between start"
                          style="padding-left: padding-right:5%; 50px;margin-top: 60px; height:100%;">
-                        <h2 class="quicksand-md" style="color:#97BA65;font-weight:700; font-size:120%;margin-bottom: 20px;">Café Yoga</h2>
+                        <h2 class="quicksand-md" style="color:#97BA65;font-weight:700; font-size:120%;margin-bottom: 20px;">Café Aum</h2>
                         <h2 class="quicksand-md" style="font-weight:100;margin-bottom: 0px;">37 avenue Victor Cresson</h2>
                         <h2 class="quicksand-md" style="font-weight:100;margin-bottom: 0px;">92130 Issy les Moulineaux</h2>
                         <h2 class="quicksand-md" style="font-weight:100;margin-bottom: 20px;">Téléphone : 01 02 03 04 05</h2>

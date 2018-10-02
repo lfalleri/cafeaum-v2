@@ -79,7 +79,13 @@
                           display: true,
                           link: '/evenements',
                           displaySubItems: false,
-                          subitems : []},
+                          subitems : [{title: 'Calendrier',
+                                       link:'/evenements/calendrier',
+                                       subitems:[]},
+                                      {title: 'Expositions',
+                                       link:'/evenements/expositions',
+                                       subitems:[]},
+                                     ]},
                         { title : 'Mon compte',
                           display: true,
                           link: '/settings',
@@ -138,6 +144,10 @@
                                                                    link:'/yoga/professeurs',
                                                                    display :true,
                                                                    subitems:{}},
+                                                  'tarifs' : {title: 'Tarifs',
+                                                                   link:'/yoga/tarifs',
+                                                                   display :true,
+                                                                   subitems:{}},
                                                   'reservation':{title:'Réservation'},
                                                   'annulation':{title:'Annulation'},
                                                  }
@@ -159,12 +169,20 @@
                                                                    subitems:{}},*/}
                                        },
                        'evenements' :  {title : 'Evènements',
-                                        link: '/evenements',
+                                        link: '/evenements/calendrier',
                                         display : true,
                                         isIcon : false,
                                         displaySubItems: false,
                                         currentLocation : false,
-                                        subitems : {}
+                                        subitems : {'calendrier_evenements':{title: 'Calendrier',
+                                                                link:'/evenements/calendrier',
+                                                                display :true,
+                                                                subitems:{}
+                                                                },
+                                                    'expositions' : {title: 'Expositions',
+                                                                   link:'/evenements/expositions',
+                                                                   display :true,
+                                                                   subitems:{}},}
                                         },
                        'settings' :    {title : 'Mon compte',
                                          link: '/settings',
@@ -194,7 +212,7 @@
        var to_display = $scope.navBar[item];
        var keys = Object.keys($scope.navBar);
 
-       keys.forEach(function(key) { //loop through keys array
+       keys.forEach(function(key) { //loop through array keys
           var current = $scope.navBar[key];
           if(key == item){
              current.displaySubItems = !current.displaySubItems;
@@ -275,18 +293,17 @@
     activate();
 
     function activate() {
-
          if (Authentication.isStored()){
                $scope.navBar["logout"].display = true;
                var logout = $scope.itemList[$scope.itemList.length - 1];
                logout.display = true;
          }
 
-         var location = $location.path().split('/');
-         if(location.length > 2)
-            $scope.setCurrentLocation(location[1],location[2]);
+         var location = $location.path().split('/').slice(1);
+         if(location.length > 1)
+            $scope.setCurrentLocation(location[0],location[1]);
          else{
-            $scope.setCurrentLocation(location[1],undefined);
+            $scope.setCurrentLocation(location[0],undefined);
          }
 
          $scope.$watch(function() { return Authentication.isStored(); }, function (newValue) {
@@ -319,7 +336,7 @@
        var locations = {'restaurant': '/restaurant/carte',
                         'yoga' : '/yoga/calendrier',
                         'createurs': '/boutique/createurs',
-                        'expositions' : '/boutique/expositions',
+                        'expositions' : '/evenements/expositions',
                         'boutique' : '/boutique',
                         'evenements': '/evenements',
                         'settings' : '/settings',
@@ -328,7 +345,10 @@
                         'professeurs': '/yoga/professeurs',
                         'calendrier': '/yoga/calendrier',
                         'recharge': '/yoga/recharge',
-                        'reservation': '/restaurant/reservation'};
+                        'tarifs': '/yoga/tarifs',
+                        'reservation': '/restaurant/reservation',
+                        'calendrier_evenements': '/evenements/calendrier',
+                       };
        $location.url(locations[location]);
     }
 

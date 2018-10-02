@@ -17,7 +17,7 @@
   function SettingsController($location, $scope, Authentication, Layout, YogaService, $mdToast, $routeParams) {
     var vm = this;
     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    activate();
+
     $scope.account = Authentication.fullAccount;
     $scope.reservedLessonsForAccount = []; /* key : id/value : lesson */
     $scope.transactions = [];
@@ -32,6 +32,7 @@
                      showRecharge: false,
                    };
     $scope.loaded = false;
+    activate();
 
     function activate() {
        Authentication.getFullAccount(function(value){
@@ -40,14 +41,12 @@
              /* Non loggé -> /monespace */
              $location.url('/monespace');
           }else{
-
              if($routeParams.hasOwnProperty('recharge')){
                 Layout.setSideNavBarToRecharge();
              }else{
                 Layout.unsetSideNavBarToRecharge();
                 Authentication.settingsDisplay('profile');
              }
-
              $scope.updateProfileFields.first_name = $scope.account.first_name;
              $scope.updateProfileFields.last_name = $scope.account.last_name;
              $scope.updateProfileFields.email = $scope.account.email;

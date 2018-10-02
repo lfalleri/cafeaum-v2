@@ -16,6 +16,8 @@
 
      $scope.data = { montant_initial : 0,
                      montant_final : 0,
+                     credit: 0,
+                     selectedFormula: undefined,
                      formules: [],
                      reduction : 0,
                      transaction_submitted : false,
@@ -83,6 +85,7 @@
         console.log("Cancel Payment");
         $scope.data.montant_initial = 0;
         $scope.data.montant_final = 0;
+        $scope.data.credit = 0;
         $scope.data.reduction = 0;
         $scope.data.code_reduction = undefined;
         for (var k in $scope.state) {
@@ -94,7 +97,10 @@
      }
 
      $scope.changeFormule = function(){
-        $scope.data.montant_final = $scope.data.montant_initial * (100 - $scope.data.reduction)/100;
+        var selectedFormula = JSON.parse($scope.data.selectedFormula);
+        $scope.data.montant_initial = selectedFormula.montant;
+        $scope.data.montant_final = selectedFormula.montant * (100 - $scope.data.reduction)/100;
+        $scope.data.credit = selectedFormula.nb_cours;
         $scope.error = undefined;
      }
 
@@ -162,8 +168,9 @@
             $scope.state.step_payment_in_progress = true;
 
             YogaService.proceedTransaction(
-               $scope.account.id,
+               $scope.account,
                $scope.data.montant_final,
+               $scope.data.credit,
                $scope.token,
                function(success, message){
                   $scope.state.step_payment_in_progress = false;

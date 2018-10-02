@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import Lesson,\
                     Reservation,\
                     Professeur, \
+                    Tarif, \
                     Type,\
                     Intensite,\
                     Transaction, \
@@ -16,6 +17,7 @@ from authentication.models import Account
 from .serializers import LessonSerializer, \
                          ReservationSerializer, \
                          ProfesseurSerializer, \
+                         TarifSerializer, \
                          TypeSerializer, \
                          TransactionSerializer,\
                          FormuleSerializer,\
@@ -307,6 +309,13 @@ class ProfesseursView(views.APIView):
         return Response(serialized.data)
 
 
+class TarifsView(views.APIView):
+    def get(self, request, format=None):
+        queryset = Tarif.objects.all()
+        serialized = TarifSerializer(queryset, many=True)
+        return Response(serialized.data)
+
+
 class YogaTypesView(views.APIView):
     def get(self, request, format=None):
         queryset = Type.objects.all()
@@ -360,6 +369,7 @@ class TransactionView(views.APIView):
         data = json.loads(request.body)
         account_id = data['account_id']
         montant = data['montant']
+        credit = data['credit']
         token = data['token']
 
         stripe.api_key = "sk_test_ZgA3fIz8UXgmhZpwXg8Aej5V"
@@ -388,7 +398,7 @@ class TransactionView(views.APIView):
         transaction = Transaction.objects.create_transaction(account, montant, token)
         transaction.save()
 
-        account.credits += int(montant)
+        account.credits += int(credit)
         account.save()
 
         serialized = TransactionSerializer(transaction)

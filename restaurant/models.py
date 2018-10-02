@@ -59,9 +59,9 @@ class Plat(models.Model):
     carte = models.ForeignKey(Carte, default=DEFAULT_CARTE_ID, related_name="plats")
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     specificite = models.ForeignKey(Specificite, on_delete=models.CASCADE)
-    denomination = models.CharField(max_length=30)
+    denomination = models.CharField(max_length=128)
     ingredients = models.CharField(max_length=512)
-    prix = models.IntegerField()
+    prix = models.FloatField()
 
     def __unicode__(self):
         return ' | '.join([str(self.categorie), str(self.specificite), self.denomination, str(self.prix) + " €"])
@@ -74,7 +74,7 @@ class Brunch(models.Model):
     carte = models.ForeignKey(Carte, default=DEFAULT_CARTE_ID, related_name="brunchs")
     didascalie = models.CharField(max_length=512, null=True)
     titre = models.CharField(max_length=80, default="")
-    prix = models.IntegerField()
+    prix = models.FloatField()
 
     def __unicode__(self):
         return ' | '.join([str(self.titre), str(self.prix) + " €"])

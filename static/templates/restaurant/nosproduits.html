@@ -2,22 +2,14 @@
     <div class="cy-contour">
         <div class="cy-container">
             <div ng-include="'/static/templates/general/navbar.html'"></div>
-            <div class="main-container">
-                <div layout="column" hide-gt-sm>
-                    <md-button ng-click="selectNosProducteurs()" class="md-primary select-button">
-                        Nos producteurs
-                    </md-button>
-                    <md-button ng-click="selectNotreCharte()" class="md-primary select-button">
-                        Notre charte
-                    </md-button>
-                </div>
+            <div class="main-container" style="margin-top:150px;">
 
 
-                <div layout="column" class="conten-container" style="height:700px;margin-top:150px;" >
+                <div layout="column"> <!--class="conten-container" style="height:700px;margin-top:150px;"-->
                     <div layout="row" flex style="font-size:28px; width:100%;">
                         <div ng-include="'/static/templates/general/sidenav.html'"></div>
 
-                        <md-content flex layout-padding style="background-color:#fffdfa;font-size:20px;">
+                        <div flex layout-padding style="background-color:#fffdfa;font-size:20px;">
 
                             <div layout="column" flex="75" flex-offset="10" layout-align="top center">
 
@@ -41,29 +33,39 @@
                                     </p>
 
                                 </div>
-                                <div ng-if="showNotreCharte" style="width: 90%;" layout-align="top center">
+                                <div ng-if="showNotreCharte" style="width: 92%;margin-bottom:5%;" layout-align="top center">
                                     <h3 class="text-centered" style="margin-bottom:5%;color:#5D3B0A;"> Notre charte</h3>
                                     <p style=" color:#5D3B0A;">
-                                        Nous nous engageons à élaborer notre carte dans le respect des … ci-dessous : <br><br></p>
-                                    <ul>
-                                        <li><p style=" color:#5D3B0A;"> Utiliser des produits de saison<br></p></li>
-                                        <li><p style=" color:#5D3B0A;">  Nos produits serons autant que possible bio et locaux<br></p></li>
-                                        <li><p style=" color:#5D3B0A;"> Tout ce qu’on ne trouve pas en France, toujours bio. <br></p></li>
-
-                                    </ul>
-                                    <p style=" color:#5D3B0A;">
-                                        Les produits locaux, seront autant que possible bio, mais nous serons regardantes sur le goût,
-                                        et pourrons privilégier un producteur non bio, s’il est local, travaille de façon raisonnée
-                                        et propose des produits plus savoureux.<br><br>
+                                    Les plats que nous vous proposons sont élaborés dans le respect des engagements suivants : <br><br>
                                     </p>
+
                                     <ul>
-                                        <li><p style=" color:#5D3B0A;"> Toujours une option vegan, une option végétarienne<br></p></li>
-                                        <li><p style=" color:#5D3B0A;"> Nos salades seront toujours sans gluten<br></p></li>
+                                        <li><p style=" color:#5D3B0A;"> Utiliser des produits de saison.<br></p></li>
+                                        <li><p style=" color:#5D3B0A;"> Choisir nos produits de base minutieusement, pour toutes nos recettes :
+                                            <ul>
+                                                <li><p style=" color:#5D3B0A;">
+                                            Nous travaillons, en priorité, avec des produits locaux.<br>
+                                        </p>
+                                        </li>
+                                        <li><p style=" color:#5D3B0A;">
+                                            Les produits locaux, sont autant que possible issus d’une agriculture biologique.
+                                            Toutefois, étant regardantes sur le goût et la qualité,
+                                            nous pouvons privilégier un producteur local non bio,
+                                            s’il travaille de façon raisonnée et propose des produits plus savoureux.
+                                            <br></p></li>
+                                        <li><p style=" color:#5D3B0A;">
+                                            Les ingrédients non produits en France sont toujours issus d’une agriculture biologique et équitable.
+                                            <br><br>
+                                        </p>
+                                        </li>
+                                        </ul>
+                                        <li><p style=" color:#5D3B0A;"> Toujours une option vegan, une option végétarienne.<br></p></li>
+                                        <li><p style=" color:#5D3B0A;"> Nos salades seront toujours sans gluten.<br></p></li>
                                     </ul>
                                 </div>
                             </div>
                             <div flex></div>
-                        </md-content>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -45,8 +45,6 @@ class LoginView(views.APIView):
         password = data.get('password', None)
 
         account = authenticate(email=email, password=password)
-
-
         if account is not None:
             if account.is_active:
                 login(request, account)
@@ -238,9 +236,6 @@ class CheckPasswordView(views.APIView):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response({}, status=status.HTTP_200_OK)
-
-        f = open("test.txt", "a")
-        f.write("{ %s : %s }"%(account.first_name,password))
 
 
 class PasswordRecoveryView(views.APIView):

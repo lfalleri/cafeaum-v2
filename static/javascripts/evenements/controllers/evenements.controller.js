@@ -12,11 +12,12 @@
 
      activate();
      $scope.evenements = [];
-     $scope.avenir = [];
-     $scope.passes = [];
+     $scope.expos = [];
+     $scope.all_expos = [];
+
      $scope.event_to_show = undefined;
-     $scope.state = { showEvenementsAVenir : true,
-                      showEvenementsPasses : false,
+     $scope.state = { showExpoEnCours : true,
+                      showExpoPassees : false,
                       showDetails : false,
                     };
      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -24,25 +25,24 @@
      function activate() {
          EvenementsService.getAllEvenements(function(success, evenements){
             if(!success) return;
-
             $scope.evenements = evenements;
+         });
 
-            var now = new Date();
-            evenements.forEach(function(e){
-            var e_date = new Date(e.date);
-
-            e.locale_date = e_date.toLocaleDateString('fr-FR', options);
-               if( (e_date - now) <0){
-                  $scope.passes.push(e);
+         EvenementsService.getAllExpos(function(success, expos){
+            if(!success) return;
+            $scope.all_expos = expos;
+            expos.forEach(function(e){
+               if(e.en_cours){
+                  $scope.currentExposition = e;
                }else{
-                  $scope.avenir.push(e);
+                  $scope.expos.push(e);
                }
-            });
+            })
          });
 
          $scope.$watch(function() { return EvenementsService.getEvenementsDisplay(); }, function (newValue) {
-                 $scope.state.showEvenementsAVenir = newValue['a venir'];
-                 $scope.state.showEvenementsPasses = newValue['passes'];
+                 $scope.state.showExpoEnCours = newValue['en_cours'];
+                 $scope.state.showExpoPassees = newValue['passees'];
          }, true);
      }
 
@@ -55,6 +55,10 @@
         $scope.event_to_show = undefined;
         $scope.state.showDetails = false;
      }
+
+     $scope.$on("$destroy", function(){
+        EvenementsService.evenementsDisplay('en_cours');
+     });
 
   };
 

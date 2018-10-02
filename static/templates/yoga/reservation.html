@@ -73,8 +73,7 @@
                     <h4>{{ lesson.type.nom }} {{ lesson.intensity.nom }}</h4>
                     <h4>Animé par : {{ lesson.animator.prenom }} {{ lesson.animator.nom }}</h4>
                     <h4>{{ meta.day}} à {{meta.start}} (durée : {{meta.duration}} minutes)</h4>
-                    <h4 ng-if="nb_persons > 1">Inscription pour {{ nb_persons }} personnes</h4>
-                    <h4 ng-if="nb_persons==1">Inscription pour {{ nb_persons }} personne</h4>
+                    <h4 ng-if="nb_persons > 1">Inscription pour {{ nb_persons }} personne<span ng-if="nb_persons > 1">s</span></h4>
                     <div style="margin: 5% auto auto auto;" layout="column" flex="60">
                         <md-button
                                 style="max-width: 30%; margin:auto auto 5% auto;"

@@ -19,6 +19,10 @@
       $scope.showNotreCharte = false;
 
       function activate() {
+
+         RestaurantService.getCarte().then(function(value){});
+
+
          Authentication.getFullAccount(function(value){
             Authentication.fullAccount = value;
             $scope.account = value;
@@ -40,6 +44,10 @@
          $scope.showNosProducteurs = false;
          $scope.showNotreCharte = true;
       }
+
+      $scope.$on("$destroy", function(){
+        RestaurantService.displayText('nosproducteurs');
+      });
   };
 
 

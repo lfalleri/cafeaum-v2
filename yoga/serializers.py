@@ -3,7 +3,7 @@ from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 
 from authentication.serializers import AccountSerializer
-from .models import Lesson, Reservation, Type, Intensite, Professeur, UploadedImage, Transaction, Formule,CodeReduction
+from .models import Lesson, Reservation, Type, Intensite, Tarif, Professeur, UploadedImage, Transaction, Formule,CodeReduction
 
 
 class UploadedImageSerializer(serializers.ModelSerializer):
@@ -17,6 +17,13 @@ class ProfesseurSerializer(serializers.ModelSerializer):
         model = Professeur
         fields = ('id', 'nom', 'prenom', 'lien', 'description',
                   'photo')
+
+
+class TarifSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tarif
+        fields = ('id', 'description', 'nb_cours', 'prix')
+
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:

@@ -26,100 +26,100 @@
             Voir mon historique de transaction
           </md-button>
         </div>
-        <div layout="column" style="height: 600px; margin-top:55px;" ng-cloak>
+        <div layout="column" style="margin-top:55px;" ng-cloak>
           <div layout="row" flex style="font-size:25px;">
             <div ng-include="'/static/templates/general/sidenav.html'"></div>
 
-            <md-content flex layout-padding style="background-color:#fffdfa;">
+            <div flex layout-padding style="background-color:#fffdfa;">
 
-              <div layout="column" layout-align="top center">
+              <div layout="column" layout-align="top center" flex="60"
+                         flex-offset="20">
 
                 <div ng-if="state.showUpdateProfile" style="width: 50%;" layout-align="top center">
                   <h3 class="text-centered"> Votre profil :</h3>
                   <form  role="form" class="update-account-form" ng-submit="updateProfile()">
-                    <div  class="alert alert-danger" ng-show="error" ng-bind="error"/>
+                    <div style="color:red;" class="alert alert-danger" ng-show="error" ng-bind="error"/>
                     <div  class="alert alert-success" ng-show="success" ng-bind="success"/>
-                    <div class="form-group settings-form">
-                      <label for="settings_nom">Nom *</label>
-                      <input name="nom"
-                             type="text"
-                             class="form-control"
-                             id="settings_nom"
-                             ng-model="updateProfileFields.first_name"
-                             ng-required="1"
-                             placeholder="Nom *"
-                             validate-on="submit"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
 
-                    </div>
-                    <div class="form-group settings-form">
-                      <label for="settings_prenom">Prénom *</label>
-                      <input name="prenom"
+                    <div class="form-group">
+                      <label class="quicksand-md" for="settings_nom">Nom</label>
+                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                             id="settings_nom"
+                             name="nom"
                              type="text"
                              class="form-control"
-                             id="settings_prenom"
                              ng-model="updateProfileFields.last_name"
                              ng-required="1"
-                             placeholder="Prénom *"
-                             validate-on="submit"
                              oninvalid="this.setCustomValidity('Champ obligatoire')"
                              oninput="setCustomValidity('')"
                              ng-change="changeForm()"/>
                     </div>
-                    <div class="form-group settings-form">
-                      <label for="settings_email">Email *</label>
-                      <input name="email"
+                    <div class="form-group">
+                      <label class="quicksand-md" for="settings_prenom">Prénom</label>
+                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                             id="settings_prenom"
+                             name="prenom"
+                             type="text"
+                             class="form-control"
+                             ng-model="updateProfileFields.first_name"
+                             ng-required="1"
+                             oninvalid="this.setCustomValidity('Champ obligatoire')"
+                             oninput="setCustomValidity('')"
+                             ng-change="changeForm()"/>
+                    </div>
+                    <div class="form-group">
+                      <label class="quicksand-md" for="settings_email">Email</label>
+                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                             id="settings_email"
+                             name="email"
                              type="email"
                              class="form-control"
-                             id="settings_email"
                              ng-model="updateProfileFields.email"
                              ng-required="1"
-                             placeholder="Email *"
                              oninvalid="this.setCustomValidity('Champ obligatoire')"
                              oninput="setCustomValidity('')"
                              ng-change="changeForm()"/>
                     </div>
-                    <div class="form-group settings-form">
-                      <label for="settings_password1">Ancien mot de passe</label>
-                      <input name="pwd1"
+                    <div class="form-group">
+                      <label class="quicksand-md" for="settings_old_password">Ancien mot de passe</label>
+                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                             id="settings_old_password"
+                             name="pwd1"
                              type="password"
                              class="form-control"
-                             id="settings_old_password"
                              ng-model="updateProfileFields.old_password"
                              ng-required="1"
-                             placeholder="Ancien mot de passe *"
                              oninvalid="this.setCustomValidity('Champ obligatoire')"
                              oninput="setCustomValidity('')"
                              ng-change="changeForm()"/>
                     </div>
-                    <div class="form-group settings-form">
-                      <label for="settings_password1">Nouveau mot de passe</label>
-                      <input name="pwd1"
+                    <div class="form-group">
+                      <label class="quicksand-md" for="settings_password1">Nouveau mot de passe</label>
+                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                             id="settings_password1"
+                             name="pwd1"
                              type="password"
                              class="form-control"
-                             id="settings_password1"
                              ng-model="updateProfileFields.password"
                              ng-required="1"
-                             placeholder="Nouveau mot de passe *"
                              oninvalid="this.setCustomValidity('Champ obligatoire')"
                              oninput="setCustomValidity('')"
                              ng-change="changeForm()"/>
                     </div>
-                    <div class="form-group settings-form">
-                      <label for="settings_password2">Confirmer votre mot de passe</label>
-                      <input name="pwd2"
+                    <div class="form-group">
+                      <label class="quicksand-md" for="settings_password2">Confirmer votre mot de passe</label>
+                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                             id="settings_password2"
+                             name="pwd2"
                              type="password"
                              class="form-control"
-                             id="settings_password2"
                              ng-model="updateProfileFields.confirmation_password"
                              ng-required="1"
-                             placeholder="Confirmer votre mot de passe *"
                              oninvalid="this.setCustomValidity('Champ obligatoire')"
                              oninput="setCustomValidity('')"
                              ng-change="changeForm()"/>
                     </div>
+
                     <div class="form-group" layout="column"
                          layout-align="top center"
                          style="margin-top:15px;">
@@ -195,15 +195,17 @@
                     <h4 ng-if="state.step_code_reduction" class="text-centered">2/ Je rentre mon code de réduction :</h4>
                     <h4 ng-if="state.step_payment_summary" class="text-centered">3/ Mon résumé de transaction :</h4>
                     <h4 ng-if="state.step_card_info" class="text-centered">4/ Mes informations de paiement : </h4>
-                    <h4 ng-if="error && !state.step_payment_error" class="text-centered transaction-step-error">{{error}}</h4>
+                    <!--<h4 ng-if="error && !state.step_payment_error" class="text-centered transaction-step-error">{{error}}</h4>-->
+
+                    <div style="color: red; margin: auto; width: 80%;" class="alert alert-danger" ng-show="error && !state.step_payment_error" ng-bind="error"></div>
 
                     <section ng-if="state.step_formule" style="width:100%;" layout="column" flex layout-align="space-between center">
-                      <div class="text-container transaction-step" style="padding:0 10%;">
-                        <md-radio-group class="formule-container" ng-model="data.montant_initial" ng-change="changeFormule()">
+                      <div class="text-container transaction-step">
+                        <md-radio-group class="formule-container" ng-model="data.selectedFormula" ng-change="changeFormule()">
                           <div class="row formule" style="margin-bottom:40px;" ng-repeat="formule in data.formules" ng-class="{'last-formule':$last}">
                             <md-radio-button
                                     aria-label="Choix de la formule"
-                                    value="{{formule.montant}}"
+                                    value="{{formule}}"
                                     class="md-primary">
                             </md-radio-button>
                             <div class="formule-details">
@@ -231,17 +233,19 @@
                             style="margin-bottom : 1%; color: green;"
                             class="text-centered"> Votre réduction : {{ data.reduction }} % !!</h4>
 
-                        <md-input-container style="width:20%; margin:auto;" class="md-block">Code de Réduction
-                          <label></label>
-                          <input style="border : 1px solid #3f3f3f;"
+                        <div style="width:100%; margin:auto auto 30px auto;" layout="column">
+
+                          <label class="quicksand-md text-centered" for="code_de_reduction" style="width:100%;margin:auto;">Code de Réduction</label>
+                          <input style="border : 1px solid #3f3f3f;width:30%;margin:auto;"
                                  md-no-asterisk
+                                 id="code_de_reduction"
                                  name="reduction"
                                  ng-model="data.code_reduction"
                                  aria-label="Code de Réduction"
-                                 ng-change="tryReductionCode(data.code_reduction)">
+                                 ng-change="tryReductionCode(data.code_reduction)"/>
                           <div ng-messages="data.$error">
                           </div>
-                        </md-input-container>
+                        </div>
                       </div>
                       <div layout="column" layout-align="center center" flex="80">
                         <div layout layout-align="space-between center">
@@ -298,7 +302,7 @@
 
                     <section ng-if="state.step_card_info"
                              class="text-container transaction-step"
-                             style="margin-bottom:15%;width:100%;"
+                             style="margin-top: 20px;margin-bottom:15%;width:100%;"
                              layout="column" flex
                              layout-align="space-between center">
                       <div class="text-container transaction-step" style="padding:0 10%;"><!-- class="col-md-4 col-md-offset-4" style="margin:auto;">-->
@@ -381,134 +385,12 @@
                              style="margin-bottom: 20%;;width:100%;"
                              layout="column" flex
                              layout-align="space-between center">
-
-                      <h4 class="text-centered transaction-step-error" style="margin-bottom: 150px;">{{ error }}  </h4>
+                      <div style="color:red;" class="alert alert-danger" ng-show="error" ng-bind="error"></div>
+                      <!--<h4 class="text-centered transaction-step-error" style="margin-bottom: 150px;">{{ error }}  </h4>-->
                       <md-button ng-click="gotoCalendar()"
                                  class="md-primary md-raised cy-button">
                         Retour
                       </md-button>
-                    </section>
-
-                    <section ng-if="false" class="text-container" style="margin-top : 0%;">
-                      <div  class="row">
-                        <div ng-if="!data.transaction_submitted" class="col-md-4">
-                          <h4  class="text-centered"> Choisissez votre formule : </h4>
-                          <md-radio-group class="formule-container" ng-model="data.montant_initial" ng-change="changeFormule()">
-                            <md-radio-button ng-repeat="formule in data.formules"
-                                             value="{{formule.montant}}"
-                                             class="md-primary">
-                              <div class="formule">
-                                <h3> Formule {{formule.nb_cours}} Cours :</h3>
-                                <h3> {{formule.montant}} € </h3>
-                              </div>
-                            </md-radio-button>
-                          </md-radio-group>
-
-                          <md-input-container style="max-width:50%;" class="md-block">Code de Réduction
-                            <input style="border : 1px solid #3f3f3f;"
-                                   md-no-asterisk
-                                   name="reduction"
-                                   ng-model="data.code_reduction"
-                                   aria-label="Code de Réduction"
-                                   ng-change="tryReductionCode(data.code_reduction)">
-                            <div ng-messages="data.$error">
-                            </div>
-                          </md-input-container>
-
-                          <div ng-if="data.montant_initial !== data.montant_final">
-                            <h4>Montant : <span class="radioValue">{{ data.montant_initial }} €</span> </h4>
-                            <h4>Réduction : <span class="radioValue">{{ data.reduction }} % </span> </h4>
-                            <h4>Montant final: <span class="radioValue">{{ data.montant_final }} €</span> </h4>
-                          </div>
-                          <div ng-if="data.montant_initial === data.montant_final">
-                            <h4>Montant : <span class="radioValue">{{ data.montant_initial }} €</span> </h4>
-                          </div>
-                          <h4 ng-if="success" style="border:1px solid green; color:green;">{{ success}}  </h4>
-                        </div>
-
-                        <md-content class="md-padding card-container" layout-xs="column" layout="row">
-                          <div class="" flex-xs flex-gt-xs="50" layout="column">
-                            <md-card>
-                              <md-card-title>
-                                <md-card-title-text style="width:100%;" fxLayout  fxLayoutAlign="space-between stretch">
-                                  <span style="width:100%;" class="md-headline">Informations de carte</span>
-                                </md-card-title-text>
-                                <md-card-title-media>
-                                  <div class="md-media-lg card-media"></div>
-                                </md-card-title-media>
-                              </md-card-title>
-                              <md-card-content>
-                                <h4 style="margin-top:10%"> Test ===> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999</h4>
-                                <form class="flexible-col" stripe-form="stripeCallback">
-                                  <div ng-if="checkoutForm.card.$invalid">Error: invalid card number!</div>
-                                  <md-input-container>
-                                    <input class="input-form"
-                                           ng-model="number"
-                                           placeholder="N° de carte"
-                                           payments-format="card"
-                                           payments-validate="card" />
-                                  </md-input-container>
-                                  <md-input-container>
-                                    <input class="input-form"
-                                           ng-model="expiry"
-                                           placeholder="Date d'expiration"
-                                           payments-format="expiry"
-                                           payments-validate="expiry" />
-                                  </md-input-container>
-                                  <md-input-container>
-                                    <input class="input-form"
-                                           ng-model="cvc"
-                                           placeholder="CVC"
-                                           payments-format="cvc"
-                                           payments-validate="cvc" />
-                                  </md-input-container>
-                                  <md-card-actions layout="row" layout-align="end center">
-                                    <md-button type="submit">Procéder</md-button>
-                                  </md-card-actions>
-                                  <md-button type="submit">Submit</md-button>
-                                </form>
-                              </md-card-content>
-                              <md-card-actions layout="row" layout-align="end center">
-                                <md-button type="submit">Procéder</md-button>
-                              </md-card-actions>
-                            </md-card>
-                          </div>
-                        </md-content>
-
-
-
-                        <div  class="col-md-4 col-md-offset-4" style="margin-left:20%;">
-
-                          <!-- Test ==> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999 -->
-                          <h4 style="margin-top:10%"> Test ===> Card Number : 4242-4242-4242-4242   / Expiry : 12/18 / CVC : 999</h4>
-                          <form class="flexible-col" stripe-form="stripeCallback">
-                            <div ng-if="checkoutForm.card.$invalid">Error: invalid card number!</div>
-                            <input class="input-form"
-                                   ng-model="number"
-                                   placeholder="Card Number"
-                                   payments-format="card"
-                                   payments-validate="card" />
-                            <input class="input-form"
-                                   ng-model="expiry"
-                                   placeholder="Expiration"
-                                   payments-format="expiry"
-                                   payments-validate="expiry" />
-                            <input class="input-form"
-                                   ng-model="cvc"
-                                   placeholder="CVC"
-                                   payments-format="cvc"
-                                   payments-validate="cvc" />
-                            <button type="submit">Submit</button>
-                          </form>
-                        </div>
-                      </div>
-                    </section>
-                    <section ng-if="false"  style="margin-top : 10%; margin-bottom:30%;" class="text-container">
-                      <h4 ng-if="!data.transaction_successful"  class="text-centered" style="margin-bottom : 5%; background-color:red;">Transaction en cours</h4>
-                      <div layout="row" layout-sm="column" layout-align="space-around">
-                        <md-progress-circular ng-disabled="data.transaction_successful" md-mode="indeterminate"></md-progress-circular>
-                      </div>
-                      <h4 class="text-centered" ng-if="success" style="max-width:25%; border:1px solid green; color:green; margin:auto;">{{ success}}  </h4>
                     </section>
                   </div>
                 </div>
@@ -516,7 +398,7 @@
 
               </div>
               <div flex></div>
-            </md-content>
+            </div>
           </div>
         </div>
       </div>

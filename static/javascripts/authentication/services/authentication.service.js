@@ -9,13 +9,13 @@
     .module('cafeyoga.authentication.services')
     .factory('Authentication', Authentication);
 
-  Authentication.$inject = ['$cookies', '$http', '$rootScope','$location', 'MessagingService'];
+  Authentication.$inject = ['$cookies', '$http', '$rootScope', '$location', '$timeout','MessagingService'];
 
   /**
   * @namespace Authentication
   * @returns {Factory}
   */
-  function Authentication($cookies, $http, $rootScope, $location, MessagingService) {
+  function Authentication($cookies, $http, $rootScope, $location, $timeout, MessagingService) {
     /**
     * @name Authentication
     * @desc The Factory to be returned
@@ -33,6 +33,7 @@
       crediteProfile: crediteProfile,
       setAuthenticatedAccount: setAuthenticatedAccount,
       unauthenticate: unauthenticate,
+      requestFullAccount: requestFullAccount,
       getFullAccount: getFullAccount,
       isStaff: isStaff,
       fullAccount : {},
@@ -170,7 +171,10 @@
         * @desc Log "Epic failure!" to the console
         */
        function logoutErrorFn(data, status, headers, config) {
-         console.error('Logout failure!');
+          Authentication.unauthenticate();
+          Authentication.fullAccount = {};
+          window.localStorage.removeItem('fullAccount');
+          console.error('Logout failure!');
        }
     }
 
@@ -333,39 +337,52 @@
           email: email
        }).then(function(data, status, headers, config){
           Authentication.fullAccount = data.data;
+          window.localStorage.setItem('fullAccount', JSON.stringify(Authentication.fullAccount));
           callback(data.data);
           return Authentication.fullAccount;
        }, function(data, status, headers, config) {
-
        });
     }
 
     function getFullAccount(callback) {
+       var timer = $timeout(function(){
+           Authentication.fullAccount = {};
+           delete $cookies.authenticatedAccount;
+           window.localStorage.removeItem('fullAccount');
+           $timeout.cancel(timer);
+       }, 3000);
        if(!angular.equals(Authentication.fullAccount,{})){
-          return requestFullAccount(Authentication.fullAccount.email,callback );
-         // callback(Authentication.fullAccount);
-         // return Authentication.fullAccount;
+          $timeout.cancel(timer);
+          callback(Authentication.fullAccount);
+          return;
        }
        var storageUser = window.localStorage.getItem('fullAccount');
        if(storageUser){
+          $timeout.cancel(timer);
           Authentication.fullAccount = JSON.parse(storageUser);
-          return requestFullAccount(Authentication.fullAccount.email,callback );
-          //callback(Authentication.fullAccount);
-         // return Authentication.fullAccount;
+          callback(Authentication.fullAccount);
+          return;
        }
        var account =  Authentication.getAuthenticatedAccount();
        if( !account )
        {
           callback({});
+          $timeout.cancel(timer);
           return {};
        }
        return $http.post('/api/v1/auth/fullaccount/', {
           email: account.email
        }).then(function(data, status, headers, config){
+          $timeout.cancel(timer);
           Authentication.fullAccount = data.data;
           callback(data.data);
           return Authentication.fullAccount;
        }, function(data, status, headers, config) {
+           $timeout.cancel(timer);
+           Authentication.fullAccount = {};
+           delete $cookies.authenticatedAccount;
+           window.localStorage.removeItem('fullAccount');
+           callback({});
        });
     }
 

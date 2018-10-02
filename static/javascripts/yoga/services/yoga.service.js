@@ -9,13 +9,13 @@
     .module('cafeyoga.yoga.services')
     .factory('YogaService', YogaService);
 
-  YogaService.$inject = ['$http','$q', '$location'];
+  YogaService.$inject = ['$http','$q', '$location', 'Authentication'];
 
   /**
   * @namespace Reservations
   * @returns {Factory}
   */
-  function YogaService($http, $q, $location) {
+  function YogaService($http, $q, $location, Authentication) {
     /**
     * @name Reservations
     * @desc The Factory to be returned
@@ -66,6 +66,9 @@
        /* Animators API */
        getAllAnimators: getAllAnimators,
 
+       /* Tarifs API */
+       getAllTarifs: getAllTarifs,
+
        /* Transactions API */
        getAllFormulas : getAllFormulas,
        tryReductionCode : tryReductionCode,
@@ -82,6 +85,11 @@
        calendar : {start:"", end:"", now:new Date()},
        setCalendarDates: setCalendarDates,
        getCalendarDates: getCalendarDates,
+
+       /* Selected lesson */
+       selectedLesson : undefined,
+       setSelectedLesson: setSelectedLesson,
+       getSelectedLesson: getSelectedLesson,
     }
 
     return YogaService;
@@ -118,7 +126,6 @@
     }
 
     function getLessonsBetweenDates(type, from, to, callback){
-        console.log("yoga_type :", type);
         return $http.get('api/v1/yoga/lessons/',{
              params: { yoga_type:type, from:from, to: to}}
         ).then(
@@ -307,16 +314,6 @@
        });
     }
 
-  /*  function storeAnonymousPreReservation(lesson){
-       YogaService.anonymousPreReservation = lesson;
-    }
-
-    function getAnonymousPreReservation(){
-       var lesson = YogaService.anonymousPreReservation;
-       YogaService.anonymousPreReservation = undefined;
-       return lesson;
-    }*/
-
     /*************************************
      *   Confirmed reservations API      *
      *************************************/
@@ -349,6 +346,8 @@
                          start.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
                           + " " +start.getHours() + ":"+(start.getMinutes() < 10 ? '0' : '')+start.getMinutes(),
                          lesson.duration + " minutes"];
+          // Update account
+          Authentication.requestFullAccount(account.email, function(){});
           callback(true, message, data.data.id);
       },function(data, status, headers, config){
           callback(false, ["Une erreur est survenue lors de la réservation"], 0);
@@ -432,6 +431,7 @@
                          start.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
                           + " " +start.getHours() + ":"+(start.getMinutes() < 10 ? '0' : '')+start.getMinutes(),
                          lesson.duration + " minutes"];
+          Authentication.requestFullAccount(account.email, function(){});
           callback(true,message);
       },function(data, status, headers, config){
           callback(false,["Une erreur est survenue lors de l'annulation"]);
@@ -552,6 +552,18 @@
      }
 
      /**********************
+      *   Tarif API     *
+      **********************/
+     function getAllTarifs(callback){
+        return $http.get('api/v1/yoga/tarifs/').then(
+          function(data, status, headers, config){
+            callback(true, data.data);
+        },function(data, status, headers, config){
+            callback(false, []);
+        });
+     }
+
+     /**********************
       * Transactions API   *
       **********************/
      function getAllFormulas(callback){
@@ -574,13 +586,15 @@
         });
      }
 
-     function proceedTransaction(account_id, montant, token, callback){
+     function proceedTransaction(account, montant, credit, token, callback){
         return $http.post('api/v1/yoga/transaction/', {
-            account_id: account_id,
+            account_id: account.id,
             montant: montant,
+            credit: credit,
             token : token
         }).then(
            function(data, status, headers, config){
+              Authentication.requestFullAccount(account.email, function(){});
               callback(true, []);
            },
            function(data, status, headers, config){
@@ -612,6 +626,13 @@
      function getCalendarDates(){
         return YogaService.calendar;
      }
+
+      /**********************
+      * Selected lesson     *
+      **********************/
+      function setSelectedLesson(lesson){ YogaService.selectedLesson = lesson;}
+
+      function getSelectedLesson(){ return YogaService.selectedLesson;}
   }
 })();
 

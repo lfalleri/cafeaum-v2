@@ -174,8 +174,10 @@ table a:hover md-icon{
 
 .formule{
   margin : 2% 0 2% 0;
+  width:90%;
   padding: 2%;
   border: 1px solid #9a9ca0;
+  border-radius:2px;
   min-width : 100%;
   width : 100%;
 }
@@ -197,7 +199,7 @@ table a:hover md-icon{
    padding: 2%;
    position : relative;
    min-height : 50%;
-   min-width : 80%;
+   width : 100%;
 }
 
 .transaction-step-error{
@@ -237,3 +239,17 @@ table a:hover md-icon{
    border-width: medium;
 }
 
+.tarif{
+   position: relative;
+   z-index:1;
+}
+
+.tarif:after{
+    content: '';
+    width: 80%;
+    border-bottom: dotted 1px #5D3B0A;
+    position: absolute;
+    top: 60px;
+    left : 10%;
+    z-index:0;
+}

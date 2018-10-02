@@ -54,7 +54,7 @@
              selectedAccount:undefined,
           }
      };
-     $scope.yoga = {selected_type:"Tous", types:["Tous"]};
+     $scope.yoga = {selected_type:"Tous", types:["Tous"], loading_lessons:false};
      $scope.datepicker = { display: true,
                            display_buttons : false,
                            today : new Date(),
@@ -67,28 +67,29 @@
 
      /* Fonction appelé une fois qu'on a récupéré les lessons d'une semaine donnée, rajoute ces lessons dans le calendrier */
      function prepare_lessons(lessons){
+           $scope.yoga.loading_lessons = false;
         /* Une fois que le promise est résolu, on parcourt chaque lesson pour le rajouter dans vm.events */
            var now = new Date();
            var diff_min = Number.MAX_SAFE_INTEGER;
            var closest_lesson = undefined;
-
+           var selectedLesson = YogaService.getSelectedLesson();
            while($scope.events.length > 0) {
               $scope.events.pop();
            }
 
            lessons.forEach(function (lesson) {
-               //lesson.type = lesson.type.nom;
-               //lesson.intensity = lesson.intensity.nom;
                lesson.reservedByAccount = false;
                lesson.cancelable = false;
                lesson.reservable = true;
+
+               /* Tag lesson as reserved by account */
                if($scope.reservedLessonIdForAccount.includes(lesson.id)){
                   lesson.reservedByAccount = true;
                   lesson.cancelable = true;
                   lesson.reservable = false;
                }
 
-               /* ui-calendar events */
+               /* ui-calendar events : will be added to list of events to display */
                var new_event = {};
                new_event.start = moment(lesson.date).toDate();
                new_event.end = moment(lesson.date).add(lesson.duration, 'm').toDate();
@@ -126,10 +127,16 @@
                      reservedLesson.id = lesson.id;
                      $scope.reservedLessons.push(reservedLesson);
 
-                     if ((new_event.start - now) < diff_min){
+                     /* If (there is no previously selected event AND the current lesson is the next in the future)
+                        OR (this is the previously selected event )
+                        */
+                     if( (!selectedLesson && ((new_event.start - now) < diff_min)) ||
+                         ( selectedLesson && (lesson.id == selectedLesson.id ))  ){
                            diff_min = new_event.start - now;
-                           closest_lesson = new_event;
                            $scope.previous_event = new_event;
+                           $scope.previous_selected_background_color = EVENT_COLOR.reservable;
+                           closest_lesson = new_event;
+                           YogaService.setSelectedLesson(undefined);
                      }
                   }else{
                      /* Lesson not reserved by user; it's either Reservable or Complete */
@@ -141,7 +148,11 @@
                         new_event.backgroundColor = EVENT_COLOR.reservable;
                         new_event.textColor = "#3e4826";
                         lesson.reservable = true;
-                        if ((new_event.start - now) < diff_min){
+                        /* If (there is no previously selected event AND the current lesson is the next in the future)
+                           OR (this is the previously selected event )
+                        */
+                        if( (!selectedLesson && ((new_event.start - now) < diff_min)) ||
+                            ( selectedLesson && (lesson.id == selectedLesson.id ))  ){
                            diff_min = new_event.start - now;
                            closest_lesson = new_event;
                            new_event.borderColor = "#3e4826";
@@ -149,6 +160,7 @@
                            new_event.textColor = "#3e4826";
                            $scope.previous_event = new_event;
                            $scope.previous_selected_background_color = EVENT_COLOR.reservable;
+                           YogaService.setSelectedLesson(undefined);
                         }
                      }else{
                         lesson.display_title = "Cours sélectionné (Complet):";
@@ -157,7 +169,11 @@
                         new_event.backgroundColor = "#f8e4c8";
                         lesson.reservable = false;
                         lesson.full = true;
-                        if ((new_event.start - now) < diff_min){
+                        /* If (there is no previously selected event AND the current lesson is the next in the future)
+                           OR (this is the previously selected event )
+                        */
+                        if( (!selectedLesson && ((new_event.start - now) < diff_min)) ||
+                            ( selectedLesson && (lesson.id == selectedLesson.id ))  ){
                            diff_min = new_event.start - now;
                            closest_lesson = new_event;
                            new_event.borderColor = "#3e4826";
@@ -165,7 +181,7 @@
                            new_event.textColor = "#3e4826";
                            $scope.previous_event = new_event;
                            $scope.previous_selected_background_color = EVENT_COLOR.complete;
-
+                           YogaService.setSelectedLesson(undefined);
                         }
                      }
                   }
@@ -187,6 +203,7 @@
 
                /* Add newly built event to calendar events list */
                $scope.events.push(new_event);
+               $scope.yoga.loading_lessons = false;
 
                /* For datepicker only */
                var day = new_event.meta.day;
@@ -196,7 +213,7 @@
                   }
                   $scope.days_with_lessons[day].push(Object.assign({}, new_event.meta));
                }
-            });
+           });
 
            if(closest_lesson){
                /* Display information about closest next lesson */
@@ -256,6 +273,7 @@
             }
 
             $scope.loaded = true;
+            $scope.yoga.loading_lessons = true;
             if(angular.equals($scope.account,{})){
                /* If not logged in, just get all the lessons */
                YogaService.getLessonsBetweenDates(
@@ -307,8 +325,8 @@
             timezone:'Europe/Paris',
             allDaySlot: false,
             defaultView: 'agendaWeek',
-            height: 500,
-            contentHeight: 530,
+            height: 600,
+            contentHeight: 566,
             firstDay: 1,
             defaultDate: moment(calendar.now),
             handleWindowResize:true,
@@ -337,7 +355,7 @@
             titleRangeSeparator: ' au ',
             hiddenDays: [  1, 2 ],
             aspectRatio: 1,
-            height: 400,
+            height: 450,
             header:{
               left: ' ',
               center: 'title',
@@ -443,6 +461,8 @@
                    first_loaded = false;
                    return;
                 }
+
+                $scope.yoga.loading_lessons = true;
                 calendar.start = start;
                 calendar.end = end;
                 calendar.now = start;
@@ -460,6 +480,7 @@
 
 
      $scope.yogaTypeUpdated = function(){
+        $scope.yoga.loading_lessons = true;
         YogaService.getLessonsBetweenDates(
            $scope.yoga.selected_type,
            moment(calendar.start).format('YYYY-MM-DD HH:mm'),
@@ -530,6 +551,7 @@
 
      /* Function called when the recredite button is clicked by user */
      $scope.recrediteAccount = function(account){
+        YogaService.setSelectedLesson($scope.lesson);
         $location.url('/settings?recharge=true');
      }
 

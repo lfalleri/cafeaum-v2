@@ -17,12 +17,9 @@
   function ContactController($scope, Authentication, MessagingService) {
     var vm = this;
 
-    $scope.questions = ["Réserver une table", "Contacter notre équipe"];
-    $scope.button_text = ["Réserver", "Envoyer"];
-    $scope.submit_button = "Réserver";
+    $scope.submit_button = "Envoyer";
     $scope.sendingMessage = false;
     $scope.success = undefined;
-    $scope.selectedQuestion = $scope.questions[0];
 
     $scope.initialize = function() {
        var loc = {lat: 48.822224, lng:2.266625};
@@ -49,21 +46,11 @@
         $scope.initialize();
     });
 
-    $scope.changeQuestion = function(){
-       $scope.success = undefined;
-       $scope.questions.forEach(function(question, i){
-          if(question === $scope.selectedQuestion){
-             $scope.submit_button = $scope.button_text[i];
-          }
-       });
-    }
-
     $scope.changeForm = function(){
        $scope.success = undefined;
     }
 
     $scope.sendMessage = function(){
-
        $scope.sendingMessage = true;
        $scope.success = undefined;
        $scope.error = undefined;
@@ -75,7 +62,6 @@
        console.log("Try to send mail from contact page");
 
        MessagingService.sendEmailFromContactPage(
-          $scope.selectedQuestion,
           $scope.contact_nom,
           $scope.contact_email,
           $scope.contact_tel,

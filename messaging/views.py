@@ -17,9 +17,11 @@ def getApiKey():
     key = SendgridApiKey.objects.get(id=1)
     return key
 
+
 def getEmails():
     emails = StaffEmail.objects.get(id=1)
     return emails
+
 
 def send_email(from_email, to_email, content, subject):
     sg = sendgrid.SendGridAPIClient(apikey=getApiKey())
@@ -437,7 +439,7 @@ class YogaCancellationToStaffEmailView(views.APIView):
              lesson_duration)
 
         return send_email(staff_email.noreply(),
-                          account.get_email(),
+                          staff_email.contact(),
                           message_content,
                           subject)
 
@@ -528,7 +530,7 @@ class RestaurantReservationToCustomerEmailView(views.APIView):
             </head>
             <p style="font-family : Montserrat;font-size:130%%;">
 
-               Bonjour %s,<br><br>
+               Cher client,<br><br>
 
                Votre demande de réservation au restaurant de Café Aum a bien été prise en compte :<br>
                    Numéro de réservation : %s<br>
@@ -547,8 +549,7 @@ class RestaurantReservationToCustomerEmailView(views.APIView):
                <br>
             </p>
             </html>
-        """%(personal_information["name"],
-             reservation_information["reservation_id"],
+        """%(reservation_information["reservation_id"],
              reservation_information["human_date"],
              reservation_information["hour"],
              reservation_information["nb_persons"],
@@ -582,40 +583,14 @@ class ContactEmailView(views.APIView):
     def post(self, request, format=None):
         data = json.loads(request.body)
 
-        type = data['type']
         name = data['name']
         email = data['email']
         tel = data['tel']
         message = data['message']
 
         staff_email = getEmails()
-
-        if type == "Réserver une table":
-            subject = "Réservation de table"
-            message_content = """
-            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-            <html>
-            <head>
-            <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-            <title>Demande de contact 2</title>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-            </head>
-            <p style="font-family : Montserrat;font-size:130%%;">
-               CafeAum,<br>
-               %s (email : %s / tel : %s) souhaite réserver une table. Son message :<br>
-
-               "%s"
-               <br><br>
-
-               Merci de lui répondre dans les meilleurs délais.
-
-               <br>
-            </p>
-            </html>
-            """%(name, email, tel, '<br>'.join(message.splitlines()))
-        else:
-            subject = "Demande de contact"
-            message_content = """
+        subject = "Demande de contact"
+        message_content = """
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html>
             <head>
@@ -635,7 +610,7 @@ class ContactEmailView(views.APIView):
                <br>
             </p>
             </html>
-            """%(name, email, tel, '<br>'.join(message.splitlines()))
+        """%(name, email, tel, '<br>'.join(message.splitlines()))
 
         sg = sendgrid.SendGridAPIClient(apikey=getApiKey())
 

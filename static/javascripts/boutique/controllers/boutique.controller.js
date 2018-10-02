@@ -27,24 +27,6 @@
 
             $scope.createurs = createurs;
          });
-
-         BoutiqueService.getAllExpos(function(success, expos){
-            if(!success) return;
-
-            $scope.all_expos = expos;
-            expos.forEach(function(e){
-               if(e.en_cours){
-                  $scope.currentExposition = e;
-               }else{
-                  $scope.expos.push(e);
-               }
-            })
-         });
-
-         $scope.$watch(function() { return BoutiqueService.getDisplayStates(); }, function (newValue) {
-            $scope.showExpoEnCours = newValue['en_cours'];
-            $scope.showExpoPassees = newValue['passees'];
-         }, true);
      }
 
   };

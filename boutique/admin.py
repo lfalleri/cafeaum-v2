@@ -1,6 +1,4 @@
 from django.contrib import admin
-from .models import Createur, Exposition, ExpositionPhoto
+from .models import Createur
 
 admin.site.register(Createur)
-admin.site.register(Exposition)
-admin.site.register(ExpositionPhoto)

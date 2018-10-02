@@ -22,6 +22,7 @@ from yoga.views import CalendarView, \
                        ReservationView,\
                        PendingReservationView,\
                        ProfesseursView,\
+                       TarifsView,\
                        TransactionView,\
                        FormuleView,\
                        CodeReductionView
@@ -34,10 +35,10 @@ from restaurant.views import CarteView, \
                              RestaurantConfigView,\
                              RestaurantReservationView
 
-from boutique.views import CreateurView, \
-                           ExpositionView
+from boutique.views import CreateurView
 
-from evenements.views import EvenementView
+from evenements.views import EvenementView, \
+                             ExpositionView
 
 from messaging.views import AccountCreationEmailView, \
                             AccountDeletionToCustomerEmailView,\
@@ -85,6 +86,7 @@ urlpatterns = patterns(
     url(r'^api/v1/yoga/reservation/$', ReservationView.as_view(), name='yoga_reservation'),
     url(r'^api/v1/yoga/pendingreservation/$', PendingReservationView.as_view(), name='yoga_pending_reservation'),
     url(r'^api/v1/yoga/animators/$', ProfesseursView.as_view(), name='yoga_animators'),
+    url(r'^api/v1/yoga/tarifs/$', TarifsView.as_view(), name='yoga_tarifs'),
     url(r'^api/v1/yoga/formule/$', FormuleView.as_view(), name='formule'),
     url(r'^api/v1/yoga/transaction/$', TransactionView.as_view(), name='transaction'),
     url(r'^api/v1/yoga/code-reduction/$', CodeReductionView.as_view(), name='code-reduction'),
@@ -96,10 +98,10 @@ urlpatterns = patterns(
 
     # Boutique Views
     url(r'^api/v1/boutique/createurs/$', CreateurView.as_view(), name='createurs'),
-    url(r'^api/v1/boutique/expos/$', ExpositionView.as_view(), name='expos'),
 
     # Evenements Views
     url(r'^api/v1/evenements/$', EvenementView.as_view(), name='evenements'),
+    url(r'^api/v1/evenements/expos/$', ExpositionView.as_view(), name='expos'),
 
     # Messaging Views
     url(r'^api/v1/messaging/account_creation_email/$', AccountCreationEmailView.as_view(), name='creation_email'),

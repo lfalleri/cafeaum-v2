@@ -48,6 +48,10 @@
       controller: 'YogaController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/yoga/calendar.html'
+    }).when('/yoga/tarifs', {
+      controller: 'YogaTarifsController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/yoga/tarifs.html'
     }).when('/yoga/reservation', {
       controller: 'YogaReservationController',
       controllerAs: 'vm',
@@ -108,6 +112,14 @@
       controller: 'EvenementsController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/evenements/evenements.html'
+    }).when('/evenements/calendrier',{
+      controller: 'EvenementsController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/evenements/calendrier.html'
+    }).when('/evenements/expositions',{
+      controller: 'EvenementsController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/evenements/expositions.html'
     }).otherwise({
        redirectTo:"/"
     });

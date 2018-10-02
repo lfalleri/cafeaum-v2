@@ -16,7 +16,8 @@
                                    'RestaurantService',
                                   'BoutiqueService',
                                   'EvenementsService',
-                                  'Layout'];
+                                  'Layout',
+                                  '$routeParams'];
 
   /**
   * @namespace NavbarController
@@ -28,7 +29,8 @@
                                 RestaurantService,
                                 BoutiqueService,
                                 EvenementsService,
-                                Layout) {
+                                Layout,
+                                $routeParams) {
 
     $scope.sectionsList =
         {'restaurant' :  { title : 'Restaurant',
@@ -82,13 +84,20 @@
                                                       subitems:[]
                                                       }
                                       ,
+                                      'tarifs' : {title: 'Tarifs',
+                                                      link:'/yoga/tarifs',
+                                                      currentLocation : false,
+                                                      icon:"",
+                                                      subitems:[]
+                                                      }
+                                      ,
                                       }
 
                            }
         ,
         'boutique' :     { title : 'Boutique',
                            displaySubItems: false,
-                           subitems : {'createurs':{title: 'Notre boutique',
+                           subitems : {/*'createurs':{title: 'Notre boutique',
                                                    link:'/boutique/createurs',
                                                    currentLocation : false,
                                                    icon:"",
@@ -111,26 +120,42 @@
 
                                                                    }
                                                         }
-                                       }
+                                       */}
                            }
         ,
         'evenements' :   { title : 'Evènements',
                            link: '/evenements',
                            displaySubItems: false,
-                           subitems : {'a venir': {title: 'A venir',
-                                                  currentLocation : true,
-                                                  click:function(){$scope.selectEvenementsAVenir()},
-                                                  icon:"chevron_right",
-                                                  subitems:{}
-                                                  }
-                                      ,
-                                      'passes':  {title: 'Passés',
+                           subitems : {'calendrier':
+                                                  {title: 'Calendrier',
                                                   currentLocation : false,
-                                                  click:function(){$scope.selectEvenementsPasses()},
+                                                  link:'/evenements/calendrier',
                                                   icon:"",
                                                   subitems:{}
                                                   }
-                                      }
+                                       ,
+                                       'expositions': { title: 'Expositions',
+                                                        currentLocation : false,
+                                                        link:'/evenements/expositions',
+                                                        icon:"",
+                                                        subitems:{'en_cours': {title: 'En cours',
+                                                                              currentLocation : true,
+                                                                              click:function(){$scope.selectEvenementsAVenir()},
+                                                                              icon:"chevron_right",
+                                                                              subitems:{}
+                                                                             }
+                                                                  ,
+                                                                  'passees':  {title: 'Passées',
+                                                                              currentLocation : false,
+                                                                              click:function(){$scope.selectEvenementsPasses()},
+                                                                              icon:"",
+                                                                              subitems:{}
+                                                                              }
+                                                                  }
+                                                        }
+
+                                       },
+
                          }
         ,
         'settings' :     { title : 'Mon compte',
@@ -189,13 +214,11 @@
     $scope.selectSubSection = function(subitem){
        var target = $scope.currentSection.subitems[subitem];
        if(target.hasOwnProperty('link')){
-          $scope.goto(subitem);
+           $location.url(target.link);
        }else{
-          target.click();
+           target.click();
        }
-
     }
-
 
     $scope.selectSubItem = function(item, key,subitem){
         if($scope.currentSectionKey === 'restaurant'){
@@ -203,7 +226,10 @@
         }
         else if($scope.currentSectionKey === 'boutique'){
            BoutiqueService.displayText(key);
+        }else if($scope.currentSectionKey === 'evenements'){
+           EvenementsService.evenementsDisplay(key);
         }
+
         var section = $scope.sectionsList[$scope.currentSectionKey];
         var subSection = section.subitems[item];
 
@@ -283,63 +309,29 @@
     }
 
     $scope.selectEvenementsAVenir = function(){
-         $scope.currentSection.subitems['a venir'].currentLocation = true;
-         $scope.currentSection.subitems['a venir'].icon = "chevron_right";
-         $scope.currentSection.subitems['passes'].currentLocation = false;
-         $scope.currentSection.subitems['passes'].icon = "";
-         EvenementsService.evenementsDisplay('a venir');
+         $scope.currentSection.subitems['en_cours'].currentLocation = true;
+         $scope.currentSection.subitems['en_cours'].icon = "chevron_right";
+         $scope.currentSection.subitems['passees'].currentLocation = false;
+         $scope.currentSection.subitems['passees'].icon = "";
+         EvenementsService.evenementsDisplay('en_cours');
     }
 
     $scope.selectEvenementsPasses = function(){
-         $scope.currentSection.subitems['a venir'].currentLocation = false;
-         $scope.currentSection.subitems['a venir'].icon = "";
-         $scope.currentSection.subitems['passes'].currentLocation = true;
-         $scope.currentSection.subitems['passes'].icon = "chevron_right";
-         EvenementsService.evenementsDisplay('passes');
+         $scope.currentSection.subitems['en_cours'].currentLocation = false;
+         $scope.currentSection.subitems['en_cours'].icon = "";
+         $scope.currentSection.subitems['passees'].currentLocation = true;
+         $scope.currentSection.subitems['passees'].icon = "chevron_right";
+         EvenementsService.evenementsDisplay('passees');
     }
 
-    $scope.goto = function(location){
-       if(location === 'logout'){
-          logout(true);
-       }
-
-       var locations = {'restaurant': '/restaurant/carte',
-                        'yoga' : '/yoga/calendrier',
-                        'createurs': '/boutique/createurs',
-                        'expositions': '/boutique/expositions',
-                        'evenements': '/evenements',
-                        'settings' : '/settings',
-                        'nosproduits' : '/restaurant/nosproduits',
-                        'carte' : '/restaurant/carte',
-                        'professeurs': '/yoga/professeurs',
-                        'calendrier': '/yoga/calendrier',
-                        'recharge': '/settings/recharge',
-                        'reservation': '/restaurant/reservation'};
-       $location.url(locations[location]);
-    }
-
-    $scope.clickItem = function(item){
-       if(item.subitems.length == 0 ){
-          $location.url(item.link);
-       }
-       $scope.itemList.forEach(function(i){
-           if(i===item){
-              i.displaySubItems = true;
-           }else{
-              i.displaySubItems = false;
-           }
-
-       });
-    }
     activate();
 
     function activate() {
-         var location = $location.path().split('/');
-         $scope.currentSection = $scope.sectionsList[location[1]];
-         $scope.currentSectionKey = location[1];
-
-         if(location.length > 2){
-             $scope.currentSubSection = $scope.currentSection.subitems[location[2]];
+         var location = $location.path().split('/').slice(1);
+         $scope.currentSection = $scope.sectionsList[location[0]];
+         $scope.currentSectionKey = location[0];
+         if(location.length > 1){
+             $scope.currentSubSection = $scope.currentSection.subitems[location[1]];
              $scope.currentSubSection.currentLocation = true;
              $scope.currentSubSection.icon = "chevron_right";
          }
@@ -353,9 +345,6 @@
                  }
              }, true);
          }
-
     }
-
-
   }
 })();

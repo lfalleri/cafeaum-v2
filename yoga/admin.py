@@ -4,6 +4,7 @@ from .models import LessonRecurrent,\
                     Type, \
                     Intensite, \
                     Professeur, \
+                    Tarif, \
                     UploadedImage, \
                     Reservation, \
                     Transaction, \
@@ -14,6 +15,7 @@ admin.site.register(LessonRecurrent)
 admin.site.register(Lesson)
 admin.site.register(Reservation)
 admin.site.register(Professeur)
+admin.site.register(Tarif)
 admin.site.register(Type)
 admin.site.register(Intensite)
 admin.site.register(UploadedImage)

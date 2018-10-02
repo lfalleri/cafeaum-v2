@@ -70,7 +70,7 @@ class Lesson(models.Model):
 
     duration = models.IntegerField() # in min
     nb_places = models.IntegerField(default=10)
-    price = models.IntegerField(default=2)  # En points : 1h = 2pts / 1h30 = 3pts
+    price = models.IntegerField(default=1)
 
     objects = LessonManager()
 
@@ -139,7 +139,7 @@ class LessonRecurrent(models.Model):
     date = models.DateTimeField()
     duration = models.IntegerField() # in min
     nb_places = models.IntegerField(default=10)
-    price = models.IntegerField(default=2) # En points : 1h = 2pts / 1h30 = 3pts
+    price = models.IntegerField(default=1) # En points : 1h = 2pts / 1h30 = 3pts
     nb_semaines = models.IntegerField(default=13)
 
     def __unicode__(self):
@@ -158,7 +158,6 @@ class ReservationManager(models.Manager):
 
 
 class Reservation(models.Model):
-
     class Meta:
         ordering = ("lesson",)
 
@@ -179,6 +178,20 @@ class Reservation(models.Model):
     def __str__(self):
         return ' >  < '.join(["Cours du " +str(self.lesson), "Réservé par : "+ str(self.account.first_name) + " "+ str(self.account.last_name), "pour " + str(self.nb_personnes), str("Present" if self.checked_present else "Non Present")])
 
+
+class Tarif(models.Model):
+    class Meta:
+        ordering = ("prix",)
+
+    description = models.CharField(max_length=128,default="")
+    nb_cours = models.IntegerField()
+    prix = models.IntegerField()
+
+    def __unicode__(self):
+        return ' '.join([self.description, str(self.nb_cours), "cours", str(self.prix)+" €"])
+
+    def __str__(self):
+        return ' '.join([self.description, str(self.nb_cours), "cours", str(self.prix)+" €"])
 
 ###############################
 # Transaction related Objects #

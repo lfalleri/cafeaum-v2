@@ -17,16 +17,7 @@
   function LandingPageController($scope, Authentication, Layout, $mdMedia, $mdToast) {
     var vm = this;
 
-    vm.logout = logout;
-
-    /**
-    * @name logout
-    * @desc Log the user out
-    * @memberOf thinkster.layout.controllers.NavbarController
-    */
-    function logout() {
-      Authentication.logout();
-    }
+    $scope.account = {};
 
     $scope.items = [
        {text:"Restaurant",
@@ -81,9 +72,27 @@
         );
     }
 
-    activate();
+    /**
+    * @name logout
+    * @desc Log the user out
+    * @memberOf thinkster.layout.controllers.NavbarController
+    */
+    $scope.logout = function() {
+      Authentication.logout(false);
+      $scope.account = {};
+    }
 
+    activate();
     function activate() {
+       Authentication.getFullAccount(function(value){
+           $scope.account = value;
+           if(!angular.equals($scope.account,{})){
+               $scope.display_name = $scope.account.first_name + " " + $scope.account.last_name;
+               if($scope.display_name.length > 15) {
+                   $scope.display_name = $scope.display_name.substring(0,12)+"...";
+               }
+           }
+       });
        if(!Layout.getUserAcceptedCookies() && !Layout.isToastShown()){
           Layout.toastShow();
           var toast = $mdToast.simple()
