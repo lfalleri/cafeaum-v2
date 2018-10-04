@@ -66,17 +66,16 @@ WSGI_APPLICATION = 'cafeyoga.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 DATABASES = {'default': dj_database_url.config()}
 
-if bool(os.environ.get('LOCAL_DEV', False)):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'cafe-yoga_db',
-            'USER': 'cafe-yoga_staff',
-            'PASSWORD': 'tMp@37Cresson',
-            'HOST': 'postgresql-cafe-yoga.alwaysdata.net',
-            'PORT': '5432',
-        }
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'NAME': 'cafe-yoga_db',
+       'USER': 'cafe-yoga_staff',
+       'PASSWORD': 'tMp@37Cresson',
+       'HOST': 'postgresql-cafe-yoga.alwaysdata.net',
+       'PORT': '5432',
     }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
