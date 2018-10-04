@@ -82,7 +82,6 @@
      }
 
      $scope.cancelPayment = function(){
-        console.log("Cancel Payment");
         $scope.data.montant_initial = 0;
         $scope.data.montant_final = 0;
         $scope.data.credit = 0;

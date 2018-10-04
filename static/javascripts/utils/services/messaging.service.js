@@ -138,7 +138,6 @@
     }
 
     function sendRestaurantReservationToStaffEmail(reservation_information,personal_information, callback) {
-       console.log("sendRestaurantReservationToStaffEmail : ",reservation_information);
        return $http.post('api/v1/messaging/restaurant_reservation_to_staff_email/', {
          reservation_information: reservation_information,
          personal_information: personal_information,
@@ -151,7 +150,6 @@
     }
 
     function sendRestaurantReservationToCustomerEmail(reservation_information,personal_information, callback) {
-       console.log("sendRestaurantReservationToCustomerEmail : ",reservation_information);
        return $http.post('api/v1/messaging/restaurant_reservation_to_customer_email/', {
          reservation_information: reservation_information,
          personal_information: personal_information,

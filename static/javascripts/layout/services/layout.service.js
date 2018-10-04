@@ -30,10 +30,9 @@
       toastShow : toastShow,
       toastHide : toastHide,
 
-      setSideNavBarToRecharge: setSideNavBarToRecharge,
-      unsetSideNavBarToRecharge:unsetSideNavBarToRecharge,
-      getSideNavBarToRecharge: getSideNavBarToRecharge,
-      sideNavBarToRecharge : false,
+      setSideNavBar: setSideNavBar,
+      getSideNavBar: getSideNavBar,
+      sideNavBar : 'profile',
     };
 
     return Layout;
@@ -76,20 +75,14 @@
       Layout.toastShown = false;
     }
 
-    function setSideNavBarToRecharge(){
-       if( Layout.sideNavBarToRecharge==false ){
-          Layout.sideNavBarToRecharge=true;
+    function setSideNavBar(item){
+       if( Layout.sideNavBar!==item ){
+          Layout.sideNavBar=item;
        }
     }
 
-    function unsetSideNavBarToRecharge(){
-       if( Layout.sideNavBarToRecharge==true ){
-          Layout.sideNavBarToRecharge=false;
-       }
-    }
-
-    function getSideNavBarToRecharge(){
-        return Layout.sideNavBarToRecharge;
+    function getSideNavBar(){
+        return Layout.sideNavBar;
     }
   }
 })();

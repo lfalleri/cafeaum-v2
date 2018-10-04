@@ -32,6 +32,7 @@
                      showRecharge: false,
                    };
     $scope.loaded = false;
+
     activate();
 
     function activate() {
@@ -42,10 +43,12 @@
              $location.url('/monespace');
           }else{
              if($routeParams.hasOwnProperty('recharge')){
-                Layout.setSideNavBarToRecharge();
+                Layout.setSideNavBar('recharge');
+                $scope.from = 'yoga';
              }else{
-                Layout.unsetSideNavBarToRecharge();
+                Layout.setSideNavBar('profile');
                 Authentication.settingsDisplay('profile');
+                $scope.from = 'profile';
              }
              $scope.updateProfileFields.first_name = $scope.account.first_name;
              $scope.updateProfileFields.last_name = $scope.account.last_name;
@@ -147,10 +150,6 @@
        $location.url("/suppression-compte");
     }
 
-    $scope.gotoCalendar = function(){
-       $location.url("/");
-    }
-
     $scope.changeForm = function(){
        $scope.error = "";
     }
@@ -185,8 +184,13 @@
         });
     }
 
-    $scope.gotoCalendar = function(){
-       YogaService.gotoCalendar();
+    $scope.endPayment = function(){
+       if($scope.from === 'yoga'){
+           YogaService.gotoCalendar();
+       }else{
+          Layout.setSideNavBar('transaction');
+          Authentication.settingsDisplay('historic');
+       }
     }
 
     $scope.selectUpdateProfile = function(){

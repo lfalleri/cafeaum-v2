@@ -67,7 +67,6 @@
             }
          }
          $scope.menu = plats_dict;
-         console.log($scope.menu);
 
          /* Cas special pour les desserts qui sont affichés en dernier */
          var desserts = "Desserts";
@@ -143,7 +142,6 @@
 
          }
          $scope.boissons = boisson_list;
-         console.log("Boissons : ", $scope.boissons);
       });
 
       function activate() {

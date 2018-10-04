@@ -59,8 +59,6 @@
           $scope.contact_tel = '';
        }
 
-       console.log("Try to send mail from contact page");
-
        MessagingService.sendEmailFromContactPage(
           $scope.contact_nom,
           $scope.contact_email,

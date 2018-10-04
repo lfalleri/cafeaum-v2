@@ -337,9 +337,11 @@
          }
 
          if($scope.currentSectionKey=='settings'){
-             $scope.$watch(function() { return Layout.getSideNavBarToRecharge(); }, function (newValue) {
-                 if(newValue==true){
+             $scope.$watch(function() { return Layout.getSideNavBar(); }, function (newValue) {
+                 if(newValue==='recharge'){
                     $scope.selectRecharge();
+                 }else if(newValue==='transaction'){
+                    $scope.selectTransactionsHistoric();
                  }else{
                     $scope.selectUpdateProfile();
                  }

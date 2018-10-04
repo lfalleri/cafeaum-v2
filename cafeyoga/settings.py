@@ -71,10 +71,10 @@ if bool(os.environ.get('LOCAL_DEV', False)):
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'cafe-yoga_db',
-            'USER': 'cafe-yoga',
-            'PASSWORD': 'cafeyoga2018',
-            'HOST': 'localhost',
-            'PORT': '',
+            'USER': 'cafe-yoga_staff',
+            'PASSWORD': 'tMp@37Cresson',
+            'HOST': 'postgresql-cafe-yoga.alwaysdata.net',
+            'PORT': '5432',
         }
     }
 

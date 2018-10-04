@@ -93,7 +93,6 @@
                  return;
               }
               $scope.message = "Votre profil a bien été créé";
-              console.log("Envoi de mail de création");
               MessagingService.sendAccountCreationEmail($scope.register.email, function(){});
 
           });

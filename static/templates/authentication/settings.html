@@ -374,7 +374,7 @@
                              layout-align="space-between center">
 
                       <h4 class="text-centered transaction-step-success" style="margin-bottom: 150px;">{{ success }}  </h4>
-                      <md-button ng-click="gotoCalendar()"
+                      <md-button ng-click="endPayment()"
                                  class="md-primary md-raised cy-button">
                         Retour
                       </md-button>
@@ -387,7 +387,7 @@
                              layout-align="space-between center">
                       <div style="color:red;" class="alert alert-danger" ng-show="error" ng-bind="error"></div>
                       <!--<h4 class="text-centered transaction-step-error" style="margin-bottom: 150px;">{{ error }}  </h4>-->
-                      <md-button ng-click="gotoCalendar()"
+                      <md-button ng-click="endPayment()"
                                  class="md-primary md-raised cy-button">
                         Retour
                       </md-button>

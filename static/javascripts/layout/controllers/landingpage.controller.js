@@ -23,22 +23,22 @@
        {text:"Restaurant",
         text_xs:"Restaurant",
         notes:"Découvrir notre carte ou réserver une table",
-        img:"/static/img/photo_restaurant.jpg",
+        img:"/static/img/landingpage/RESTAURANT.png",
         link:"/restaurant/carte"},
        {text:"Yoga",
         text_xs:"Yoga",
         notes:"Découvrir nos cours et nos professeurs",
-        img:"/static/img/photo_yoga.jpg",
+        img:"/static/img/landingpage/YOGA.png",
         link:"/yoga/calendrier"},
        {text:"Boutique & Expositions",
         text_xs:"Boutique",
         notes:"Découvrir nos artisans partenaires",
-        img:"/static/img/photo_boutique.jpg",
+        img:"/static/img/landingpage/BOUTIQUE.png",
         link:"/boutique/createurs"},
        {text:"Evenements",
         text_xs:"Evenements",
         notes:"Découvrir nos évènements",
-        img:"/static/img/photo_evenements.jpg",
+        img:"/static/img/landingpage/EVENEMENTS.png",
         link:"/evenements"},
     ];
 
@@ -88,9 +88,9 @@
            $scope.account = value;
            if(!angular.equals($scope.account,{})){
                $scope.display_name = $scope.account.first_name + " " + $scope.account.last_name;
-               if($scope.display_name.length > 15) {
+               /*if($scope.display_name.length > 15) {
                    $scope.display_name = $scope.display_name.substring(0,12)+"...";
-               }
+               }*/
            }
        });
        if(!Layout.getUserAcceptedCookies() && !Layout.isToastShown()){
