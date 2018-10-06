@@ -184,12 +184,27 @@
         });
     }
 
+    $scope.gotoCalendar = function(){
+       YogaService.gotoCalendar();
+    }
+
     $scope.endPayment = function(){
        if($scope.from === 'yoga'){
            YogaService.gotoCalendar();
        }else{
-          Layout.setSideNavBar('transaction');
-          Authentication.settingsDisplay('historic');
+           YogaService.getTransactionsByAccount($scope.account.id, function(success, transactions){
+               if(success){
+                   $scope.transactions = [];
+                   transactions.forEach(function(transaction){
+                       var date = new Date(transaction.created);
+                       transaction.meta = {};
+                       transaction.meta.date = date.toLocaleDateString('fr-FR', options);
+                       $scope.transactions.push(transaction);
+                   });
+               }
+               Layout.setSideNavBar('transaction');
+               Authentication.settingsDisplay('historic');
+           });
        }
     }
 
