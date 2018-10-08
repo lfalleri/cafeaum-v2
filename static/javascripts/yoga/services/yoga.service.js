@@ -55,11 +55,12 @@
        createReservation : createReservation,
        createLiveReservation : createLiveReservation,
        cancelReservation : cancelReservation,
+       cancelReservationById: cancelReservationById,
        checkAccountPresent: checkAccountPresent,
        updateNbPresent : updateNbPresent,
        allReservations : allReservations,
        getReservation: getReservation,
-       getReservationsById: getReservationsById,
+       getReservationById: getReservationById,
        getReservationsByAccount : getReservationsByAccount,
        getReservationsByLesson : getReservationsByLesson,
 
@@ -439,6 +440,23 @@
       });
     }
 
+    function cancelReservationById(reservation_id, lesson, callback) {
+      return $http.delete('api/v1/yoga/reservation/',{
+          params: {reservation_id: reservation_id, lesson_id:lesson.id}}
+      ).then(
+        function(data, status, headers, config){
+          var start = new Date(lesson.date);
+          var message = ["Votre réservation a bien été annulée: ",
+                         lesson.type + " " + lesson.intensity+ " - " + lesson.animator,
+                         start.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                          + " " +start.getHours() + ":"+(start.getMinutes() < 10 ? '0' : '')+start.getMinutes(),
+                         lesson.duration + " minutes"];
+          callback(true,message);
+      },function(data, status, headers, config){
+          callback(false,["Une erreur est survenue lors de l'annulation"]);
+      });
+    }
+
     /**
     * @name getReservation
     * @desc Get a Reservation with account_id and lesson_id
@@ -458,7 +476,7 @@
      * @name getReservationsByAccount
      * @desc Get the all the Reservations of a given user
      */
-    function getReservationsById(reservation_id, callback) {
+    function getReservationById(reservation_id, callback) {
       return $http.get('api/v1/yoga/reservation/',{
          params: {reservation_id: reservation_id}
       }).then(

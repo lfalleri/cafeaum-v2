@@ -251,7 +251,7 @@
                                         <td> {{ reservation.account.first_name }} </td>
                                         <td> {{ reservation.account.last_name }} </td>
                                         <td> {{ reservation.account.email }} </td>
-                                        <td> {{ reservation.nb_personnes }} </td>
+                                        <td> {{ reservation.nb_personnes }} {{ reservation.id}}</td>
                                         <td>
                                             <md-checkbox ng-if="reservation.nb_personnes==1"
                                                          style="vertical-align:middle;"
@@ -284,7 +284,7 @@
                                         <td>
                                             <a>
                                                 <md-icon md-font-icon="material-icons"
-                                                         ng-click="cancelReservation(reservation.lesson, reservation.account, true)">
+                                                         ng-click="cancelReservationByStaff(reservation.id, reservation.lesson, reservation.account, true)">
                                                     delete
                                                 </md-icon>
                                             </a>

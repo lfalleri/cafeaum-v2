@@ -162,17 +162,30 @@ class ReservationView(views.APIView):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
     def delete(self, request, format=None):
-        account_id = request.query_params['account_id']
-        account = Account.objects.get(id=account_id)
-        lesson_id = request.query_params['lesson_id']
-        lesson = Lesson.objects.get(id=lesson_id)
 
-        reservation = Reservation.objects.filter(account=account, lesson=lesson, confirmed=True)
-        if not reservation:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        reservation = reservation[0]
+        if 'reservation_id' in request.query_params.keys():
+            reservation_id = request.query_params['reservation_id']
+            reservation = Reservation.objects.get(id=reservation_id)
+            account = reservation.account
 
-        #Update account and lesson
+        if 'lesson_id' in request.query_params.keys():
+                lesson_id = request.query_params['lesson_id']
+                lesson = Lesson.objects.get(id=lesson_id)
+                if not lesson:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if 'account_id' in request.query_params.keys():
+            account_id = request.query_params['account_id']
+            account = Account.objects.get(id=account_id)
+            if not account:
+               return Response(status=status.HTTP_404_NOT_FOUND)
+
+            reservation = Reservation.objects.filter(account=account, lesson=lesson, confirmed=True)
+            if not reservation:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            reservation = reservation[0]
+
+        # Update account and lesson
         account.credits += lesson.price * reservation.nb_personnes
         account.save()
         lesson.nb_places += reservation.nb_personnes
