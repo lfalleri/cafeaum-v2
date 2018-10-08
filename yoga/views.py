@@ -84,12 +84,20 @@ class ReservationView(views.APIView):
 
     def post(self, request, format=None):
         data = json.loads(request.body)
-        account_id = data['account']['id']
-        lesson_id = data['lesson']['id']
 
-        # Get objects account and event
+        if 'anonymous' in data.keys():
+            anonymous = data['anonymous']
+            if anonymous:
+                account = Account.objects.filter(first_name="Anonyme", last_name="Anonyme").first()
+            else:
+                account_id = data['account']['id']
+                account = Account.objects.get(id=account_id)
+        else:
+            account_id = data['account']['id']
+            account = Account.objects.get(id=account_id)
+
+        lesson_id = data['lesson']['id']
         lesson = Lesson.objects.get(id=lesson_id)
-        account = Account.objects.get(id=account_id)
 
         credit = 0
         debit = 0

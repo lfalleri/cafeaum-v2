@@ -50,7 +50,6 @@
          var plats_dict = {};
          var plats = menu["plats"];
 
-         console.log("plats : ", plats);
          for (var i = 0; i < plats.length; i++) {
             var plat = plats[i];
             if( !(plat.categorie.titre in plats_dict)){
@@ -69,7 +68,6 @@
             }
          }
          $scope.menu = plats_dict;
-         console.log("Menu : ", $scope.menu);
 
          /* Cas special pour les desserts qui sont affichés en dernier */
          var desserts = "Desserts";

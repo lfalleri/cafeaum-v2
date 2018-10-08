@@ -237,6 +237,7 @@
                         </h2>
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div style="color: red; margin: auto; width: 80%;" class="alert alert-danger" ng-show="error" ng-bind="error"></div>
                                 <table style="margin-top: 3%; width:100%;">
                                     <td> ID </td>
                                     <td> Prénom </td>
@@ -315,14 +316,15 @@
                             </div>
 
                             <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6">
-                                <div style="margin-top:2%;" ng-if="staff.addUser.displaySearchUserForm">
-                                    <form style="margin:3% 10% 0 40%;" role="form" ng-submit="searchUser()" name="search_user_form">
+                                <div style="margin-top:2%;"
+                                     ng-if="staff.addUser.displaySearchUserForm">
+                                    <form layout="column" layout-align="space-between center" style="margin:3% 10% 0 40%;" role="form" ng-submit="searchUser()" name="search_user_form">
                                         <div  style="font-size:20px; border: 1px solid red; background-color : #f2f2f2; color:red; max-width:70%;"
                                               class="alert alert-danger" ng-show="staff.addUser.userNotFound" ng-bind="staff.addUser.userNotFound">
                                         </div>
-                                        <div class="form-group" style="max-width : 50%;">
-                                            <label for="search_nom">Nom</label>
-                                            <input style="font-family:'Poiret One'; font-size:20px;"
+                                        <div class="form-group">
+                                            <label class="quicksand-md" for="search_nom">Nom</label>
+                                            <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8; margin: auto;"
                                                    name="nom"
                                                    type="text"
                                                    class="form-control"
@@ -331,9 +333,9 @@
                                                    placeholder="Nom"
                                                    ng-change="changeForm()"/>
                                         </div>
-                                        <div class="form-group" style="max-width : 50%;">
-                                            <label for="search_prenom">Prénom</label>
-                                            <input style="font-family:'Poiret One'; font-size:20px;"
+                                        <div class="form-group">
+                                            <label class="quicksand-md" for="search_prenom">Prénom</label>
+                                            <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;margin: auto;"
                                                    name="prenom"
                                                    type="text"
                                                    class="form-control"
@@ -342,9 +344,9 @@
                                                    placeholder="Prénom"
                                                    ng-change="changeForm()"/>
                                         </div>
-                                        <div class="form-group" style="max-width : 50%;">
-                                            <label for="search_email">Email</label>
-                                            <input style="font-family:'Poiret One'; font-size:20px;"
+                                        <div class="form-group">
+                                            <label class="quicksand-md" for="search_email">Email</label>
+                                            <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;margin: auto;"
                                                    name="email"
                                                    type="email"
                                                    class="form-control"
@@ -355,18 +357,18 @@
                                         </div>
                                         <div class="button-flex-row">
                                             <div class="form-group">
-                                                <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                                <md-button
                                                         type="submit"
-                                                        class="btn btn-primary">
+                                                        class="button-type-submit md-raised md-primary">
                                                     Recherche
-                                                </button>
+                                                </md-button>
                                             </div>
                                             <div class="form-group">
-                                                <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                                <md-button
                                                         ng-click="hideSearchForm()"
-                                                        class="btn btn-primary">
+                                                        class="button-type-submit md-raised md-primary">
                                                     Retour
-                                                </button>
+                                                </md-button>
                                             </div>
                                         </div>
                                     </form>
@@ -394,11 +396,11 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72; margin-top:5%;"
+                                    <md-button
                                             ng-click="hideSearchedAccounts()"
-                                            class="btn btn-primary">
+                                            class="button-type-submit md-raised md-primary">
                                         Retour
-                                    </button>
+                                    </md-button>
                                 </div>
                                 <div style="margin:3% 20% 0 20%;" ng-if="staff.addUser.displayDetailedAccount">
                                     <h2>{{ staff.addUser.selectedAccount.first_name}} {{ staff.addUser.selectedAccount.last_name}}  </h2>
@@ -419,8 +421,8 @@
                                               class="alert alert-danger" ng-show="staff.addUser.proceedBalanceSuccess" ng-bind="staff.addUser.proceedBalanceSuccess">
                                         </div>
                                         <div class="form-group" style="max-width : 50%;">
-                                            <label for="proceed_credit">Crédit</label>
-                                            <input style="font-family:'Poiret One'; font-size:20px;"
+                                            <label class="quicksand-md" for="proceed_credit">Crédit</label>
+                                            <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;margin: auto;"
                                                    name="credit"
                                                    type="text"
                                                    class="form-control"
@@ -430,8 +432,8 @@
                                                    ng-change="changeForm()"/>
                                         </div>
                                         <div class="form-group" style="max-width : 50%;">
-                                            <label for="proceed_debit">Débit</label>
-                                            <input style="font-family:'Poiret One'; font-size:20px;"
+                                            <label class="quicksand-md" for="proceed_debit">Débit</label>
+                                            <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;margin: auto;"
                                                    name="prenom"
                                                    type="text"
                                                    class="form-control"
@@ -442,18 +444,18 @@
                                         </div>
                                         <div style="margin-top:5%;" class="row">
                                             <div class="form-group">
-                                                <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                                <md-button
                                                         ng-click="hideProceedBalanceForm()"
-                                                        class="btn btn-primary">
+                                                        class="button-type-submit md-raised md-primary">
                                                     Retour
-                                                </button>
+                                                </md-button>
                                             </div>
                                             <div class="form-group">
-                                                <button style="font-family:'Poiret One'; font-size:20px; color:#3f3f3f; background-color:#137b72"
+                                                <md-button
                                                         type="submit"
-                                                        class="btn btn-primary">
+                                                        class="button-type-submit md-raised md-primary">
                                                     Procéder
-                                                </button>
+                                                </md-button>
                                             </div>
                                         </div>
                                     </form>

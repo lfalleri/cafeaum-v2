@@ -645,9 +645,23 @@
      }
 
      $scope.displaySearchForm = function(){
+        $scope.error = "";
         $scope.staff.addUser.displaySearchUserForm = true;
         $scope.staff.addUser.searchedAccounts = [];
         $scope.staff.addUser.displaySearchedAccounts = false;
+     }
+
+     $scope.addAnonymousUser = function(lesson){
+         YogaService.createLiveReservation($scope.lesson,{}, 1, 1, 1, true, function(success, message, reservation){
+            if(!success){
+               $scope.error = "Erreur d'ajout";
+               return;
+            }else{
+                $scope.error = "";
+                $scope.staff.reservationsForLesson.push(reservation);
+                $scope.lesson.nb_places -= 1;
+            }
+         });
      }
 
      $scope.hideSearchForm = function(){
@@ -742,7 +756,7 @@
 
         var nb_persons = debit / $scope.lesson.price;
         $scope.staff.addUser.nb_persons = nb_persons;
-        YogaService.createLiveReservation($scope.lesson,account, nb_persons, credit, debit, function(success, message, reservation){
+        YogaService.createLiveReservation($scope.lesson,account, nb_persons, credit, debit, false, function(success, message, reservation){
             if(!success){
                $scope.staff.addUser.proceedBalanceError = message;
                return;
@@ -754,7 +768,6 @@
                 $scope.staff.addUser.proceed_credit = 0;
                 $scope.staff.addUser.proceed_debit = 0;
                 $scope.lesson.nb_places -= nb_persons;
-                $scope.$apply();
             }
         });
      }

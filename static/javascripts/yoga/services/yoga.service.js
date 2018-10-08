@@ -358,13 +358,14 @@
     * @name createReservation
     * @desc Create a new Reservation
     */
-    function createLiveReservation(lesson, account, nb_persons, credit, debit, callback) {
+    function createLiveReservation(lesson, account, nb_persons, credit, debit, anonymous, callback) {
       return $http.post('api/v1/yoga/reservation/', {
         lesson: lesson,
         account: account,
         nb_persons: nb_persons,
         credit : credit,
-        debit: debit
+        debit: debit,
+        anonymous:anonymous
       }).then(
         function(data, status, headers, config){
           var start = new Date(lesson.date);
