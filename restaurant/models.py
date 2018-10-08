@@ -34,6 +34,7 @@ class Carte(models.Model):
 
 class Categorie(models.Model):
     titre = models.CharField(max_length=60)
+    description = models.CharField(max_length=128, blank=True)
 
     def __unicode__(self):
         return self.titre
@@ -43,7 +44,10 @@ class Categorie(models.Model):
 
 
 class Specificite(models.Model):
+    class Meta:
+        ordering = ('titre', )
     titre = models.CharField(max_length=60)
+
 
     def __unicode__(self):
         return self.titre
@@ -58,7 +62,7 @@ class Plat(models.Model):
 
     carte = models.ForeignKey(Carte, default=DEFAULT_CARTE_ID, related_name="plats")
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
-    specificite = models.ForeignKey(Specificite, on_delete=models.CASCADE)
+    specificite = models.ForeignKey(Specificite, on_delete=models.CASCADE, default=lambda: Specificite.objects.filter(titre=' ').first())
     denomination = models.CharField(max_length=128)
     ingredients = models.CharField(max_length=512)
     prix = models.FloatField()
@@ -100,6 +104,7 @@ class Boisson(models.Model):
     carte = models.ForeignKey(Carte, default=DEFAULT_CARTE_ID, related_name="boissons")
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)
     nom = models.CharField(max_length=80)
+    description = models.CharField(max_length=126, blank=True)
     prix = models.FloatField()
 
     def __unicode__(self):

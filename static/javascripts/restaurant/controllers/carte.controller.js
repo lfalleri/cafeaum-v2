@@ -31,7 +31,7 @@
       activate();
       $scope.account = Authentication.fullAccount;
 
-      /* On récupère toutes les lessons */
+      /* On récupère tous les plats */
       RestaurantService.getCarte().then(function(value){
 
          var brunch_dict = {};
@@ -49,15 +49,17 @@
           */
          var plats_dict = {};
          var plats = menu["plats"];
+
+         console.log("plats : ", plats);
          for (var i = 0; i < plats.length; i++) {
             var plat = plats[i];
             if( !(plat.categorie.titre in plats_dict)){
                var new_categorie = {};
                new_categorie[plat.specificite.titre] = [[plat.denomination, plat.ingredients, plat.prix]];
-               plats_dict[plat.categorie.titre] = new_categorie;
+               plats_dict[plat.categorie.titre] = {description:plat.categorie.description, object:new_categorie};
             }
             else{
-               var categorie_dict = plats_dict[plat.categorie.titre];
+               var categorie_dict = plats_dict[plat.categorie.titre].object;
                if( !(plat.specificite.titre in categorie_dict)){
                   categorie_dict[plat.specificite.titre] = [[plat.denomination, plat.ingredients, plat.prix]];
                }
@@ -67,6 +69,7 @@
             }
          }
          $scope.menu = plats_dict;
+         console.log("Menu : ", $scope.menu);
 
          /* Cas special pour les desserts qui sont affichés en dernier */
          var desserts = "Desserts";
@@ -130,13 +133,13 @@
 
             if( !(categorie in categorie_dict)){
                var dict = {};
-               dict[categorie]  = [ [boisson.nom, boisson.prix] ];
+               dict[categorie]  = [ [boisson.nom, boisson.prix, boisson.description] ];
                boisson_list[boissonDisplayOrders[categorie]] = dict;
                categorie_dict[categorie] = 1;
             }
             else{
                var dict = boisson_list[boissonDisplayOrders[categorie]];
-               dict[categorie].push( [boisson.nom, boisson.prix] );
+               dict[categorie].push( [boisson.nom, boisson.prix, boisson.description] );
                boisson_list[boissonDisplayOrders[boisson.categorie.titre]] = dict;
             }
 

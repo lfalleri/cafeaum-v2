@@ -20,8 +20,9 @@
                                                 {{categorie}}
                                             </h2>
                                         </div>
+                                        <p style="font-style:italic;font-size:90%;"> {{obj.description}}</p>
 
-                                        <div  ng-repeat="(type, rest) in obj">
+                                        <div  ng-repeat="(type, rest) in obj.object">
                                             <div class="restaurant-specificite">
                                                 {{type}}
                                             </div>
@@ -120,8 +121,8 @@
                                                         <div class="restaurant-plat-prix">
                                                             {{ boisson[1]}}€
                                                         </div>
-
                                                     </div>
+                                                    <p style="font-style:italic; font-size:80%;padding:0 5%;"> {{boisson[2]}}</p>
                                                 </div>
                                             </div>
                                         </div>

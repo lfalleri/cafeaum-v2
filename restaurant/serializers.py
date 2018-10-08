@@ -26,7 +26,7 @@ class CategorieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Categorie
-        fields = ('id', 'titre')
+        fields = ('id', 'titre', 'description')
 
 
 class SpecificiteSerializer(serializers.ModelSerializer):
@@ -64,7 +64,7 @@ class BoissonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Boisson
-        fields = ('id', 'nom', 'categorie', 'prix')
+        fields = ('id', 'nom', 'categorie', 'prix', 'description')
 
 
 class CarteSerializer(serializers.ModelSerializer):
