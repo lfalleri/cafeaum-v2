@@ -16,7 +16,7 @@
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       $scope.reservationSuccessful = false;
       $scope.alert_message = undefined;
-      $scope.loaded = false;
+      $scope.loading = true;
       var timer;
       activate();
 
@@ -52,7 +52,7 @@
                      $scope.reservationSuccessful = false;
                   }
                   timer = window.setTimeout(expiredReservation, 1000 * 60  ); // 1min
-                  $scope.loaded = true;
+                  $scope.loading = false;
                });
             }
          });
@@ -71,6 +71,7 @@
      }
 
      $scope.processReservation = function(lesson, account, nb_persons){
+        $scope.loading = true;
         YogaService.createReservation(lesson, account, nb_persons, function(success, message, reservation_id){
            if(!success){
               $scope.alert_message = message;
@@ -79,6 +80,7 @@
            }else{
               clearTimeout(timer);
               $scope.reservationSuccessful = true;
+              $scope.loading = false;
               $scope.alert_message = message;
               $scope.alert_message_color = "green";
               YogaService.deletePendingReservation(lesson, account, nb_persons, function(success,message){});
@@ -89,6 +91,7 @@
      }
 
      $scope.exitReservation = function(lesson, account, nb_persons){
+        $scope.loading = true;
         clearTimeout(timer);
         if($scope.reservationSuccessful){
            /* Reservation has been successful : pending reservation has already been cleaned */

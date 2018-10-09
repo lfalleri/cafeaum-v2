@@ -325,7 +325,7 @@
             timezone:'Europe/Paris',
             allDaySlot: false,
             defaultView: 'agendaWeek',
-            height: 600,
+            height: 500,
             contentHeight: 566,
             firstDay: 1,
             defaultDate: moment(calendar.now),
@@ -555,8 +555,7 @@
         $location.url('/settings?recharge=true');
      }
 
-     /* Function called when the cancellation button is clicked by user.
-        by_staff means the staff is responsible of "live" cancellation */
+     /* Function called when the cancellation button is clicked by user.*/
      $scope.cancelReservation = function(lesson, account, by_staff){
         $scope.alert_message = [];
 
@@ -571,38 +570,14 @@
                 $scope.alert_message_color = "red";
                 return;
            }
-
            reservation = reservation[0];
-
-           if(!by_staff){
-              /* Delegate actual to YogaCancellationController on cancellation page */
-              YogaService.stageCancellation(reservation, "calendar");
-           }else{
-               /* A staff member wants to cancel reservation */
-               YogaService.cancelReservation(lesson, account, function(success, message){
-                   if(!success){
-                       $scope.alert_message = message;
-                       $scope.alert_message_color = "red";
-                       return;
-                   }
-
-                   /* Update local information */
-                   $scope.account.credits += lesson.price * reservation.nb_personnes;
-                   $scope.lesson.nb_places += reservation.nb_personnes;
-                   $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
-                       return el.account.id !== reservation.account.id;
-                   });
-
-                   $scope.reservedLessons = $scope.reservedLessons.filter(function(el) {return el.id !== lesson.id;});
-                   $scope.$apply();
-               }); /* cancelReservation() */
-           }/* End live case */
+           /* Delegate actual to YogaCancellationController on cancellation page */
+           YogaService.stageCancellation(reservation, "calendar");
         });
      };
 
-     /* Function called when the cancellation button is clicked by user.
-        by_staff means the staff is responsible of "live" cancellation */
-     $scope.cancelReservationByStaff = function(reservation_id, lesson, account, by_staff){
+     /* Function called when the cancellation button is clicked by staff (trash). */
+     $scope.cancelReservationByStaff = function(reservation_id, lesson, account){
         $scope.alert_message = [];
 
         YogaService.getReservationById(reservation_id, function(success, reservation){
@@ -618,25 +593,18 @@
            }
            reservation = reservation[0];
 
-           if(!by_staff){
-              /* Delegate actual to YogaCancellationController on cancellation page */
-              YogaService.stageCancellation(reservation, "calendar");
-           }else{
-               /* A staff member wants to cancel reservation */
-               YogaService.cancelReservationById(reservation_id, lesson, function(success, message){
-                   if(!success){
-                       $scope.alert_message = message;
-                       $scope.alert_message_color = "red";
-                       return;
-                   }
-
-                   $scope.lesson.nb_places += reservation.nb_personnes;
-                   $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
-                       return el.id !== reservation_id;
-                   });
-
-               }); /* cancelReservation() */
-           }/* End live case */
+           /* A staff member wants to cancel reservation */
+           YogaService.cancelReservationById(reservation_id, lesson, function(success, message){
+               if(!success){
+                   $scope.alert_message = message;
+                   $scope.alert_message_color = "red";
+                   return;
+               }
+               $scope.lesson.nb_places += reservation.nb_personnes;
+               $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
+                   return el.id !== reservation_id;
+               });
+           }); /* cancelReservation() */
         });
      };
 

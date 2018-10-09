@@ -3,13 +3,13 @@
         <div class="cy-container">
             <div ng-include="'/static/templates/general/navbar.html'"></div>
             <div class="main-container">
-                <div style="margin: 25% auto 25% auto;" ng-if="!loaded">
+                <div style="margin: 25% auto 25% auto;" ng-if="loading">
                     <md-progress-circular
                             md-mode="indeterminate"
                             style="margin: auto;">
                     </md-progress-circular>
                 </div>
-                <section class="text-container" ng-if="loaded">
+                <section class="text-container" ng-if="!loading">
                     <h2 style="text-align: center;margin-top:5%;">Bonjour {{  account.first_name }} {{  account.last_name }}</h2><br><br>
                     <div ng-if="cancellationSuccessful" class="text-centered" ng-if="alert_message" style="margin-top:5%;margin-bottom:15%;">
                         <h2>Votre réservation a bien été annulée !</h2>

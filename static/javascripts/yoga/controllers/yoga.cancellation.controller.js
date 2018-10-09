@@ -16,7 +16,7 @@
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       $scope.cancellationSuccessful = false;
       $scope.alert_message = undefined;
-      $scope.loaded = false;
+      $scope.loading = true;
       activate();
 
       function prepare_cancellation(reservation){
@@ -32,7 +32,7 @@
           $scope.meta.nb_places = $scope.lesson.nb_places;
           $scope.meta.total_price = $scope.nb_persons * $scope.lesson.price;
           $scope.meta.next_credits = $scope.account.credits + ($scope.nb_persons * $scope.lesson.price);
-          $scope.loaded = true;
+          $scope.loading = false;
       }
 
       function activate() {
@@ -84,7 +84,9 @@
      }
 
      $scope.processCancellation = function(){
+        $scope.loading = true;
         YogaService.cancelReservation($scope.lesson, $scope.account, function(success, message){
+           $scope.loading = false;
            if(!success){
               $scope.alert_message = message;
               $scope.alert_message_color = "red";
