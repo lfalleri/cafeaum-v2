@@ -326,7 +326,7 @@
             allDaySlot: false,
             defaultView: 'agendaWeek',
             height: 500,
-            contentHeight: 566,
+            contentHeight: 576,
             firstDay: 1,
             defaultDate: moment(calendar.now),
             handleWindowResize:true,
