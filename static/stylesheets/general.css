@@ -456,10 +456,10 @@ text-up{
   border-right : 2px solid #A87E43;
   position: relative;
   z-index:0;
-  margin-left: 30px;
-  padding-right: 50px;
-  min-height: 500px;
-  min-width: 220px;
+  margin-left: 0px;
+  padding-right: 30px;
+  min-height: 400px;
+  min-width: 200px;
 }
 
 .cy-sidenav-title{
@@ -472,7 +472,7 @@ text-up{
   color : #A87E43;
   font-family:'Montserrat';
   font-weight: 700;
-  font-size: 24px;
+  font-size: 22px;
   text-transform:uppercase;
 }
 
@@ -486,7 +486,7 @@ text-up{
   margin-bottom: 30px;
   font-family:'Montserrat';
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   color : #A87E43;
 }
 
