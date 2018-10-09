@@ -46,7 +46,7 @@
                 if(angular.equals($scope.account,{})){
                    Authentication.gotoLoginAndBackTo($location.url());
                 }else{
-                   YogaService.getReservationsById(path[3], function(success, reservations){
+                   YogaService.getReservationById(path[3], function(success, reservations){
                       if(!success){
                           $scope.alert_message = "Réservation invalide";
                           YogaService.stagedReservationExit(false, undefined, false);
