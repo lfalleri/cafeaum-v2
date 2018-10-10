@@ -40,6 +40,7 @@
                                                style="min-width:50px; padding-right: 10px;padding-left: 10px; margin: auto;">
                                         <md-icon md-font-icon="material-icons"
                                                  ng-click="logout()"
+                                                 class="landingpage-link-text"
                                                  style="color:white;">power_settings_new
                                         </md-icon>
                                     </md-button>
@@ -116,19 +117,20 @@
                         <div layout="column">
                             <div ng-if="!(account|isEmpty)">
                                 <div layout="column" style="margin-bottom:15%;">
-                                    <h4 class="text-centered landingpage-link-text" style="color:white;font-size:20px;text-transform: uppercase;">{{account.first_name}} {{account.last_name}}</h4>
+                                    <h4 class="text-centered landingpage-link-text" style="color:white;text-transform: uppercase;">{{account.first_name}} {{account.last_name}}</h4>
                                     <md-button ng-click="logout()"
                                                class=""
                                                style="min-width:50px; padding-right: 10px;padding-left: 10px; margin: auto;">
                                         <md-icon md-font-icon="material-icons"
                                                  ng-click="logout()"
-                                                 style="color:white;">power_settings_new
+                                                 class="landingpage-link-text"
+                                                 style="color:white; ">power_settings_new
                                         </md-icon>
                                     </md-button>
                                 </div>
                             </div>
                             <a ng-if="(account|isEmpty)" class="landingpage-link" href="/monespace">
-                                <h4 class="text-centered" style="padding: 2% 0;color:white;text-transform: uppercase;margin-bottom:15%;"> Mon compte </h4>
+                                <h4 class="text-centered landingpage-link-text" style="padding: 2% 0;color:white;text-transform: uppercase;margin-bottom:15%;"> Mon compte </h4>
                             </a>
                             <a class="landingpage-link-md" href="/presentation">
                                 <h4 class="landingpage-link-text text-centered"
