@@ -116,7 +116,31 @@
         );
     }
 
-    $scope.updateProfile = function() {
+    $scope.updateProfileNames = function() {
+
+
+       Authentication.updateProfileNames(
+          $scope.account.id,
+          $scope.updateProfileFields.first_name,
+          $scope.updateProfileFields.last_name,
+          $scope.updateProfileFields.email,
+          function(success, message){
+             if(!success){
+                 $scope.error = message;
+                 $scope.success = "";
+             }else{
+                 $scope.error = "";
+                 $scope.success = "Votre profil a bien été mis à jour";
+                 $scope.account.first_name = $scope.updateProfileFields.first_name;
+                 $scope.account.last_name = $scope.updateProfileFields.last_name;
+                 $scope.account.email = $scope.updateProfileFields.email;
+                 $scope.showToast();
+             }
+          }
+       );
+    }
+
+    $scope.updatePassword = function(){
        if($scope.updateProfileFields.confirmation_password !== $scope.updateProfileFields.password )
        {
           $scope.error = "Les 2 mots de passe sont différents";
@@ -125,9 +149,9 @@
 
        Authentication.updateProfile(
           $scope.account.id,
-          $scope.updateProfileFields.first_name,
-          $scope.updateProfileFields.last_name,
-          $scope.updateProfileFields.email,
+          $scope.account.first_name,
+          $scope.account.last_name,
+          $scope.account.email,
           $scope.updateProfileFields.password,
           $scope.updateProfileFields.old_password,
           function(success, message){
@@ -136,7 +160,7 @@
                  $scope.success = "";
              }else{
                  $scope.error = "";
-                 $scope.success = "Votre profil a bien été mis à jour";
+                 $scope.success = "Votre mot de passe a bien été mis à jour";
                  $scope.updateProfileFields.confirmation_password = undefined;
                  $scope.updateProfileFields.password = undefined;
                  $scope.updateProfileFields.old_password = undefined;
@@ -152,6 +176,7 @@
 
     $scope.changeForm = function(){
        $scope.error = "";
+       $scope.success = "";
     }
 
     function compareDates(lesson1, lesson2){

@@ -107,28 +107,34 @@ class AccountView(views.APIView):
             account.save()
             return Response(status.HTTP_200_OK)
 
-        old_password = data['old_password']
-        if not account.check_password(old_password):
-            return Response({
-                'status': 'Unauthorized',
-                'message': 'Ancien mot de passe invalide'
-            }, status=status.HTTP_401_UNAUTHORIZED)
+        if "old_password" in data:
+            old_password = data['old_password']
+            if not account.check_password(old_password):
+                return Response({
+                    'status': 'Unauthorized',
+                    'message': 'Ancien mot de passe invalide'
+                }, status=status.HTTP_401_UNAUTHORIZED)
 
-        logout(request)
         first_name = data['first_name']
         last_name = data['last_name']
         email = data['email']
-        password = data['password']
+
+        if "password" in data:
+            logout(request)
+            password = data['password']
+            account.set_password(password)
 
         account.first_name = first_name
         account.last_name = last_name
         account.email = AccountManager.normalize_email(email)
-        account.set_password(password)
         account.save()
-        authentification = authenticate(email=email, password=password)
-        if authentification is not None:
-            if authentification.is_active:
-                login(request, authentification)
+
+        if "password" in data:
+            password = data['password']
+            authentification = authenticate(email=email, password=password)
+            if authentification is not None:
+                if authentification.is_active:
+                    login(request, authentification)
 
         return Response(status.HTTP_200_OK)
 

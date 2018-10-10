@@ -7,6 +7,9 @@ from django.utils.encoding import python_2_unicode_compatible
 class Createur(models.Model):
     nom = models.CharField(max_length=60)
     texte = models.TextField()
+    texte2 = models.TextField()
+    texte3 = models.TextField()
+    texte4 = models.TextField()
     image = models.CharField(max_length=128, default='/static/img/...')
 
     def __str__(self):

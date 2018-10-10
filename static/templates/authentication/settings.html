@@ -12,7 +12,8 @@
       <div class="main-container" ng-if="loaded">
         <h1 class="page-title">Bonjour {{account.first_name}}</h1>
         <h3 class="text-centered">Votre crédit est de {{account.credits}} points</h3>
-
+        <div style="color:red;width: 30%;margin: 0  auto;" class="alert alert-danger" ng-show="error" ng-bind="error"/>
+        <div style="width: 30%;margin: 0  auto;" class="alert alert-success" ng-show="success" ng-bind="success"/>
 
 
         <div layout="column" hide-gt-sm>
@@ -28,114 +29,128 @@
         </div>
         <div layout="column" style="margin-top:55px;" ng-cloak>
           <div layout="row" flex style="font-size:25px;">
-            <div ng-include="'/static/templates/general/sidenav.html'"></div>
+            <div style="width:200px;" ng-include="'/static/templates/general/sidenav.html'"></div>
 
-            <div flex layout-padding style="background-color:#fffdfa;">
+            <div layout
+                 layout-align="space-between start"
+                 layout-padding
+                 style="background-color:#fffdfa;margin: 0 auto;width: 80%;">
 
-              <div layout="column" layout-align="top center" flex="60"
-                         flex-offset="20">
+              <div layout="column" layout-align="top center" style="width: 100%; margin: 0 auto;">
 
-                <div ng-if="state.showUpdateProfile" style="width: 50%;" layout-align="top center">
-                  <h3 class="text-centered"> Votre profil :</h3>
-                  <form  role="form" class="update-account-form" ng-submit="updateProfile()">
-                    <div style="color:red;" class="alert alert-danger" ng-show="error" ng-bind="error"/>
-                    <div  class="alert alert-success" ng-show="success" ng-bind="success"/>
+                <div ng-if="state.showUpdateProfile" style="width: 60%;" layout-align="start center">
+                  <div layout layout-align="space-between start">
+                    <div layout="column" layout-align="start center">
+                      <h3 class="text-centered"> Votre profil :</h3>
+                      <form  role="form" class="update-account-form" >
+                        <div class="form-group">
+                          <label class="quicksand-md" for="settings_nom">Nom</label>
+                          <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                                 id="settings_nom"
+                                 name="nom"
+                                 type="text"
+                                 class="form-control"
+                                 ng-model="updateProfileFields.last_name"
+                                 ng-required="1"
+                                 oninvalid="this.setCustomValidity('Champ obligatoire')"
+                                 oninput="setCustomValidity('')"
+                                 ng-change="changeForm()"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="quicksand-md" for="settings_prenom">Prénom</label>
+                          <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                                 id="settings_prenom"
+                                 name="prenom"
+                                 type="text"
+                                 class="form-control"
+                                 ng-model="updateProfileFields.first_name"
+                                 ng-required="1"
+                                 oninvalid="this.setCustomValidity('Champ obligatoire')"
+                                 oninput="setCustomValidity('')"
+                                 ng-change="changeForm()"/>
+                        </div>
+                        <div class="form-group">
+                          <label class="quicksand-md" for="settings_email">Email</label>
+                          <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                                 id="settings_email"
+                                 name="email"
+                                 type="email"
+                                 class="form-control"
+                                 ng-model="updateProfileFields.email"
+                                 ng-required="1"
+                                 oninvalid="this.setCustomValidity('Champ obligatoire')"
+                                 oninput="setCustomValidity('')"
+                                 ng-change="changeForm()"/>
+                        </div>
+                        <div class="form-group" layout="column"
+                             layout-align="top center"
+                             style="margin-top:15px;">
+                          <md-button ng-click="updateProfileNames()"
+                                     class="button-type-submit md-raised md-primary">
+                            Mettre à jour mon profil
+                          </md-button>
+                          <md-button ng-click="deleteAccount()"
+                                     class="button-type-submit md-raised md-primary">
+                            Supprimer mon compte
+                          </md-button>
+                        </div>
+                      </form>
+                    </div>
+                    <div layout="column" layout-align="start center">
+                      <h3 class="text-centered"> Votre mot de passe :</h3>
+                      <div class="form-group">
+                        <label class="quicksand-md" for="settings_old_password">Ancien mot de passe</label>
+                        <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                               id="settings_old_password"
+                               name="pwd1"
+                               type="password"
+                               class="form-control"
+                               ng-model="updateProfileFields.old_password"
+                               ng-required="1"
+                               oninvalid="this.setCustomValidity('Champ obligatoire')"
+                               oninput="setCustomValidity('')"
+                               ng-change="changeForm()"/>
+                      </div>
+                      <div class="form-group">
+                        <label class="quicksand-md" for="settings_password1">Nouveau mot de passe</label>
+                        <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                               id="settings_password1"
+                               name="pwd1"
+                               type="password"
+                               class="form-control"
+                               ng-model="updateProfileFields.password"
+                               ng-required="1"
+                               oninvalid="this.setCustomValidity('Champ obligatoire')"
+                               oninput="setCustomValidity('')"
+                               ng-change="changeForm()"/>
+                      </div>
+                      <div class="form-group">
+                        <label class="quicksand-md" for="settings_password2">Confirmer votre mot de passe</label>
+                        <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
+                               id="settings_password2"
+                               name="pwd2"
+                               type="password"
+                               class="form-control"
+                               ng-model="updateProfileFields.confirmation_password"
+                               ng-required="1"
+                               oninvalid="this.setCustomValidity('Champ obligatoire')"
+                               oninput="setCustomValidity('')"
+                               ng-change="changeForm()"/>
+                      </div>
+                      <div class="form-group" layout="column"
+                           layout-align="top center"
+                           style="margin-top:15px;">
+                        <md-button ng-click="updatePassword()"
+                                   class="button-type-submit md-raised md-primary">
+                          Mettre à jour mon mot de passe
+                        </md-button>
+                      </div>
+                    </div>
+                  </div>
 
-                    <div class="form-group">
-                      <label class="quicksand-md" for="settings_nom">Nom</label>
-                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
-                             id="settings_nom"
-                             name="nom"
-                             type="text"
-                             class="form-control"
-                             ng-model="updateProfileFields.last_name"
-                             ng-required="1"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
-                    </div>
-                    <div class="form-group">
-                      <label class="quicksand-md" for="settings_prenom">Prénom</label>
-                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
-                             id="settings_prenom"
-                             name="prenom"
-                             type="text"
-                             class="form-control"
-                             ng-model="updateProfileFields.first_name"
-                             ng-required="1"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
-                    </div>
-                    <div class="form-group">
-                      <label class="quicksand-md" for="settings_email">Email</label>
-                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
-                             id="settings_email"
-                             name="email"
-                             type="email"
-                             class="form-control"
-                             ng-model="updateProfileFields.email"
-                             ng-required="1"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
-                    </div>
-                    <div class="form-group">
-                      <label class="quicksand-md" for="settings_old_password">Ancien mot de passe</label>
-                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
-                             id="settings_old_password"
-                             name="pwd1"
-                             type="password"
-                             class="form-control"
-                             ng-model="updateProfileFields.old_password"
-                             ng-required="1"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
-                    </div>
-                    <div class="form-group">
-                      <label class="quicksand-md" for="settings_password1">Nouveau mot de passe</label>
-                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
-                             id="settings_password1"
-                             name="pwd1"
-                             type="password"
-                             class="form-control"
-                             ng-model="updateProfileFields.password"
-                             ng-required="1"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
-                    </div>
-                    <div class="form-group">
-                      <label class="quicksand-md" for="settings_password2">Confirmer votre mot de passe</label>
-                      <input style="font-size:20px; border-radius: 0; background-color:#f8e4c8;"
-                             id="settings_password2"
-                             name="pwd2"
-                             type="password"
-                             class="form-control"
-                             ng-model="updateProfileFields.confirmation_password"
-                             ng-required="1"
-                             oninvalid="this.setCustomValidity('Champ obligatoire')"
-                             oninput="setCustomValidity('')"
-                             ng-change="changeForm()"/>
-                    </div>
-
-                    <div class="form-group" layout="column"
-                         layout-align="top center"
-                         style="margin-top:15px;">
-                      <md-button type="submit"
-                                 class="button-type-submit md-raised md-primary">
-                        Mettre à jour
-                      </md-button>
-                      <md-button ng-click="deleteAccount()"
-                                 class="button-type-submit md-raised md-primary">
-                        Supprimer mon compte
-                      </md-button>
-                    </div>
-                  </form>
                 </div>
                 <div ng-if="state.showLessonHistoric" layout-align="top center">
-                  <div layout="column">
+                  <div layout="column" layout-align="space-between center">
                     <md-button
                             style="margin: auto auto 60px auto;"
                             ng-click="gotoCalendar()"
@@ -147,7 +162,7 @@
 
                   <h3 class="text-centered"> Votre historique de cours : </h3>
                   <div class="historic-table">
-                    <table style="margin-top: 3%; width:100%;">
+                    <table style="margin: 3% auto auto auto; width:100%;">
                       <td class="table-header"> Type </td>
                       <td class="table-header" hide-xs hide-sm hide-md> Animateur </td>
                       <td class="table-header"> Jour </td>
@@ -177,7 +192,7 @@
                 <div ng-if="state.showTransactionHistoric" layout-align="top center">
                   <h3 class="text-centered"> Votre historique de transactions : </h3>
                   <div class="historic-table">
-                    <table style="margin-top: 3%; width:100%;">
+                    <table style="margin: 3% auto auto auto; width:100%;">
                       <td class="table-header"> Id </td>
                       <td class="table-header"> Date </td>
                       <td class="table-header"> Montant </td>
@@ -189,7 +204,7 @@
                     </table>
                   </div>
                 </div>
-                <div ng-if="state.showRecharge" layout-align="top center" style="width:100%;">
+                <div ng-if="state.showRecharge" layout-align="top center" style="width:60%;">
                   <div ng-controller="RechargeController as vm">
                     <h4 ng-if="state.step_formule" class="text-centered">1/ Je choisis ma formule :</h4>
                     <h4 ng-if="state.step_code_reduction" class="text-centered">2/ Je rentre mon code de réduction :</h4>
@@ -201,19 +216,34 @@
 
                     <section ng-if="state.step_formule" style="width:100%;" layout="column" flex layout-align="space-between center">
                       <div class="text-container transaction-step">
-                        <md-radio-group class="formule-container" ng-model="data.selectedFormula" ng-change="changeFormule()">
-                          <div class="row formule" style="margin-bottom:40px;" ng-repeat="formule in data.formules" ng-class="{'last-formule':$last}">
-                            <md-radio-button
-                                    aria-label="Choix de la formule"
-                                    value="{{formule}}"
-                                    class="md-primary">
-                            </md-radio-button>
-                            <div class="formule-details">
+                        <div class="formule-container">
+                          <div class="formule"
+                               layout layout-align="space-between center"
+                               style="margin-bottom:40px;"
+                               ng-repeat="formule in data.formules"
+                               ng-class="{'last-formule':$last}">
+                            <div class="formule-details" style="width:60%;">
                               <h3> Formule {{formule.nb_cours}} Cours : {{formule.montant}} €</h3>
                               <h4 style="font-style: italic; margin-top: 5%;"> {{formule.description}} </h4>
                             </div>
+                            <div layout="column" style="width:10%;">
+                              <div layout>
+                                <md-icon style="cursor:pointer;"
+                                        ng-click="increaseFormuleNb(formule)"
+                                        md-font-icon="material-icons">
+                                  add_circle
+                                </md-icon>
+                                <md-icon
+                                        style="cursor:pointer;"
+                                        ng-click="decreaseFormuleNb(formule)"
+                                        md-font-icon="material-icons">
+                                  remove_circle
+                                </md-icon>
+                              </div>
+                              <div style="margin:auto;"><span>{{formule.nb}}</span></div>
+                            </div>
                           </div>
-                        </md-radio-group>
+                        </div>
                       </div>
 
                       <md-button

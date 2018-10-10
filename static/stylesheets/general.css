@@ -509,6 +509,17 @@ text-up{
   margin:0;
 }
 
+.md-radio-button:focus
+{
+    outline: none;
+    border: 0;
+}
+
+.md-icon:focus {
+   outline: none;
+   border: 0;
+}
+
 .cy-sidenav-icon:hover{
   cursor: pointer;
 }

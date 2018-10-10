@@ -29,6 +29,7 @@
       register: register,
       checkPassword: checkPassword,
       updateProfile : updateProfile,
+      updateProfileNames: updateProfileNames,
       deleteProfile: deleteProfile,
       crediteProfile: crediteProfile,
       setAuthenticatedAccount: setAuthenticatedAccount,
@@ -207,6 +208,25 @@
           old_password: old_password,
        }).then(function(data, status, headers, config){
           callback(true,"Profil mis à jour");
+       }, function(data, status, headers, config){
+          callback(false, data.data.message);
+       });
+    }
+
+    function updateProfileNames(account_id, first_name, last_name, email, callback) {
+       return $http.post('/api/v1/auth/update-profile/', {
+          account_id: account_id,
+          first_name:first_name,
+          last_name:last_name,
+          email: email,
+       }).then(function(data, status, headers, config){
+           Authentication.fullAccount = {};
+           delete $cookies.authenticatedAccount;
+           window.localStorage.removeItem('fullAccount');
+           Authentication.requestFullAccount(email, function(success, message){
+               callback(true,"Profil mis à jour");
+           });
+
        }, function(data, status, headers, config){
           callback(false, data.data.message);
        });

@@ -306,7 +306,7 @@ class YogaConfirmationToStaffEmailView(views.APIView):
              lesson_duration)
 
         return send_email(staff_email.noreply(),
-                          staff_email.contact(),
+                          staff_email.noreply(),
                           message_content,
                           subject)
 
@@ -435,7 +435,7 @@ class YogaCancellationToStaffEmailView(views.APIView):
              lesson_duration)
 
         return send_email(staff_email.noreply(),
-                          staff_email.contact(),
+                          staff_email.noreply(),
                           message_content,
                           subject)
 

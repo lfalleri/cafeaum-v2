@@ -59,7 +59,12 @@
                   if(!success){
                      Authentication.gotoLogin();
                   }else{
-                     $scope.data.formules = formules;
+                     formules.forEach(function(formule){
+                         formule.nb = 0;
+                         formule.selected = false;
+                         $scope.data.formules.push(formule);
+                     });
+                    // $scope.data.formules = formules;
                      $scope.data.formules.sort(compareFormules);
                   }
                })
@@ -86,6 +91,9 @@
         $scope.data.montant_final = 0;
         $scope.data.credit = 0;
         $scope.data.reduction = 0;
+        $scope.data.formules.forEach(function(f){
+            f.nb = 0;
+        });
         $scope.data.code_reduction = undefined;
         for (var k in $scope.state) {
             if ($scope.state.hasOwnProperty(k)) {
@@ -93,14 +101,6 @@
             }
         }
         $scope.state.step_formule = true;
-     }
-
-     $scope.changeFormule = function(){
-        var selectedFormula = JSON.parse($scope.data.selectedFormula);
-        $scope.data.montant_initial = selectedFormula.montant;
-        $scope.data.montant_final = selectedFormula.montant * (100 - $scope.data.reduction)/100;
-        $scope.data.credit = selectedFormula.nb_cours;
-        $scope.error = undefined;
      }
 
      $scope.chooseFormula = function(){
@@ -111,8 +111,19 @@
 
         $scope.data.montant_final = $scope.data.montant_initial * (100 - $scope.data.reduction)/100;
         $scope.state.step_formule = false;
-        $scope.state.step_code_reduction = true;
+        $scope.state.step_code_reduction = false;
+        $scope.state.step_payment_summary = true;
         $scope.error = undefined;
+     }
+
+     $scope.increaseFormuleNb = function(formule){
+         formule.nb++;
+         $scope.data.montant_initial += formule.montant;
+     }
+
+     $scope.decreaseFormuleNb = function(formule){
+         if(formule.nb > 0) formule.nb--;
+         $scope.data.montant_initial -= formule.montant;
      }
 
      $scope.backToFormula = function(){
@@ -140,7 +151,8 @@
 
      $scope.backToReductionCode = function(){
         $scope.state.step_payment_summary = false;
-        $scope.state.step_code_reduction = true;
+        $scope.state.step_code_reduction = false;
+        $scope.state.step_formule = true;
         $scope.error = undefined;
      }
 
