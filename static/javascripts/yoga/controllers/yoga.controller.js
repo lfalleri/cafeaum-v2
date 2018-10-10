@@ -9,9 +9,9 @@
     .module('cafeyoga.yoga.controllers')
     .controller('YogaController', YogaController);
 
-  YogaController.$inject = ['YogaService', 'Authentication', '$scope', 'moment', '$uibModal', '$location' ];
+  YogaController.$inject = ['YogaService', 'Authentication', 'MessagingService','$scope', 'moment', '$uibModal', '$location', '$window' ];
 
-  function YogaController( YogaService, Authentication, $scope, moment, $uibModal, $location) {
+  function YogaController( YogaService, Authentication, MessagingService, $scope, moment, $uibModal, $location, $window) {
 
      var EVENT_COLOR = { reservable:"#bfcb91", focused :"#fffdfa", complete:"#f8e4c8", reserved:"#54622e"};
 
@@ -256,6 +256,7 @@
      }
 
      function activate() {
+         console.log("Hauteur : ", $window.innerHeight);
          YogaService.getYogaTypes(function(success, types){
              types.forEach(function(type){
                 $scope.yoga.types.push(type.nom);
@@ -318,6 +319,22 @@
      }
 
      $scope.eventSources = [$scope.events];
+
+     function getContentHeight(){
+
+        var height = $window.innerHeight;
+        var contentHeight = 576;
+        if (height < 610){
+           contentHeight = 550;
+        }else if ( height < 700){
+           contentHeight = 560;
+        }else if ( height < 800){
+           contentHeight = 576;
+        }else if ( height < 900){
+           contentHeight = 580;
+        }
+        return contentHeight;
+     }
 
      /* Calendar config object */
      $scope.uiConfig = {
@@ -604,6 +621,14 @@
                $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
                    return el.id !== reservation_id;
                });
+               console.log("Send Mail");
+               MessagingService.sendYogaCancellationToCustomerEmail(
+                    $scope.lesson,
+                    account,
+                    reservation.nb_personnes,
+                    reservation.id,
+                    function(success, message){}
+              );
            }); /* cancelReservation() */
         });
      };
@@ -747,6 +772,7 @@
               $scope.staff.addUser.selectedAccount.credits += credit - debit;
               $scope.staff.addUser.proceed_credit = 0;
               $scope.staff.addUser.proceed_debit = 0;
+
               return;
            });
            return;
@@ -762,7 +788,7 @@
 
         var nb_persons = debit / $scope.lesson.price;
         $scope.staff.addUser.nb_persons = nb_persons;
-        YogaService.createLiveReservation($scope.lesson,account, nb_persons, credit, debit, false, function(success, message, reservation){
+        YogaService.createLiveReservation($scope.lesson, account, nb_persons, credit, debit, false, function(success, message, reservation){
             if(!success){
                $scope.staff.addUser.proceedBalanceError = message;
                return;
@@ -774,6 +800,9 @@
                 $scope.staff.addUser.proceed_credit = 0;
                 $scope.staff.addUser.proceed_debit = 0;
                 $scope.lesson.nb_places -= nb_persons;
+                MessagingService.sendYogaConfirmationToCustomerEmail($scope.lesson,
+                                                                     $scope.staff.addUser.selectedAccount,
+                                                                     nb_persons, reservation.id, function(){});
             }
         });
      }

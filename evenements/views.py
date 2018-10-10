@@ -12,6 +12,7 @@ class EvenementView(views.APIView):
     def get(self, request, format=None):
         evenements = Evenement.objects.all()
         serialized_evenements = EvenementSerializer(evenements, many=True)
+        print(" evenement : %s"%serialized_evenements.data)
         return Response(serialized_evenements.data)
 
 

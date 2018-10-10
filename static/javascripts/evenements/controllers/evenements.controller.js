@@ -25,7 +25,22 @@
      function activate() {
          EvenementsService.getAllEvenements(function(success, evenements){
             if(!success) return;
-            $scope.evenements = evenements;
+            console.log("Evenements : ", evenements);
+            evenements.forEach(function(evenement){
+               evenement.summary = evenement.texte.slice(0, 128) + "...";
+               var date =  moment(evenement.date).toDate();
+               evenement.locale_date =  date.toLocaleDateString('fr-FR', options);
+               evenement.locale_date = evenement.locale_date.charAt(0).toUpperCase() + evenement.locale_date.slice(1);
+               evenement.heure_debut = date.getHours() + "h"+
+                                       (date.getMinutes() < 10 ? '0' : '') +
+                                       date.getMinutes();
+               var date_fin = moment(evenement.date).add(evenement.duree, 'm').toDate();
+               evenement.heure_fin = date_fin.getHours() + "h"+
+                                     (date_fin.getMinutes() < 10 ? '0' : '') +
+                                     date_fin.getMinutes();
+               console.log("Evenement :", evenement);
+               $scope.evenements.push(evenement);
+            });
          });
 
          EvenementsService.getAllExpos(function(success, expos){

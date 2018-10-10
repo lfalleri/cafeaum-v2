@@ -58,10 +58,10 @@
                                                  alt="Evenement"
                                                  style="max-height:200px; height:auto; width:auto; float: right;"/>
                                         </div>
-                                        <div layout="column" flex="100" layout-align="space-between center" style="margin:0 20px;width:100%;">
+                                        <div layout="column" flex="100" layout-align="space-between start" style="margin:0 20px;width:100%;">
+                                            <h4>{{passe.locale_date}} de </h4>
                                             <h2 class="text-centered">{{passe.titre}}</h2>
-                                            <h4>{{passe.locale_date}}</h4>
-                                            <h4>{{passe.prix}} €</h4>
+                                            <h4>Participation : {{passe.prix}} €</h4>
 
                                         </div>
                                     </div>
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                         <div ng-if="state.showDetails">
-                            <div class="cy-exposition">
+                            <div class="cy-exposition" style="margin-top: -150px;">
                                 <h2 class="text-centered" style="margin-bottom:5%; color:#5D3B0A;">{{event_to_show.titre}}</h2>
                                 <div layout layout-align="space-between start" layout-md="column">
                                     <div style="margin-bottom:30px;">
@@ -89,8 +89,8 @@
                                     </div>
                                     <div layout="column" flex="100" layout-align="space-between start" style="margin:0 20px;width:100%;">
                                         <h4>{{event_to_show.locale_date}}</h4>
-                                        <h4>{{event_to_show.prix}} €</h4>
                                         <p>{{event_to_show.texte}}</p>
+                                        <h4>Prix : {{event_to_show.prix}} €</h4>
                                     </div>
                                 </div>
                                 <div layout layout-align="space-between start" style="padding:0 20px;width:100%;">
@@ -110,7 +110,7 @@
 
                     </div>
                     <div ng-if="state.showDetails">
-                        <div class="cy-exposition">
+                        <div class="cy-exposition" style="margin-top: -150px;">
                             <h2 class="text-centered" style="margin-bottom:5%; color:#5D3B0A;">{{event_to_show.titre}}</h2>
                             <div layout layout-align="space-between start" layout-md="column">
                                 <div style="margin-bottom:30px;">
@@ -120,8 +120,9 @@
                                 </div>
                                 <div layout="column" flex="100" layout-align="space-between start" style="margin:0 20px;width:100%;">
                                     <h4>{{event_to_show.locale_date}}</h4>
-                                    <h4>{{event_to_show.prix}} €</h4>
                                     <p>{{event_to_show.texte}}</p>
+                                    <h4 ng-if="event_to_show.prix > 0">Prix : {{event_to_show.prix}} €</h4>
+                                    <h4 ng-if="event_to_show.prix == 0">Entrée libre</h4>
                                 </div>
 
                             </div>

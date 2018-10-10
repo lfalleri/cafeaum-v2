@@ -113,7 +113,7 @@ class AccountDeletionToCustomerEmailView(views.APIView):
             </style>
             </head>
             <div style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;">
-                Bonjour %s %s,<br>
+                Bonjour %s,<br>
 
                 Nous vous informons que votre compte client a bien été supprimé.<br><br>
 
@@ -124,8 +124,7 @@ class AccountDeletionToCustomerEmailView(views.APIView):
                 L’équipe de Café Aum<br><br>
             </div>
             </html>
-        """ % (json_first_name,
-               json_last_name)
+        """ % (json_first_name)
 
         return send_email(staff_email.noreply(),
                           json_email,
@@ -207,7 +206,7 @@ class YogaConfirmationToCustomerEmailView(views.APIView):
             </style>
             </head>
             <div style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;">
-               Bonjour %s %s,<br>
+               Bonjour %s,<br>
 
                Nous avons le plaisir de vous confirmer votre inscription pour %s personne%s au cours suivant :<br>
                Réservation n°: %s<br>
@@ -219,13 +218,13 @@ class YogaConfirmationToCustomerEmailView(views.APIView):
 
                Votre nouveau solde de cours est de : %s cours. <br>
 
-               Les tapis sont fournis et des vestiaires sont à disposition.
+               Les tapis sont fournis et des vestiaires sont à votre disposition.
                Nous vous invitons à vous présenter environ 15 minutes avant le début du cours,
                munis d’une tenue confortable.<br><br>
 
                Si ce cours ne vous convenait plus, vous avez la possibilité de l’annuler jusqu’au %s. <br><br>
 
-               Vous pouvez annuler cette réservation en allant sur <a style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;" href="http://cafeaum.fr/yoga/annulation/%s">http://cafeaum.fr/yoga/annulation/%s</a><br><br>
+               Vous pouvez annuler cette réservation en allant sur <a style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;" href="https://cafe-yoga.alwaysdata.net/yoga/annulation/%s">http://cafe-yoga.alwaysdata.net/yoga/annulation/%s</a><br><br>
 
                Cordialement, <br><br>
                L'équipe CafeAum   <br>
@@ -233,7 +232,6 @@ class YogaConfirmationToCustomerEmailView(views.APIView):
             </div>
             </html>
         """%(account.get_first_name(),
-             account.get_last_name(),
              str(nb_persons),
              str("s" if nb_persons > 1 else ""),
              reservation_id,
@@ -266,7 +264,6 @@ class YogaConfirmationToStaffEmailView(views.APIView):
         lesson_duration = json_lesson['duration']
         lesson_animator = json_lesson['animator']['prenom'] + " " + json_lesson['animator']['nom']
         lesson_date = str(parse_datetime(json_lesson['date']).strftime("%A %d %b %Y à %Hh%M"))
-
 
         account = Account.objects.get(id=json_account['id'])
 
@@ -346,7 +343,7 @@ class YogaCancellationToCustomerEmailView(views.APIView):
             </style>
             </head>
             <div style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;">
-            Bonjour %s %s,<br>
+            Bonjour %s,<br>
 
             Votre inscription pour %s personne%s au cours suivant a bien été annulée :<br>
             Numéro de réservation : %s<br>
@@ -365,7 +362,6 @@ class YogaCancellationToCustomerEmailView(views.APIView):
             </div>
             </html>
         """%(account.get_first_name(),
-             account.get_last_name(),
              str(nb_persons),
              str("s" if nb_persons > 1 else ""),
              reservation_id,
@@ -516,8 +512,6 @@ class RestaurantReservationToCustomerEmailView(views.APIView):
         reservation_information = data['reservation_information']
 
         staff_email = getEmails()
-        print("1 Reservation : ")
-        print("Reservation : %s " % reservation_information)
 
         subject = "Restaurant - Votre demande de réservation"
         message_content = """
@@ -709,7 +703,7 @@ def send_lesson_cancellation_email(account,
          </style>
          </head>
          <div style="font-family : Montserrat;font-size:120%%;color:#3f3f3f;">
-         Bonjour %s %s,<br>
+         Bonjour %s,<br>
 
          Votre inscription pour %s personne%s au cours suivant a bien été annulée :<br>
          Numéro de réservation : %s<br>
@@ -728,7 +722,6 @@ def send_lesson_cancellation_email(account,
          </div>
          </html>
      """ % (account.get_first_name(),
-            account.get_last_name(),
             str(nb_personnes),
             str("s" if nb_personnes > 1 else ""),
             reservation_id,
@@ -766,7 +759,7 @@ def send_lesson_modification_email(account,
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     </head>
     <p style="font-family : Montserrat;font-size:130%%;">
-       Bonjour %s %s,<br><br>
+       Bonjour %s,<br><br>
        Nous vous informons que votre cours du %s (%s %s) vient d'être modifié. <br><br>
        Nouveau cours : <br><br>
        %s %s
@@ -784,7 +777,6 @@ def send_lesson_modification_email(account,
     </p>
     </html>
     """ % (account.get_first_name(),
-           account.get_last_name(),
            old_date,
            old_type,
            old_intensity,

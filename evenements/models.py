@@ -11,9 +11,11 @@ class Evenement(models.Model):
     titre = models.CharField(max_length=60)
     didascalie = models.CharField(max_length=512, blank=True)
     date = models.DateTimeField()
+    duree = models.IntegerField(default=60)
     texte = models.TextField()
     prix = models.FloatField()
     image = models.CharField(max_length=128, default='/static/img/...')
+    lien = models.CharField(max_length=512, blank=True)
 
     def __str__(self):
         return ' | '.join([self.titre, self.texte[0:10] + "..."])

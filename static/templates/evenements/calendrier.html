@@ -24,13 +24,16 @@
                                         </div>
                                         <div layout="column"
                                              flex="100"
-                                             layout-align="space-between center"
+                                             layout-align="space-between start"
                                              layout-align-md="space-between start"
                                              style="margin:0 20px;width:100%;">
                                             <h2 class="text-centered">{{evenement.titre}}</h2>
-                                            <h4>{{evenement.locale_date}}</h4>
-                                            <h4>{{evenement.prix}} €</h4>
+                                            <h4>{{evenement.locale_date}} de {{evenement.heure_debut}} à {{evenement.heure_fin}}</h4>
+                                            <h4>{{evenement.summary}}</h4>
 
+                                            <h4 ng-if="evenement.prix > 0">Participation : {{evenement.prix}} €</h4>
+                                            <h4 ng-if="evenement.prix == 0">Entrée libre</h4>
+                                            <a href="{{evenement.lien}}">Voir l'évènement sur Facebook</a>
                                         </div>
                                     </div>
                                     <div layout layout-align="space-between start" style="padding:0 20px;width:100%;">
@@ -78,7 +81,7 @@
 
                     </div>-->
                     <div ng-if="state.showDetails">
-                        <div class="cy-exposition">
+                        <div class="cy-exposition" style="margin-top:-100px;">
                             <h2 class="text-centered" style="margin-bottom:5%; color:#5D3B0A;">{{event_to_show.titre}}</h2>
                             <div layout layout-align="space-between start" layout-md="column">
                                 <div style="margin-bottom:30px;">
@@ -87,9 +90,11 @@
                                          style="max-height:250px; height:250px; width:auto; float: right;"/>
                                 </div>
                                 <div layout="column" flex="100" layout-align="space-between start" style="margin:0 20px;width:100%;">
-                                    <h4>{{event_to_show.locale_date}}</h4>
-                                    <h4>{{event_to_show.prix}} €</h4>
+                                    <h4>{{event_to_show.locale_date}} de {{event_to_show.heure_debut}} à {{event_to_show.heure_fin}}</h4>
                                     <p>{{event_to_show.texte}}</p>
+                                    <h4 ng-if="event_to_show.prix > 0">Participation : {{event_to_show.prix}} €</h4>
+                                    <h4 ng-if="event_to_show.prix == 0">Entrée libre</h4>
+                                    <a href="{{event_to_show.lien}}">Voir l'évènement sur Facebook</a>
                                 </div>
 
                             </div>

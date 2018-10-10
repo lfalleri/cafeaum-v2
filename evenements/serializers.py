@@ -8,7 +8,7 @@ from .models import Evenement, \
 class EvenementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evenement
-        fields = ('id', 'titre', 'texte', 'image', 'date', 'didascalie', 'prix')
+        fields = ('id', 'titre', 'texte', 'image', 'date', 'duree', 'lien', 'didascalie', 'prix')
 
 
 class ExpositionPhotoSerializer(serializers.ModelSerializer):
