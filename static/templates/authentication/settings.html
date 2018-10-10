@@ -36,10 +36,10 @@
                  layout-padding
                  style="background-color:#fffdfa;margin: 0 auto;width: 80%;">
 
-              <div layout="column" layout-align="top center" style="width: 100%; margin: 0 auto;">
+              <div layout="column" layout-align="start center" style="width: 100%; margin: 0 auto;">
 
-                <div ng-if="state.showUpdateProfile" style="width: 60%;" layout-align="start center">
-                  <div layout layout-align="space-between start">
+                <div ng-if="state.showUpdateProfile" style="width: 100%;" layout="column" layout-align="start center">
+                  <div layout layout-align="space-between start" style="width: 65%;">
                     <div layout="column" layout-align="start center">
                       <h3 class="text-centered"> Votre profil :</h3>
                       <form  role="form" class="update-account-form" >
@@ -89,10 +89,6 @@
                                      class="button-type-submit md-raised md-primary">
                             Mettre à jour mon profil
                           </md-button>
-                          <md-button ng-click="deleteAccount()"
-                                     class="button-type-submit md-raised md-primary">
-                            Supprimer mon compte
-                          </md-button>
                         </div>
                       </form>
                     </div>
@@ -139,7 +135,7 @@
                       </div>
                       <div class="form-group" layout="column"
                            layout-align="top center"
-                           style="margin-top:15px;">
+                           style="margin-top:0px;">
                         <md-button ng-click="updatePassword()"
                                    class="button-type-submit md-raised md-primary">
                           Mettre à jour mon mot de passe
@@ -147,7 +143,11 @@
                       </div>
                     </div>
                   </div>
-
+                  <md-button style="margin: 30px auto 0 auto;"
+                             ng-click="deleteAccount()"
+                             class="button-type-submit md-raised md-primary">
+                    Supprimer mon compte
+                  </md-button>
                 </div>
                 <div ng-if="state.showLessonHistoric" layout-align="top center">
                   <div layout="column" layout-align="space-between center">
@@ -229,8 +229,8 @@
                             <div layout="column" style="width:10%;">
                               <div layout>
                                 <md-icon style="cursor:pointer;"
-                                        ng-click="increaseFormuleNb(formule)"
-                                        md-font-icon="material-icons">
+                                         ng-click="increaseFormuleNb(formule)"
+                                         md-font-icon="material-icons">
                                   add_circle
                                 </md-icon>
                                 <md-icon
