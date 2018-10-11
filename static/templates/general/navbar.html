@@ -10,7 +10,7 @@
     </a>
   </div>
   <div layout="column" flex-align="space-between stretched" flex="100">
-    <div layout="row" flex="none" layout-align="end stretched" style="">
+    <div layout="row" flex="none" layout-align="end center" style="">
 
       <div layout="column" flex="none" ng-repeat="(key, item) in navBar" style="position: relative;">
         <md-button ng-click="displaySubItems(key)"
@@ -29,9 +29,9 @@
         <md-button ng-click="logout(true)"
                    class="md-primary md-raised cy-button"
                    ng-if="item.isIcon && item.display" style="min-width:50px; padding-right: 10px;padding-left: 10px;">
-           <md-icon md-font-icon="material-icons"
+          <md-icon md-font-icon="material-icons"
                    ng-click="logout(true)">{{item.icon}}
-           </md-icon>
+          </md-icon>
 
         </md-button>
       </div>

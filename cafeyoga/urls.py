@@ -29,7 +29,8 @@ from yoga.views import CalendarView, \
 
 
 from cafeyoga.views import IndexView,\
-                           LandingPageView
+                           LandingPageView, \
+                           DeleteAllInDb
 
 from restaurant.views import CarteView, \
                              RestaurantConfigView,\
@@ -76,8 +77,10 @@ urlpatterns = patterns(
     url(r'^api/v1/auth/update-password/$', UpdateNewPasswordView.as_view(), name='update-password'),
 
 
+
     # Config view
     url(r'^api/v1/config/$', ConfigView.as_view(), name='config'),
+    url(r'^api/v1/delete-all/$', DeleteAllInDb.as_view(), name='delete-all'),
 
     # Yoga Views
     url(r'^api/v1/calendar/$', CalendarView.as_view(), name='calendar'),

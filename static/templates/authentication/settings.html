@@ -148,6 +148,31 @@
                              class="button-type-submit md-raised md-primary">
                     Supprimer mon compte
                   </md-button>
+
+                  <md-button ng-if="account.is_staff"
+                             style="margin: 30px auto 0 auto;"
+                             ng-click="clickDeleteAllInDb()"
+                             class="button-type-submit md-raised md-primary">
+                    Supprimer toute la base de données !!!
+                  </md-button>
+                  <div layout="column" style="margin-top:15px;"
+                       ng-if="account.is_staff && state.askConfirmationBeforeDeletion">
+                    <p style="color:red;"> Vous êtes sur le point de supprimer toute la base de donnée. Etes vous sûr ?!</p>
+
+                    <md-button
+                            style="margin: 30px auto 0 auto;"
+                            ng-click="processDeleteAllInDb()"
+                            class="button-type-submit md-raised md-primary">
+                      Effacer
+                    </md-button>
+                    <md-button
+                            style="margin: 30px auto 0 auto;"
+                            ng-click="cancelDeleteAllInDb()"
+                            class="button-type-submit md-raised md-primary">
+                      Annuler
+                    </md-button>
+                  </div>
+
                 </div>
                 <div ng-if="state.showLessonHistoric" layout-align="top center">
                   <div layout="column" layout-align="space-between center">

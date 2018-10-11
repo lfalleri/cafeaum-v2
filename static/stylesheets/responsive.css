@@ -86,10 +86,6 @@ and (max-device-width : 320px) {
      margin: 2% 0;
   }
 
-  .main-container{
-     margin-top: 20px;
-  }
-
   .content-container{
      margin-top: 20px;
      margin-bottom: 20px;
@@ -237,10 +233,6 @@ and (max-device-height : 480px)
 
   .fullsize-container{
      padding: 30px 0;
-  }
-
-  .main-container{
-     margin-top: 20px;
   }
 
   .content-container{
@@ -428,11 +420,6 @@ and (max-device-width : 768px) {
      min-height: 2%;
   }
 
-  .main-container{
-     margin-top: 50px;
-    /* margin-bottom: 150px;*/
-  }
-
   .content-container{
      margin-top: 20px;
      margin-bottom: 20px;
@@ -537,10 +524,6 @@ and (max-device-width : 1024px) {
   .landingpage-row-md{
     min-height:10%;
   }
-  .main-container{
-     margin-top: 50px;
-    /* margin-bottom: 150px;*/
-  }
 
   .content-container{
      margin-top: 20px;
@@ -577,196 +560,38 @@ and (max-device-width : 1024px) {
 
 /* Desktops and laptops ----------- */
 @media only screen
-and (min-device-width : 1024px)
-and (max-device-width : 1254px)  {
-  .first-section{
-    margin-top : 10%;
-  }
-
-  .page-title{
-     font-size: 35px;
-  }
-
-  .historic-table table,
-  .historic-table th,
-  .historic-table td  {
-     padding: 15px;
-     font-size: 15px;
-  }
-
-  .long-button{
-     min-width: 45%;
-  }
-
-  .cy-container{
-     min-height:630px;
-  }
-
+and (min-width : 1024px)
+and (max-width : 1254px)  {
   .cy-button{
-    font-size:15px;
-    padding:  0 15px;
+    padding:  0 8px;
     min-width: 150px;
+    font-size:18px;
   }
 
-  #calendar table,
-  #calendar th,
-  #calendar td {
-     font-size: 15px;
-     font-weight: 100;
-  }
-/*
-  .landingpage-item {
-     max-width:75%;
-  }
-*/
-
-  .landingpage-link *{
-     font-size:70%;
-  }
-
-  .landingpage-link-text{
-     font-size:14px;
-  }
-
-  .landingpage-contour{
-     /*padding: 3% 8% 3% 8%;*/
-  }
-
-  .fullsize-container{
-     padding: 30px 0;
-  }
-
-  .cy-sidenav-title{
-    font-size: 22px;
-  }
-
-  md-sidenav,
-  md-sidenav.md-locked-open,
-  md-sidenav.md-closed.md-locked-open-add-active {
-    min-width: 220px !important;
-    width: 220px !important;
-    max-width: 200px !important;
-  }
-
-  .main-container{
-     margin-top: 20px;
-    /* margin-bottom: 150px;*/
-  }
-
-  .content-container{
-     margin-top: 30px;
-     margin-bottom: 30px;
-  }
-
-  .cy-footer-links{
-    margin:0;
+  .cy-subbutton{
+    min-width: 150px;
+    font-size:13px;
   }
 }
 
 @media only screen
-and (min-device-width : 1254px)
-and (max-device-width : 1524px)  {
-  .first-section{
-    margin-top : 10%;
-  }
-
-  .page-title{
-     font-size: 35px;
-  }
-
-  .historic-table table,
-  .historic-table th,
-  .historic-table td  {
-     padding: 15px;
-     font-size: 15px;
-  }
-
-  .long-button{
-     min-width: 45%;
-  }
-
-  .cy-footer{
-      height: 100px;
-  }
-
-  .cy-container{
-     min-height:650px;
-  }
-
+and (min-width : 1254px)
+and (max-width : 1524px)  {
   .cy-button{
-    font-size:16px;
-    padding:  0 10px;
-    min-width: 170px;
+    padding:  0 15px;
+    min-width: 180px;
+    font-size:18px;
   }
 
   .cy-subbutton{
-    min-width: 170px;
-    font-size:12px;
-  }
-
-  #calendar table,
-  #calendar th,
-  #calendar td {
-     font-size: 15px;
-     font-weight: 100;
-  }
-
- /* .landingpage-item {
-     width:100%;
-  }*/
-
-/*
-  .landingpage-contour{
-     padding: 3% 8% 3% 8%;
-  }
-*/
-  .fullsize-container{
-     padding: 30px 0;
-  }
-
-  .fullsize-container{
-     padding: 30px 0;
-  }
-
-  .main-container{
-     margin-top: 20px;
-    /* margin-bottom: 150px;*/
-  }
-
-  .cy-footer-links{
-    margin:0;
+    min-width: 180px;
+    font-size:13px;
   }
 }
 
 @media only screen
 and (min-width : 1524px)
 and (max-width : 1824px)  {
-  .first-section{
-    margin-top : 10%;
-  }
-
-  .page-title{
-     font-size: 35px;
-  }
-
-  .historic-table table,
-  .historic-table th,
-  .historic-table td  {
-     padding: 15px;
-     font-size: 15px;
-  }
-
-  .long-button{
-     min-width: 45%;
-  }
-  .cy-footer{
-      height: 100px;
-  }
-
-  .cy-container{
-     min-height:700px;
-  }
-
   .cy-button{
     padding:  0 30px;
     min-width: 200px;
@@ -776,28 +601,6 @@ and (max-width : 1824px)  {
   .cy-subbutton{
     min-width: 200px;
     font-size:14px;
-  }
-
-  #calendar table,
-  #calendar th,
-  #calendar td {
-     font-family: Montserrat;
-     font-size: 16px;
-     font-weight:100;
-        vertical-align: middle;
-  }
-
-  .fullsize-container{
-     padding: 30px 50px;
-  }
-
-  .cy-footer-links{
-    margin:0;
-  }
-
-  .main-container{
-     margin-top: 20px;
-    /* margin-bottom: 170px;*/
   }
 }
 
@@ -1271,7 +1074,7 @@ and (min-width : 1824px)
       padding:30px 0px;
   }
   .restaurant-img{
-      content : url('/static/img/landingpage/YOGA-carre.png');
+      content : url('/static/img/landingpage/RESTAURANT-carre.png');
   }
   .boutique-img{
     content : url('/static/img/landingpage/BOUTIQUE-carre.png');
@@ -1302,6 +1105,6 @@ and (min-width : 1824px)
     content : url('/static/img/landingpage/YOGA-carre.png');
   }
   .evenements-img{
-    content : url('/static/img/landingpage/BOUTIQUE-carre.png');
+    content : url('/static/img/landingpage/EVENEMENTS-carre.png');
   }
 }

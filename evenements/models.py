@@ -48,7 +48,7 @@ class Exposition(models.Model):
 
 
 class ExpositionPhoto(models.Model):
-    exposition = models.ForeignKey(Exposition, related_name='photos')
+    exposition = models.ForeignKey(Exposition, on_delete=models.CASCADE, related_name='photos')
     photo = models.CharField(max_length=128,default='/static/img/...')
     legende = models.CharField(max_length=128)
 

@@ -30,6 +30,7 @@
                      showLessonHistoric : false,
                      showTransactionHistoric : false,
                      showRecharge: false,
+                     askConfirmationBeforeDeletion: false,
                    };
     $scope.loaded = false;
 
@@ -172,6 +173,26 @@
 
     $scope.deleteAccount = function(){
        $location.url("/suppression-compte");
+    }
+
+    $scope.clickDeleteAllInDb = function(){
+        $scope.state.askConfirmationBeforeDeletion = true;
+    }
+
+    $scope.processDeleteAllInDb = function(){
+        Authentication.deleteAllInDb($scope.account, function(success, data){
+            if(success){
+                $scope.success = "Base de données effacée";
+                $scope.error = "";
+                return;
+            }
+            $scope.error = "Base de données non effacée";
+            $scope.success = "";
+        });
+    }
+
+    $scope.cancelDeleteAllInDb = function(){
+        $scope.state.askConfirmationBeforeDeletion = false;
     }
 
     $scope.changeForm = function(){

@@ -48,6 +48,8 @@
       gotoLoginAndBackTo : gotoLoginAndBackTo,
       backTo: undefined,
 
+      deleteAllInDb: deleteAllInDb,
+
       getSettingsDisplay: getSettingsDisplay,
       settingsDisplay : settingsDisplay,
       displayStates : {'profile' : true,
@@ -442,6 +444,16 @@
 
     function getSettingsDisplay(){
        return Authentication.displayStates;
+    }
+
+    function deleteAllInDb(account, callback){
+       return $http.post('/api/v1/delete-all/', {
+          account_id: account.id,
+       }).then(function(data, status, headers, config){
+          callback(true, "");
+       }, function(data, status, headers, config){
+          callback(false, "");
+       });
     }
   }
 })();
