@@ -1068,7 +1068,7 @@ and (min-width : 1824px)
 @media (min-aspect-ratio: 130/100) and (max-aspect-ratio: 150/100)
  {
   .landingpage-item{
-     max-width:45%;
+     max-width:80%;
   }
   .fullsize-container{
       padding:30px 0px;
