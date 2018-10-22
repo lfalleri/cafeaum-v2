@@ -15,7 +15,7 @@
                         <h2>Votre réservation a bien été annulée !</h2>
                         <h4>Vous pouvez réserver un autre cours en retournant au calendrier :</h4>
 
-                        <div style="margin: 5% auto 15%; auto;" layout="column" flex="20">
+                        <div style="margin: 5% auto 15%; auto;width: 20%; layout="column" flex="20">
                             <md-button
                                     ng-click="gotoCalendar()"
                                     class="md-primary md-raised cy-button">
@@ -25,7 +25,7 @@
                     </div>
                     <div ng-if="!cancellationSuccessful">
                         <h2 class="text-centered">Souhaitez-vous vraiment annuler votre réservation ?</h2>
-                        <div layout="row" layout-sm="column" layout-md="column"  style="margin-top:5%;">
+                        <div layout="row" layout-sm="column" layout-md="column"  style="margin:5% auto 0 auto;width:80%;">
                             <div layout="column" flex-gt-md="45" flex="100">
                                 <h2 style="text-align: center;">Votre cours :</h2>
                                 <div class="pending-reservation-lesson">

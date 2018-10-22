@@ -7,9 +7,9 @@
                     <div layout="column"  flex="30" flex-offset="10" layout-align="space-between center"
                          style="height:100%;padding: 0 20px;">
                         <h2 class="page-title"
-                            style="margin-bottom:80px;margin-top: 75px;"> Me connecter </h2>
-                        <div hide-gt-md style="width :1px; margin-bottom:75px;"></div>
-                        <form role="form">
+                            style="margin:75px auto;"> Me connecter </h2>
+                        <div hide-gt-md style="width:1px; margin-bottom:75px;"></div>
+                        <form role="form" style="width:70%;margin:auto;">
                             <div style="color:red;" class="alert alert-danger" ng-show="login_error" ng-bind="login_error"></div>
                             <div class="form-group">
                                 <label class="quicksand-md" for="login__email">Email</label>
@@ -51,12 +51,12 @@
                          style="margin-top: 100px;width:5%; min-height: 500px; border-left: 1px solid #3f3f3f;">
                     </div>
 
-                    <div layout="column"  flex="30" flex-offset="5" layout-align="space-between start"
+                    <div layout="column"  flex="30" flex-offset="5" layout-align="space-between center"
                          style="height:100%;padding: 0 20px;">
                         <h2 class="page-title"
-                            style="margin-bottom:80px;margin-top: 75px;"> M'enregistrer </h2>
+                            style="margin:75px auto;"> M'enregistrer </h2>
                         <div hide-gt-md style="width :1px; margin-bottom:75px;"></div>
-                        <form role="form">
+                        <form role="form" style="width:70%;margin:auto;">
                             <div style="color:red;" class="alert alert-danger" ng-show="register_error" ng-bind="register_error"></div>
                             <div class="form-group">
                                 <label class="quicksand-md" for="register__last_name">Nom</label>
@@ -136,8 +136,18 @@
                                     on-success="setResponse(response)"
                                     on-expire="cbExpiration()">
                             </div>
+                            <div layout>
+                                <md-checkbox ng-model="cguvChecked" aria-label="CGUVAccepted">
+                                    <a style="font-size:80%; text-decoration:underline;" href="/cguv">
+                                        J'ai pris connaissance des Conditions Générales d'Utilisation et de Vente
+                                    </a>
+                                </md-checkbox>
+
+                            </div>
                             <div class="form-group">
-                                <md-button type="submit" ng-click="registerUser()"
+                                <md-button type="submit"
+                                           ng-click="registerUser()"
+                                           ng-disabled="!cguvChecked"
                                            class="md-primary md-raised cy-button">
                                     M'enregistrer
                                 </md-button>

@@ -50,7 +50,7 @@
                                       {title: 'Notre carte',
                                        link:'/restaurant/carte',
                                        subitems:[]},
-                                      {title: 'Nos producteurs',link:'/restaurant/nosproduits',
+                                      {title: 'Nos fournisseurs',link:'/restaurant/nosproduits',
                                        subitems:[]},
                                       ]},
                         { title : 'Yoga',

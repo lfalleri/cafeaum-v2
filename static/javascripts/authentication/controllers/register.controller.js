@@ -21,7 +21,8 @@
     $scope.login = {};
     $scope.response = null;
     $scope.widgetId = null;
-    $scope.state = {password_invalid:false,}
+    $scope.state = {password_invalid:false,
+                    cguvChecked:false,}
 
     $scope.model = {
        /*key: '6LcqC1MUAAAAANRMW5g0oN7tufDBTLUI2Lg9lCQ-'*/

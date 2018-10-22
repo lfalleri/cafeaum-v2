@@ -46,7 +46,7 @@
                                                        link:'/restaurant/nosproduits',
                                                        currentLocation : false,
                                                        icon:"",
-                                                       subitems: {'nosproducteurs': {title: 'Nos producteurs',
+                                                       subitems: {'nosproducteurs': {title: 'Nos fournisseurs',
                                                                                      click:'selectNosProducteurs()',
                                                                                      currentLocation : true,
                                                                                      icon:"chevron_right"}

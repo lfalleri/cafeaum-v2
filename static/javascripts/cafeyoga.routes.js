@@ -120,6 +120,14 @@
       controller: 'EvenementsController',
       controllerAs: 'vm',
       templateUrl: '/static/templates/evenements/expositions.html'
+    }).when('/mentions',{
+      controller: 'LandingPageController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/general/mentions_legales.html'
+    }).when('/cguv',{
+      controller: 'LandingPageController',
+      controllerAs: 'vm',
+      templateUrl: '/static/templates/general/cguv.html'
     }).otherwise({
        redirectTo:"/"
     });

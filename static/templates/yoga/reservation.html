@@ -15,7 +15,7 @@
                         Ces places vous sont réservées pendant {{meta.remaining_time}} minutes,
                         mais passé ce délai, nous ne garantissons plus leur disponibilité.</h4>
 
-                    <div layout="row" layout-md="column" layout-sm="column"  style="margin-top:5%;">
+                    <div layout="row" layout-md="column" layout-sm="column"  style="margin:5% auto 0 auto;width:80%;">
                         <div layout="column" flex-gt-md="45" flex-md="80" flex-xs="100">
                             <h2 style="text-align: center;">Votre cours :</h2>
                             <div class="pending-reservation-lesson" >
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin: 5% auto auto auto;" layout="column" flex="40">
+                    <div style="margin: 5% auto auto auto; width:15%;" layout="column" flex="40">
                         <md-button
                                 ng-click="exitReservation(lesson, account, nb_persons)"
                                 class="md-primary md-raised cy-button">
@@ -76,13 +76,13 @@
                     <h4 ng-if="nb_persons > 1">Inscription pour {{ nb_persons }} personne<span ng-if="nb_persons > 1">s</span></h4>
                     <div style="margin: 5% auto auto auto;" layout="column" flex="60">
                         <md-button
-                                style="max-width: 30%; margin:auto auto 5% auto;"
+                                style="max-width: 15%; margin:auto auto 5% auto;"
                                 ng-click="exitReservation(lesson, account, nb_persons)"
                                 class="md-primary md-raised cy-button">
                             Retour
                         </md-button>
                         <md-button
-                                style="min-width: 60%; margin:auto;"
+                                style="width: 25%; margin:auto;"
                                 ng-click="cancelReservation(lesson, account)"
                                 class="md-primary md-raised cy-button long-button">
                             Annuler la réservation

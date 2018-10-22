@@ -10,7 +10,6 @@ html, body {
    overflow: auto;
 }
 
-
 body {
   background-color: #fffdfa;
   font-family: 'Montserrat', sans-serif;
@@ -100,11 +99,11 @@ p{
 .select-button{
      font-size:20px;
 }
-
+/*
 .md-select  {
     background-color: #BBCB90;
     color: blue;
-}
+}*/
 
 .montserrat-md{
   font-family: Montserrat;
@@ -204,7 +203,7 @@ p{
 .content-container{
      margin-top: 150px;
 }
-
+/*
 section {
   padding: 20px 0; }
   section h2.section-heading {
@@ -218,7 +217,7 @@ section {
     font-weight: 300;
     margin-bottom: 20px;
     text-transform: none;
-    /*font-family: 'Poiret One', sans-serif; */
+    /*font-family: 'Poiret One', sans-serif;
    font-family: 'Yanone Kaffeesatz';}
 
 @media (min-width: 768px) {
@@ -229,74 +228,17 @@ section {
 @media (min-width: 768px) {
 .page-title{
 
-}}
+}}*/
 
-
+/*
 .text-container{
    margin-left: 15%;
    margin-right: 15%;
    font-family:Montserrat;}
 
-
-/*
-header.masthead {
-  background-color: #f2f2f2;
-  margin-right : 15%;
-  margin-left : 15%;
-  margin-top : 8%;
-  text-align: center;
-  color: white;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-position: 0px 0px;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;}
-  header.masthead .intro-text {
-    text-align: center;
-    padding-top: 100px;
-    padding-bottom: 0px; }
-    header.masthead .intro-text .intro-lead-in {
-      text-align: center;
-      font-size: 50px;
-      font-weight: 500;
-      line-height: 100%;
-      margin-bottom: 25px;
-      font-family: 'Poiret One';
-      color: #3f3f3f;}
-    header.masthead .intro-text .intro-heading {
-      font-size: 20px;
-      font-style: italic;
-      font-weight: 200;
-      line-height: 50px;
-      margin-bottom: 25px;
-      font-family: 'Poiret One', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      color: #595959;
-      padding-top: 15px;}
-
-@media (min-width: 768px) {
-  header.masthead .intro-text {
-    text-align: center;
-    padding-top: 100px;
-    padding-bottom: 0px; }
-    header.masthead .intro-text .intro-lead-in {
-      text-align: center;
-      font-size: 60px;
-      font-weight: 500;
-      line-height: 40px;
-      margin-bottom: 15px;
-      font-family: 'Poiret One';}
-    header.masthead .intro-text .intro-heading {
-      font-size: 40px;
-      font-weight: 200;
-      line-height: 75px;
-      margin-bottom: 50px;
-      font-family: 'Poiret One';
-      color: #595959;
-      padding-top: 35px;}}
 */
 
+/*
 .text-logo{
     font-size:60px;
     font-family:'Lobster';
@@ -344,7 +286,7 @@ footer {
 .invalid-input{
    color: red;
    border-color: red;
-}
+}*/
 
 .text-centered{
    text-align : center;
@@ -363,6 +305,7 @@ text-up{
   text-align: center;
 }
 
+/*
 .flexible-row{
   display: flex;
   flex-direction: row;
@@ -394,6 +337,7 @@ text-up{
 .button-flex-col:hover{
    cursor: pointer;
 }
+*/
 
 .cy-button{
    color: #3f3f3f;
