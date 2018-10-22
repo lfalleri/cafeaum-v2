@@ -54,7 +54,7 @@
 
        Config.getConfig(function(config){
           if(config['local_dev']==='False'){
-             $scope.model.key = '6LfOCVMUAAAAAIKY9r3qW0vTcKo0G3kRVv5cZcDk';
+             $scope.model.key = '6LcogHMUAAAAANsA8eurYzOjA6Tzqi7OceBj0C_E';
           }else{
              $scope.model.key = '6LcqC1MUAAAAANRMW5g0oN7tufDBTLUI2Lg9lCQ-';
           }
