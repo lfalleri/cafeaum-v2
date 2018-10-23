@@ -3,7 +3,13 @@
         <div class="cy-container">
             <div ng-include="'/static/templates/general/navbar.html'"></div>
             <div class="main-container" style="min-height:100%;">
-                <div layout="column" flex-offset="20" flex="60">
+                <div style="margin: 25% auto 25% auto;" ng-if="!state.loaded">
+                    <md-progress-circular
+                            md-mode="indeterminate"
+                            style="margin: auto;">
+                    </md-progress-circular>
+                </div>
+                <div ng-if="state.loaded" layout="column" flex-offset="20" flex="60">
                     <h4 class="text-centered" style="margin-top:150px; margin-bottom:2%;color:red;">
                         Vous êtes sur le point de supprimer votre compte CafeAum. <br><br>
                         En cliquant sur "Confirmer", votre compte sera effectivement supprimé, et vos éventuels crédits perdus.
@@ -21,7 +27,7 @@
                                        type="password"
                                        class="form-control"
                                        id="settings_password"
-                                       ng-model="password"
+                                       ng-model="data.password"
                                        ng-required="1"
                                        placeholder="Mot de passe *"
                                        oninvalid="this.setCustomValidity('Champ obligatoire')"

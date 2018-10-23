@@ -27,6 +27,8 @@
       login: login,
       logout: logout,
       register: register,
+      saveRegistrationInfo:saveRegistrationInfo,
+      getRegistrationInfo:getRegistrationInfo,
       checkPassword: checkPassword,
       updateProfile : updateProfile,
       updateProfileNames: updateProfileNames,
@@ -38,6 +40,7 @@
       getFullAccount: getFullAccount,
       isStaff: isStaff,
       fullAccount : {},
+      registerInfo:{},
       getUsers: getUsers,
 
       checkAccountByEmail: checkAccountByEmail,
@@ -56,6 +59,7 @@
                        'lessons' : false,
                         'historic' : false,
                         'recharge' : false}
+
     };
 
     return Authentication;
@@ -101,6 +105,12 @@
         callback(false,"");
       }
     }
+
+    function saveRegistrationInfo(info){
+        Authentication.registerInfo = info;
+    }
+
+    function getRegistrationInfo(){return Authentication.registerInfo;}
 
     /**
     * @name login
@@ -182,6 +192,7 @@
     }
 
     function checkPassword(account_id, password, callback){
+       console.log("checkPassword : ", password);
        return $http.post('/api/v1/auth/check-password/', {
           account_id: account_id,
           password:password,

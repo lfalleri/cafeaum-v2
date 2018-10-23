@@ -17,12 +17,13 @@
   function DeletionController($location, $http, $scope, Authentication, MessagingService) {
     var vm = this;
 
-    activate();
+
 
     $scope.deletePassword = {};
     $scope.deletePassword;
     $scope.account = undefined;
-    $scope.loaded = false;
+    $scope.state = {loaded:false};
+    $scope.data = {password:""};
 
     /**
      * @name activate
@@ -31,11 +32,14 @@
     function activate() {
 
        Authentication.getFullAccount(function(value){
+
+           $scope.state.loaded = true;
            $scope.account = value;
            if(angular.equals($scope.account,{})){
               /* Non loggé -> /monespace */
               $location.url('/monespace');
            }
+
        });
     }
 
@@ -48,10 +52,12 @@
     }
 
     $scope.processDeletion = function(){
+        $scope.state.loaded = false;
         Authentication.checkPassword(
             $scope.account.id,
-            $scope.password,
+            $scope.data.password,
             function(success, message){
+                $scope.state.loaded = true;
                 if(!success){
                     $scope.error = message;
                 }else{
@@ -59,7 +65,7 @@
 
                     Authentication.deleteProfile(
                         $scope.account.id,
-                        $scope.password,
+                        $scope.data.password,
                         function(success, message){
                             if(!success){
                                 $scope.error = message;
@@ -86,5 +92,7 @@
             }
         );
     }
+
+    activate();
   }
 })();

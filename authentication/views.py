@@ -225,16 +225,11 @@ class AccountView(views.APIView):
 
 class CheckPasswordView(views.APIView):
     def post(self, request, format=None):
-
         data = json.loads(request.body)
-
         account_id = data['account_id']
         account = Account.objects.get(id=account_id)
 
-        print("CheckPasswordView : %s" % account)
-
         password = data['password']
-        print("CheckPasswordView : password  %s" % password)
         if not account.check_password(password):
             return Response({
                 'status': 'Unauthorized',

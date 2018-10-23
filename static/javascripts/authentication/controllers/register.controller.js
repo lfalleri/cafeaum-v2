@@ -59,6 +59,12 @@
              $scope.model.key = '6LcqC1MUAAAAANRMW5g0oN7tufDBTLUI2Lg9lCQ-';
           }
        });
+
+       $scope.register = Authentication.getRegistrationInfo();
+    }
+
+    $scope.saveRegistrationInfo = function(){
+        Authentication.saveRegistrationInfo($scope.register);
     }
 
     /**
