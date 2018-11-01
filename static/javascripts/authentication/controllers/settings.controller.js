@@ -281,5 +281,10 @@
        $scope.state.showTransactionHistoric = true;
        $scope.state.showRecharge = true;
     }
+
+    $scope.$watch(function() { return Authentication.fullAccount; }, function (newValue) {
+        $scope.account = newValue;
+    }, true);
+
   }
 })();

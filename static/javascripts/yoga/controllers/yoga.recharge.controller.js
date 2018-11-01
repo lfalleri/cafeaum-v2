@@ -119,11 +119,19 @@
      $scope.increaseFormuleNb = function(formule){
          formule.nb++;
          $scope.data.montant_initial += formule.montant;
+         $scope.data.credit += formule.nb_cours;
      }
 
      $scope.decreaseFormuleNb = function(formule){
          if(formule.nb > 0) formule.nb--;
-         $scope.data.montant_initial -= formule.montant;
+
+         if($scope.data.montant_initial >= formule.montant){
+            $scope.data.montant_initial -= formule.montant;
+         }
+
+         if($scope.data.credit >= formule.nb_cours){
+            $scope.data.credit -= formule.nb_cours;
+         }
      }
 
      $scope.backToFormula = function(){
@@ -195,6 +203,10 @@
                      $scope.error = undefined;
                      $scope.state.step_payment_error = false;
                      $scope.state.step_payment_success = true;
+
+                     Authentication.requestFullAccount($scope.account.email, function(success, account){
+                         $scope.account = account;
+                     });
                   }
                }
             );

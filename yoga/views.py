@@ -392,6 +392,7 @@ class TransactionView(views.APIView):
         montant = data['montant']
         credit = data['credit']
         token = data['token']
+        print("Transaction POST : data=%s " % data)
 
         stripe.api_key = "sk_test_ZgA3fIz8UXgmhZpwXg8Aej5V"
 
@@ -421,6 +422,10 @@ class TransactionView(views.APIView):
 
         account.credits += int(credit)
         account.save()
+
+        print("Transaction POST : transaction=%s / account=%s "%(transaction,account))
+        print("Transaction POST : account=%d "%(account.credits))
+        print("Transaction POST : credit=%d " % int(credit))
 
         serialized = TransactionSerializer(transaction)
         return Response(serialized.data)

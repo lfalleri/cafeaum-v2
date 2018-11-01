@@ -192,7 +192,6 @@
     }
 
     function checkPassword(account_id, password, callback){
-       console.log("checkPassword : ", password);
        return $http.post('/api/v1/auth/check-password/', {
           account_id: account_id,
           password:password,

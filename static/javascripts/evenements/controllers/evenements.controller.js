@@ -25,7 +25,6 @@
      function activate() {
          EvenementsService.getAllEvenements(function(success, evenements){
             if(!success) return;
-            console.log("Evenements : ", evenements);
             evenements.forEach(function(evenement){
                evenement.summary = evenement.texte.slice(0, 128) + "...";
                var date =  moment(evenement.date).toDate();
@@ -38,7 +37,6 @@
                evenement.heure_fin = date_fin.getHours() + "h"+
                                      (date_fin.getMinutes() < 10 ? '0' : '') +
                                      date_fin.getMinutes();
-               console.log("Evenement :", evenement);
                $scope.evenements.push(evenement);
             });
          });

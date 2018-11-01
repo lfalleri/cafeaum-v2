@@ -60,7 +60,8 @@
           }
        });
 
-       $scope.register = Authentication.getRegistrationInfo();
+       $scope.register = angular.copy(Authentication.getRegistrationInfo());
+       Authentication.saveRegistrationInfo({});
     }
 
     $scope.saveRegistrationInfo = function(){

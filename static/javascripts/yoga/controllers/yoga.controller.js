@@ -256,7 +256,6 @@
      }
 
      function activate() {
-         console.log("Hauteur : ", $window.innerHeight);
          YogaService.getYogaTypes(function(success, types){
              types.forEach(function(type){
                 $scope.yoga.types.push(type.nom);
@@ -621,7 +620,6 @@
                $scope.staff.reservationsForLesson = $scope.staff.reservationsForLesson.filter(function(el){
                    return el.id !== reservation_id;
                });
-               console.log("Send Mail");
                MessagingService.sendYogaCancellationToCustomerEmail(
                     $scope.lesson,
                     account,
