@@ -137,12 +137,10 @@
                                     on-expire="cbExpiration()">
                             </div>
                             <div layout>
-                                <md-checkbox ng-model="cguvChecked" aria-label="CGUVAccepted">
-                                    <a style="font-size:80%; text-decoration:underline;" href="/cguv" ng-click="saveRegistrationInfo()">
-                                        J'ai pris connaissance des Conditions Générales d'Utilisation et de Vente
-                                    </a>
-                                </md-checkbox>
-
+                                <md-checkbox ng-model="cguvChecked" aria-label="CGUVAccepted"></md-checkbox>
+                                <a style="font-size:80%; text-decoration:underline;" href="/cguv" ng-click="saveRegistrationInfo()">
+                                    J'ai pris connaissance des Conditions Générales d'Utilisation et de Vente
+                                </a>
                             </div>
                             <div class="form-group">
                                 <md-button type="submit"
