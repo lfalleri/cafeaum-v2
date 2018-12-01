@@ -22,7 +22,6 @@ from .serializers import LessonSerializer, \
                          TransactionSerializer,\
                          FormuleSerializer,\
                          CodeReductionSerializer
-
 import stripe
 from datetime import datetime
 from django.utils.dateparse import parse_datetime
@@ -34,7 +33,7 @@ class CalendarView(views.APIView):
 
     def post(self, request, format=None):
         queryset = Lesson.objects.all()
-
+        
 
 class LessonView(views.APIView):
     serializer_class = LessonSerializer
