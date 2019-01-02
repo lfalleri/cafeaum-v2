@@ -605,27 +605,12 @@ class ContactEmailView(views.APIView):
             </p>
             </html>
         """%(name, email, tel, '<br>'.join(message.splitlines()))
-
-        sg = sendgrid.SendGridAPIClient(apikey=getApiKey())
-
-        from_email = Email(staff_email.noreply())
-        to_email = Email(staff_email.contact())
-        content = Content("text/html", message_content)
-        mail = Mail(from_email, subject, to_email, content)
-
-        response = sg.client.mail.send.post(request_body=mail.get())
-
-        if (response.status_code >= 200) and (response.status_code < 300):
-            return Response({
-                'status': 'OK',
-                'message': 'Email sent'
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({
-                'status': 'KO',
-                'message': 'Error'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        
+        return send_email(staff_email.noreply(),
+                          staff_email.noreply(),
+                          message_content,
+                          subject)
+    
 
 class PasswordRecoveryEmailView(views.APIView):
     def post(self, request, format=None):
