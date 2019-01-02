@@ -161,7 +161,7 @@
        });
     }
 
-    function sendEmailFromContactPage(type, name, email, tel, message, callback) {
+    function sendEmailFromContactPage(name, email, tel, message, callback) {
        return $http.post('api/v1/messaging/contact/', {
          name: name,
          email: email,
